@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import {
   StatusBar,
-  View
+  View,
+  StyleSheet
 } from 'react-native';
 import {
   Appbar,
-  Text
+  Text,
+  Searchbar
 } from 'react-native-paper';
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Home extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      search: ''
+    };
   }
 
   AppHerder() {
@@ -29,9 +35,20 @@ export default class Home extends Component<Props> {
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         {this.AppHerder()}
-        <Text>Home</Text>
+        <View>
+          <Searchbar
+            placeholder="Search"
+            onChangeText={searching => { this.setState({ search: searching }); }}
+            value={this.state.search}
+          />
+        </View>
+
+        <ActionButton
+          buttonColor="rgba(231,76,60,1)"
+          onPress={() => { console.log("hi") }}
+        />
       </View>
     );
   }
