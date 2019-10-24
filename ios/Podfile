@@ -36,6 +36,8 @@ target 'FamilyPlan' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNInAppBrowser', :path => '../node_modules/react-native-inappbrowser-reborn'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

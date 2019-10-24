@@ -4828,7 +4828,7 @@ open@^6.2.0:
   dependencies:
     is-wsl "^1.1.0"
 
-opencollective-postinstall@^2.0.0:
+opencollective-postinstall@^2.0.0, opencollective-postinstall@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
   integrity sha512-pVOEP16TrAO2/fjej1IdOyupJY8KDUM1CvsaScRbw6oddvpQoOfGk4ywha0HKKVAD6RkW4x6Q+tNBwhf3Bgpuw==
@@ -5276,6 +5276,14 @@ react-native-flash-message@^0.1.15:
   dependencies:
     prop-types "^15.7.2"
     react-native-iphone-x-helper "^1.2.1"
+
+react-native-inappbrowser-reborn@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-inappbrowser-reborn/-/react-native-inappbrowser-reborn-3.1.0.tgz#c6b1bc39787e325b14960f21d1bddcd0977dd1da"
+  integrity sha512-1EXc0RAnXg1rLVfP5bzGJHZPKLsRW5l6ECuHajUNTpUgPdCi1LqnzA+XNwssUFpUj8tL3aNHJou1ajvG0gvAhw==
+  dependencies:
+    invariant "^2.2.4"
+    opencollective-postinstall "^2.0.2"
 
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"
