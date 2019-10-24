@@ -4,28 +4,20 @@ const height = Dimensions.get('window').height;
 const IS_ANDROID = Platform.OS === 'android';
 
 export const styles = StyleSheet.create({
-  colorBlue: {
-    color: '#278EF5'
+  homeColor: {
+    backgroundColor: '#2370E6'
   },
 
-  homeComponent: {
-    backgroundColor: '#278EF5'
+  chatColor: {
+    backgroundColor: '#09A650'
   },
 
-  colorGreen: {
-    color: '#036A35'
+  notiColor: {
+    backgroundColor: '#2370E6'
   },
 
-  addComponent: {
-    backgroundColor: '#036A35'
-  },
-
-  settingsComponent: {
-    backgroundColor: '#DA044B'
-  },
-
-  profileComponent: {
-    backgroundColor: '#167EFA'
+  settingColor: {
+    backgroundColor: '#2370E6'
   },
 
   listCard: {

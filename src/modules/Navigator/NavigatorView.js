@@ -4,10 +4,11 @@ import {
   Text
 } from 'react-native-paper';
 
-const HomeRoute = () => <Text>Home</Text>;
-const ChatsRoute = () => <Text>Chats</Text>;
-const NotificationsRoute = () => <Text>Notifications</Text>;
-const SettingsRoute = () => <Text>Settings</Text>;
+// View
+import HomeView from '../Home/HomeView';
+import ChatView from '../Chat/ChatView';
+import NotificationView from '../Notification/NotificationView';
+import SettingView from '../Setting/SettingView';
 
 export default class App extends Component<Props> {
   constructor(props) {
@@ -15,10 +16,10 @@ export default class App extends Component<Props> {
     this.state = {
       index: 0,
       routes: [
-        { key: 'home', title: 'Home', icon: 'home', color: '#3F51B5' },
-        { key: 'chats', title: 'Chats', icon: 'chat', color: '#009688' },
-        { key: 'notifications', title: 'Notifications', icon: 'bell', color: '#795548' },
-        { key: 'settings', title: 'Settings', icon: 'settings', color: '#607D8B' },
+        { key: 'homes', title: 'Home', icon: 'home', color: '#2370E6' },
+        { key: 'chats', title: 'Chats', icon: 'chat', color: '#09A650' },
+        { key: 'notifications', title: 'Notifications', icon: 'bell', color: '#F93636' },
+        { key: 'settings', title: 'Settings', icon: 'settings', color: '#6D06F9' },
       ],
     };
   }
@@ -26,10 +27,10 @@ export default class App extends Component<Props> {
   _handleIndexChange = index => this.setState({ index });
 
   _renderScene = BottomNavigation.SceneMap({
-    home: HomeRoute,
-    chats: ChatsRoute,
-    notifications: NotificationsRoute,
-    settings: SettingsRoute,
+    homes: HomeView,
+    chats: ChatView,
+    notifications: NotificationView,
+    settings: SettingView,
   });
 
   render() {
