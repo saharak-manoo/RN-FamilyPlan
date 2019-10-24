@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 import InAppBrowser from 'react-native-inappbrowser-reborn'
+import I18n from '../../components/i18n';
 
 export default class Home extends Component<Props> {
   constructor(props) {
@@ -103,7 +104,7 @@ export default class Home extends Component<Props> {
             ref={c => (this.loadingButton = c)}
             width={300}
             height={50}
-            title='Login'
+            title={I18n.t('button.signIn')}
             titleFontSize={16}
             titleColor='rgb(255,255,255)'
             backgroundColor='rgb(29,18,121)'

@@ -38,6 +38,8 @@ target 'FamilyPlan' do
 
   pod 'RNInAppBrowser', :path => '../node_modules/react-native-inappbrowser-reborn'
 
+  pod 'RNI18n', :path => '../node_modules/react-native-i18n'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

@@ -16,6 +16,7 @@
     "react-native-animate-loading-button": "^1.0.3",
     "react-native-elements": "^1.2.6",
     "react-native-flash-message": "^0.1.15",
+    "react-native-i18n": "^2.0.15",
     "react-native-inappbrowser-reborn": "^3.1.0",
     "react-native-paper": "^3.0.0",
     "react-native-vector-icons": "^6.6.0"
