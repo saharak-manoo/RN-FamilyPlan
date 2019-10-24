@@ -5250,6 +5250,11 @@ react-native-action-button@^2.8.5:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-animate-loading-button@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-animate-loading-button/-/react-native-animate-loading-button-1.0.3.tgz#6425215f12aca464b8057ac62d9ea4a728375e98"
+  integrity sha512-jQhZxx/e9XalyXkuW6HVxKfoVUbHhbrrRMK9gIWgR3lSmVF113//4iJQ01y85A0DkqCpgLnzH3em28SeOVMc8g==
+
 react-native-elements@^1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.2.6.tgz#fda0f49ddf87abdb287de1ec9bc057c103430455"

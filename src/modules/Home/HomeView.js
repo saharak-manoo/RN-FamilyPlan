@@ -11,6 +11,7 @@ import {
 } from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AnimateLoadingButton from 'react-native-animate-loading-button';
 
 export default class Home extends Component<Props> {
   constructor(props) {
@@ -33,6 +34,15 @@ export default class Home extends Component<Props> {
     )
   }
 
+  _onPressHandler() {
+    this.loadingButton.showLoading(true);
+
+    // mock
+    setTimeout(() => {
+      this.loadingButton.showLoading(false);
+    }, 2000);
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -42,6 +52,20 @@ export default class Home extends Component<Props> {
             placeholder="Search"
             onChangeText={searching => { this.setState({ search: searching }); }}
             value={this.state.search}
+          />
+        </View>
+
+        <View style={{ flex: 1, backgroundColor: 'rgb(255,255,255)', justifyContent: 'center' }}>
+          <AnimateLoadingButton
+            ref={c => (this.loadingButton = c)}
+            width={300}
+            height={50}
+            title="Login"
+            titleFontSize={16}
+            titleColor="rgb(255,255,255)"
+            backgroundColor="rgb(29,18,121)"
+            borderRadius={4}
+            onPress={this._onPressHandler.bind(this)}
           />
         </View>
 
