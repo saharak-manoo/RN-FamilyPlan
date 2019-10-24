@@ -39,6 +39,9 @@ export default class Home extends Component<Props> {
         animationType='slide'
         transparent={false}
         visible={this.state.modalVisible}
+        onRequestClose={() => {
+          this.setState({ modalVisible: false });
+        }}
       >
         <LoginView
           back={
