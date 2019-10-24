@@ -17,10 +17,10 @@ export default class Chat extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#09A650" barStyle="light-content" />
+        <StatusBar backgroundColor='#09A650' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#09A650' }}>
           <Appbar.Content
-            title="Chat"
+            title='Chat'
           />
         </Appbar.Header>
       </View>

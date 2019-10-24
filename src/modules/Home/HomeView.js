@@ -12,7 +12,7 @@ import {
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { showMessage, hideMessage } from 'react-native-flash-message';
 
 export default class Home extends Component<Props> {
   constructor(props) {
@@ -25,10 +25,10 @@ export default class Home extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#2370E6" barStyle="light-content" />
+        <StatusBar backgroundColor='#2370E6' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#2370E6' }}>
           <Appbar.Content
-            title="Home"
+            title='Home'
           />
         </Appbar.Header>
       </View>
@@ -37,9 +37,9 @@ export default class Home extends Component<Props> {
 
   _onPressHandler() {
     showMessage({
-      message: "Hello World",
-      description: "This is our second message",
-      type: "success",
+      message: 'Hello World',
+      description: 'This is our second message',
+      type: 'success',
     });
 
     this.loadingButton.showLoading(true);
@@ -56,7 +56,7 @@ export default class Home extends Component<Props> {
         {this.AppHerder()}
         <View>
           <Searchbar
-            placeholder="Search"
+            placeholder='Search'
             onChangeText={searching => { this.setState({ search: searching }); }}
             value={this.state.search}
           />
@@ -67,18 +67,18 @@ export default class Home extends Component<Props> {
             ref={c => (this.loadingButton = c)}
             width={300}
             height={50}
-            title="Login"
+            title='Login'
             titleFontSize={16}
-            titleColor="rgb(255,255,255)"
-            backgroundColor="rgb(29,18,121)"
+            titleColor='rgb(255,255,255)'
+            backgroundColor='rgb(29,18,121)'
             borderRadius={4}
             onPress={this._onPressHandler.bind(this)}
           />
         </View>
 
         <ActionButton
-          buttonColor="rgba(231,76,60,1)"
-          onPress={() => { console.log("hi") }}
+          buttonColor='rgba(231,76,60,1)'
+          onPress={() => { console.log('hi') }}
         />
       </View>
     );

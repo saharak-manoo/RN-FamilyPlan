@@ -17,10 +17,10 @@ export default class NotificationView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#F93636" barStyle="light-content" />
+        <StatusBar backgroundColor='#F93636' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#F93636' }}>
           <Appbar.Content
-            title="Notification"
+            title='Notification'
           />
         </Appbar.Header>
       </View>

@@ -17,10 +17,10 @@ export default class SettingView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#6D06F9" barStyle="light-content" />
+        <StatusBar backgroundColor='#6D06F9' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#6D06F9' }}>
           <Appbar.Content
-            title="Setting"
+            title='Setting'
           />
         </Appbar.Header>
       </View>
