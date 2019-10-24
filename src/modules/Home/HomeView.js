@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {
   Alert,
   Linking,
+  Modal,
   StatusBar,
+  TouchableHighlight,
   View,
   StyleSheet
 } from 'react-native';
@@ -18,12 +20,38 @@ import { showMessage, hideMessage } from 'react-native-flash-message';
 import InAppBrowser from 'react-native-inappbrowser-reborn'
 import I18n from '../../components/i18n';
 
+import LoginView from '../Auth/Login/LoginView';
+
 export default class Home extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      search: ''
+      search: '',
+      modalVisible: false,
     };
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
+  logInModal() {
+    return (
+      <Modal
+        animationType='slide'
+        transparent={false}
+        visible={this.state.modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <LoginView
+          back={
+            () => {
+              this.setState({ modalVisible: false });
+            }}
+        />
+      </Modal>
+    )
   }
 
   AppHerder() {
@@ -112,10 +140,12 @@ export default class Home extends Component<Props> {
             onPress={this._onPressHandler.bind(this)}
           />
         </View>
-
+        {this.logInModal()}
         <ActionButton
           buttonColor='rgba(231,76,60,1)'
-          onPress={() => { console.log('hi') }}
+          onPress={() => {
+            this.setModalVisible(true);
+          }}
         />
       </View>
     );
