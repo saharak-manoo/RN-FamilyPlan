@@ -14,17 +14,6 @@ export default class App extends Component<Props> {
   render() {
     return (
       <PaperProvider>
-        <Appbar.Header style={{ backgroundColor: '#000' }}>
-          <Appbar.BackAction
-            onPress={() => this.props.jumpTo('albums')}
-          />
-          <Appbar.Content
-            title="Title"
-            subtitle="Subtitle"
-          />
-          <Appbar.Action icon="search" onPress={this._onSearch} />
-          <Appbar.Action icon="more-vert" onPress={this._onMore} />
-        </Appbar.Header>
         <NavigatorView />
       </PaperProvider>
     );
