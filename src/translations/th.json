@@ -1,15 +1,17 @@
 {
   "button": {
     "signIn": "เข้าสู่ระบบ",
+    "signUp": "สมัครเข้าใช้ระบบ",
     "signOut": "ออกจากระบบ",
-    "register": "สมัครเข้าใช้ระบบ",
     "back": "ย้อนกลับ",
     "logout": "ออกจากระบบ",
     "submit": "บันทึก",
     "cancel": "ยกเลิก",
     "ok": "ตกลง",
     "save": "บันทึก",
-    "signinWith": "เข้าสู่ระบบด้วย"
+    "signinWith": "เข้าสู่ระบบด้วย",
+    "forgotPassword": "ลืมรหัสผ่าน",
+    "resetPassword": "รีเซ็ตรหัสผ่าน"
   },
   "text": {},
   "placeholder": {},
