@@ -69,6 +69,9 @@ export default class LoginView extends Component<Props> {
         animationType='slide'
         transparent={false}
         visible={this.state.forgotPasswordModal}
+        onRequestClose={() => {
+          this.setState({ forgotPasswordModal: false });
+        }}
       >
         <ForgotPasswordView
           back={
