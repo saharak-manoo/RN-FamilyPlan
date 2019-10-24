@@ -4,6 +4,7 @@ import {
   Appbar
 } from 'react-native-paper';
 import NavigatorView from './Navigator/NavigatorView';
+import FlashMessage from 'react-native-flash-message';
 
 export default class App extends Component<Props> {
   constructor(props) {
@@ -15,6 +16,7 @@ export default class App extends Component<Props> {
     return (
       <PaperProvider>
         <NavigatorView />
+        <FlashMessage position='top' />
       </PaperProvider>
     );
   }

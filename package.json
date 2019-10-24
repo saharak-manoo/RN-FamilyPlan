@@ -15,6 +15,7 @@
     "react-native-action-button": "^2.8.5",
     "react-native-animate-loading-button": "^1.0.3",
     "react-native-elements": "^1.2.6",
+    "react-native-flash-message": "^0.1.15",
     "react-native-paper": "^3.0.0",
     "react-native-vector-icons": "^6.6.0"
   },

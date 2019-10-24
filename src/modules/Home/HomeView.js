@@ -12,6 +12,7 @@ import {
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 export default class Home extends Component<Props> {
   constructor(props) {
@@ -35,6 +36,12 @@ export default class Home extends Component<Props> {
   }
 
   _onPressHandler() {
+    showMessage({
+      message: "Hello World",
+      description: "This is our second message",
+      type: "success",
+    });
+
     this.loadingButton.showLoading(true);
 
     // mock
