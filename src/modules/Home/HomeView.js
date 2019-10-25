@@ -23,34 +23,10 @@ import LoginView from '../Auth/Login/LoginView';
 export default class Home extends Component<Props> {
   constructor(props) {
     super(props);
+    this._goToModalLogin = this._goToModalLogin.bind(this);
     this.state = {
       search: '',
-      modalVisible: false,
     };
-  }
-
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
-  }
-
-  logInModal() {
-    return (
-      <Modal
-        animationType='slide'
-        transparent={false}
-        visible={this.state.modalVisible}
-        onRequestClose={() => {
-          this.setState({ modalVisible: false });
-        }}
-      >
-        <LoginView
-          back={
-            () => {
-              this.setState({ modalVisible: false });
-            }}
-        />
-      </Modal>
-    )
   }
 
   AppHerder() {
@@ -66,6 +42,10 @@ export default class Home extends Component<Props> {
     )
   }
 
+  _goToModalLogin() {
+    this.props.navigation.navigate('Login')
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -78,13 +58,11 @@ export default class Home extends Component<Props> {
           />
         </View>
 
-        {this.logInModal()}
-
         <ActionButton
           buttonColor='rgba(231,76,60,1)'
-          onPress={() => {
-            this.setModalVisible(true);
-          }}
+          onPress={
+            this._goToModalLogin()
+          }
         />
       </View>
     );
