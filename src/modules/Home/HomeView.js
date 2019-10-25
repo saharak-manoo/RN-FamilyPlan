@@ -6,7 +6,7 @@ import {
   StatusBar,
   TouchableHighlight,
   View,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import {
   Appbar,

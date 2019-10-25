@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   StatusBar,
-  View
+  View,
 } from 'react-native';
 import {
   Appbar,

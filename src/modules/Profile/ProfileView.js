@@ -38,13 +38,11 @@ export default class ProfileView extends Component<Props> {
 
   signOut() {
     this.loadingSignOut.showLoading(true);
-
-    // mock
     setTimeout(() => {
       AsyncStorage.removeItem('isSignIn')
       this.loadingSignOut.showLoading(false);
       this.props.navigation.navigate('Login');
-    }, 2000);
+    }, 200);
   }
 
   render() {
