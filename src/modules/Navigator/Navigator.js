@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createAppContainer } from 'react-navigation';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -40,7 +40,7 @@ const ProfileStack = createStackNavigator(
     Profile: { screen: ProfileView },
   },
   {
-    headerMode: 'none',
+    headerMode: 'none'
   }
 );
 
@@ -100,7 +100,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
   },
 );
 
-const AppNavigator = createStackNavigator(
+const AppNavigator = createSwitchNavigator(
   {
     Logo: LogoView,
     Auth: AuthStack,
