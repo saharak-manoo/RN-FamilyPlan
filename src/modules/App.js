@@ -17,7 +17,7 @@ export default class App extends Component<Props> {
       <PaperProvider>
         <NavigatorView />
         <FlashMessage position='top' />
-      </PaperProvider>
+      </PaperProvider >
     );
   }
 };
