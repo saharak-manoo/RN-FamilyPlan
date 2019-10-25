@@ -18,7 +18,7 @@ const HomeStack = createStackNavigator(
     Home: { screen: HomeView },
   },
   {
-    headerMode: 'none',
+    headerMode: 'none'
   }
 );
 
@@ -28,7 +28,9 @@ const AuthStack = createStackNavigator(
     Register: { screen: RegisterView },
     ForgotPassword: { screen: ForgotPasswordView }
   },
-  { headerMode: 'none' }
+  {
+    headerMode: 'none'
+  }
 );
 
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
   Alert,
   View,
   Dimensions,
@@ -24,9 +25,18 @@ export default class LoginView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isSignIn: false,
       email: '',
       password: ''
     };
+  }
+
+  async componentWillMount() {
+    let isSignIn = await AsyncStorage.getItem('isSignIn')
+    await this.setState({ isSignIn: isSignIn != null })
+    if (this.state.isSignIn) {
+      this.props.navigation.navigate('Home')
+    }
   }
 
   appHerder() {
@@ -45,6 +55,7 @@ export default class LoginView extends Component<Props> {
   signIn() {
     this.loadingLogin.showLoading(true);
     setTimeout(() => {
+      AsyncStorage.setItem('isSignIn', 'true')
       this.loadingLogin.showLoading(false);
       showMessage({
         message: 'Login',
