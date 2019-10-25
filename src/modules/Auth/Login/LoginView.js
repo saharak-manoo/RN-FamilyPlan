@@ -32,7 +32,7 @@ export default class LoginView extends Component<Props> {
   }
 
   async componentWillMount() {
-    let isSignIn = await AsyncStorage.getItem('isSignIn')
+    let isSignIn = await AsyncStorage.getItem('userToken')
     await this.setState({ isSignIn: isSignIn != null })
     if (this.state.isSignIn) {
       this.props.navigation.navigate('Home')

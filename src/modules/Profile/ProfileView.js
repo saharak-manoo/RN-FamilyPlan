@@ -39,7 +39,7 @@ export default class ProfileView extends Component<Props> {
   signOut() {
     this.loadingSignOut.showLoading(true);
     setTimeout(() => {
-      AsyncStorage.removeItem('isSignIn')
+      AsyncStorage.removeItem('userToken')
       this.loadingSignOut.showLoading(false);
       this.props.navigation.navigate('Login');
     }, 200);
