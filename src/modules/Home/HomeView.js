@@ -23,7 +23,6 @@ import LoginView from '../Auth/Login/LoginView';
 export default class Home extends Component<Props> {
   constructor(props) {
     super(props);
-    this._goToModalLogin = this._goToModalLogin.bind(this);
     this.state = {
       search: '',
     };
@@ -41,16 +40,11 @@ export default class Home extends Component<Props> {
       </View>
     )
   }
-
-  _goToModalLogin() {
-    this.props.navigation.navigate('Login')
-  }
-
   render() {
     return (
       <View style={{ flex: 1 }}>
         {this.AppHerder()}
-        <View>
+        <View style={{ padding: 15 }}>
           <Searchbar
             placeholder='Search'
             onChangeText={searching => { this.setState({ search: searching }); }}
@@ -60,9 +54,6 @@ export default class Home extends Component<Props> {
 
         <ActionButton
           buttonColor='rgba(231,76,60,1)'
-          onPress={
-            this._goToModalLogin()
-          }
         />
       </View>
     );

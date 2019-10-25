@@ -32,97 +32,93 @@ export default class LoginView extends Component<Props> {
   appHerder() {
     return (
       <View>
-        <StatusBar backgroundColor='#E05100' barStyle='light-content' />
-        <Appbar.Header style={{ backgroundColor: '#E05100' }}>
-          <Appbar.Action icon='close' onPress={() => this.props.navigation.navigate('Profile')} />
+        <StatusBar backgroundColor='#1C83F7' barStyle='light-content' />
+        <Appbar.Header style={{ backgroundColor: '#1C83F7' }}>
           <Appbar.Content
-            title='Login'
+            title='Family Plan'
           />
         </Appbar.Header>
       </View>
     )
   }
 
-  logIn() {
-    showMessage({
-      message: 'Hello World',
-      description: 'This is our second message',
-      type: 'success',
-    });
-
+  signIn() {
     this.loadingLogin.showLoading(true);
-
-    // mock
     setTimeout(() => {
       this.loadingLogin.showLoading(false);
-      alert('Login')
-    }, 2000);
+      showMessage({
+        message: 'Login',
+        description: 'Login done.',
+        type: 'success',
+      });
+      this.props.navigation.navigate('Home')
+    }, 300);
+  }
+
+  goToSignUp() {
+    this.loadingGoToSignUp.showLoading(true);
+    setTimeout(() => {
+      this.loadingGoToSignUp.showLoading(false);
+      this.props.navigation.navigate('Register')
+    }, 500);
   }
 
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Modal
-          animationType='slide'
-          transparent={false}
-          visible={true}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}
-        >
-          {this.appHerder()}
-          <View style={{ padding: 45 }}>
-            <Text style={{ alignItems: 'center', fontSize: 58 }}>Family Plan</Text>
-          </View>
-          <View style={{ padding: 15 }}>
-            <TextInput
-              style={{ paddingBottom: 13 }}
-              label='Email'
-              mode='outlined'
-              value={this.state.email}
-              onChangeText={email => this.setState({ email: email })}
+        {this.appHerder()}
+        <View style={{ padding: 45, alignSelf: 'center' }}>
+          <Text style={{ alignItems: 'center', fontSize: 58 }}>Sign In</Text>
+        </View>
+        <View style={{ padding: 15 }}>
+          <TextInput
+            style={{ paddingBottom: 13 }}
+            label='Email'
+            mode='outlined'
+            value={this.state.email}
+            onChangeText={email => this.setState({ email: email })}
+          />
+
+          <TextInput
+            style={{ paddingBottom: 13 }}
+            label='Password'
+            mode='outlined'
+            value={this.state.password}
+            onChangeText={password => this.setState({ password: password })}
+          />
+
+          <View style={{ justifyContent: 'center', paddingTop: 25 }}>
+            <AnimateLoadingButton
+              ref={load => (this.loadingLogin = load)}
+              width={width - 25}
+              height={50}
+              title={I18n.t('button.signIn')}
+              titleFontSize={18}
+              titleColor='#FFF'
+              backgroundColor='#1C83F7'
+              borderRadius={25}
+              onPress={this.signIn.bind(this)}
             />
 
-            <TextInput
-              style={{ paddingBottom: 13 }}
-              label='Password'
-              mode='outlined'
-              value={this.state.password}
-              onChangeText={password => this.setState({ password: password })}
+            <TouchableOpacity
+              style={{ padding: 20, paddingTop: 30, alignItems: 'center' }}
+              onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+              <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>Forgot your password ?</Text>
+            </TouchableOpacity>
+
+            <AnimateLoadingButton
+              ref={c => (this.loadingGoToSignUp = c)}
+              width={width - 25}
+              height={50}
+              title={I18n.t('button.signUp')}
+              titleFontSize={18}
+              titleColor='#FFF'
+              backgroundColor='#F71C58'
+              borderRadius={25}
+              onPress={this.goToSignUp.bind(this)}
             />
-
-            <View style={{ justifyContent: 'center', paddingTop: 25 }}>
-              <AnimateLoadingButton
-                ref={load => (this.loadingLogin = load)}
-                width={width - 25}
-                height={50}
-                title={I18n.t('button.signIn')}
-                titleFontSize={18}
-                titleColor='#FFF'
-                backgroundColor='#1C83F7'
-                borderRadius={25}
-                onPress={this.logIn.bind(this)}
-              />
-
-              <TouchableOpacity
-                style={{ padding: 20, paddingTop: 30, alignItems: 'center' }}
-                onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-                <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>Forgot your password ?</Text>
-              </TouchableOpacity>
-
-              <AnimateLoadingButton
-                ref={c => (this.loadingButton = c)}
-                width={width - 25}
-                height={50}
-                title={I18n.t('button.signUp')}
-                titleFontSize={18}
-                titleColor='#FFF'
-                backgroundColor='#F71C58'
-                borderRadius={25}
-              />
-            </View>
           </View>
-        </Modal >
+        </View>
       </View >
     );
   }
