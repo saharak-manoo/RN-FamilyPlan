@@ -8,18 +8,40 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import HomeView from '../Home/HomeView';
 import ChatView from '../Chat/ChatView';
 import NotificationView from '../Notification/NotificationView';
-import SettingView from '../Setting/SettingView';
+import ProfileView from '../Profile/ProfileView';
+import LoginView from '../Auth/Login/LoginView';
+import RegisterView from '../Auth/Register/RegisterView';
+import ForgotPasswordView from '../Auth/ForgotPassword/ForgotPasswordView';
+
+const HomeStack = createStackNavigator(
+  {
+    Home: { screen: HomeView },
+  },
+  {
+    headerMode: 'none',
+  }
+);
+
+const ProfileStack = createStackNavigator(
+  {
+    Profile: { screen: ProfileView },
+  },
+  {
+    headerMode: 'none',
+  }
+);
+
 
 const MainNavigator = createMaterialBottomTabNavigator(
   {
     Home: {
-      screen: HomeView,
+      screen: HomeStack,
       navigationOptions: {
         title: 'Home',
         tabBarLabel: 'Home',
         tabBarColor: '#2370E6',
         tabBarIcon: () => (
-          <Icon size={25} name='home' color='#FFF' />
+          <Icon size={26} name='home' color='#FFF' />
         )
       }
     },
@@ -30,7 +52,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
         tabBarLabel: 'Chat',
         tabBarColor: '#09A650',
         tabBarIcon: () => (
-          <Icon size={25} name='chat' color='#FFF' />
+          <Icon size={26} name='chat' color='#FFF' />
         )
       }
     },
@@ -41,18 +63,18 @@ const MainNavigator = createMaterialBottomTabNavigator(
         tabBarLabel: 'Notifications',
         tabBarColor: '#F93636',
         tabBarIcon: () => (
-          <Icon size={25} name='notifications' color='#FFF' />
+          <Icon size={26} name='notifications' color='#FFF' />
         )
       }
     },
-    Setting: {
-      screen: SettingView,
+    Profile: {
+      screen: ProfileStack,
       navigationOptions: {
-        title: 'Settings',
-        tabBarLabel: 'Settings',
+        title: 'Profile',
+        tabBarLabel: 'Profile',
         tabBarColor: '#6D06F9',
         tabBarIcon: () => (
-          <Icon size={25} name='settings' color='#FFF' />
+          <Icon size={26} name='account-box' color='#FFF' />
         )
       }
     },
