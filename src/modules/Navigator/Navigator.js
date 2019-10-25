@@ -22,6 +22,16 @@ const HomeStack = createStackNavigator(
   }
 );
 
+const AuthStack = createStackNavigator(
+  {
+    Login: { screen: LoginView },
+    Register: { screen: RegisterView },
+    ForgotPassword: { screen: ForgotPasswordView }
+  },
+  { headerMode: 'none' }
+);
+
+
 const ProfileStack = createStackNavigator(
   {
     Profile: { screen: ProfileView },
@@ -87,6 +97,17 @@ const MainNavigator = createMaterialBottomTabNavigator(
   },
 );
 
-const Navigator = createAppContainer(MainNavigator);
+const AppNavigator = createStackNavigator(
+  {
+    Auth: AuthStack,
+    App: MainNavigator,
+  },
+  {
+    headerMode: 'none',
+    initialRouteName: 'Auth'
+  }
+);
+
+const Navigator = createAppContainer(AppNavigator);
 
 export default Navigator;

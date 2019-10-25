@@ -33,7 +33,7 @@ export default class ForgotPasswordView extends Component<Props> {
       <View>
         <StatusBar backgroundColor='#0144A4' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#0144A4' }}>
-          <Appbar.Action icon='close' onPress={() => this.props.navigation.navigate('Login')} />
+          <Appbar.BackAction onPress={() => this.props.navigation.navigate('Login')} />
           <Appbar.Content
             title='Forgot password'
           />
@@ -60,42 +60,33 @@ export default class ForgotPasswordView extends Component<Props> {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Modal
-          animationType='slide'
-          transparent={false}
-          visible={true}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}
-        >
-          {this.appHerder()}
-          <View style={{ padding: 45, alignContent: 'center' }}>
-            <Text style={{ alignItems: 'center', fontSize: 38 }}>Forgot Password</Text>
-          </View>
-          <View style={{ padding: 15 }}>
-            <TextInput
-              style={{ paddingBottom: 13 }}
-              label='Email'
-              mode='outlined'
-              value={this.state.email}
-              onChangeText={email => this.setState({ email: email })}
-            />
+        {this.appHerder()}
+        <View style={{ padding: 45, alignContent: 'center' }}>
+          <Text style={{ alignItems: 'center', fontSize: 38 }}>Forgot Password</Text>
+        </View>
+        <View style={{ padding: 15 }}>
+          <TextInput
+            style={{ paddingBottom: 13 }}
+            label='Email'
+            mode='outlined'
+            value={this.state.email}
+            onChangeText={email => this.setState({ email: email })}
+          />
 
-            <View style={{ justifyContent: 'center', paddingTop: 25 }}>
-              <AnimateLoadingButton
-                ref={load => (this.loading = load)}
-                width={width - 25}
-                height={50}
-                title={I18n.t('button.resetPassword')}
-                titleFontSize={18}
-                titleColor='#FFF'
-                backgroundColor='#1C83F7'
-                borderRadius={25}
-                onPress={this.submit.bind(this)}
-              />
-            </View>
+          <View style={{ justifyContent: 'center', paddingTop: 25 }}>
+            <AnimateLoadingButton
+              ref={load => (this.loading = load)}
+              width={width - 25}
+              height={50}
+              title={I18n.t('button.resetPassword')}
+              titleFontSize={18}
+              titleColor='#FFF'
+              backgroundColor='#1C83F7'
+              borderRadius={25}
+              onPress={this.submit.bind(this)}
+            />
           </View>
-        </Modal>
+        </View>
       </View>
     );
   }
