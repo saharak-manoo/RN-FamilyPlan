@@ -36,49 +36,39 @@ export default class ProfileView extends Component<Props> {
     )
   }
 
-  async isLogin() {
-    let user = await AsyncStorage.getItem('user');
-    this.setState({ isLogin: user != null })
-  }
-
-  openLogin() {
-    this.loadingOpenLogin.showLoading(true);
+  signOut() {
+    this.loadingSignOut.showLoading(true);
 
     // mock
     setTimeout(() => {
-      this.loadingOpenLogin.showLoading(false);
+      AsyncStorage.removeItem('isSignIn')
+      this.loadingSignOut.showLoading(false);
       this.props.navigation.navigate('Login');
     }, 2000);
-  }
-
-  notLoginView() {
-    return (
-      <View>
-        <View style={{ padding: 45 }}>
-          <Text style={{ alignItems: 'center', fontSize: 38 }}>Your can't sign in</Text>
-        </View>
-        <View style={{ justifyContent: 'center', paddingTop: 25 }}>
-          <AnimateLoadingButton
-            ref={load => (this.loadingOpenLogin = load)}
-            width={width - 25}
-            height={50}
-            title={I18n.t('button.signIn')}
-            titleFontSize={18}
-            titleColor='#FFF'
-            backgroundColor='#1C83F7'
-            borderRadius={25}
-            onPress={this.openLogin.bind(this)}
-          />
-        </View>
-      </View>
-    )
   }
 
   render() {
     return (
       <View style={{ flex: 1 }}>
         {this.AppHerder()}
-        {this.state.isLogin ? null : this.notLoginView()}
+        <View>
+          <View style={{ padding: 45 }}>
+            <Text style={{ alignItems: 'center', fontSize: 38 }}>Your can't sign in</Text>
+          </View>
+          <View style={{ justifyContent: 'center', paddingTop: 25 }}>
+            <AnimateLoadingButton
+              ref={load => (this.loadingSignOut = load)}
+              width={width - 25}
+              height={50}
+              title={I18n.t('button.signOut')}
+              titleFontSize={18}
+              titleColor='#FFF'
+              backgroundColor='#F71C58'
+              borderRadius={25}
+              onPress={this.signOut.bind(this)}
+            />
+          </View>
+        </View>
       </View>
     );
   }

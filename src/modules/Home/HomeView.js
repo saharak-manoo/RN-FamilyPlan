@@ -40,6 +40,7 @@ export default class Home extends Component<Props> {
       </View>
     )
   }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -52,6 +53,8 @@ export default class Home extends Component<Props> {
           />
         </View>
 
+        <View>
+        </View>
         <ActionButton
           buttonColor='rgba(231,76,60,1)'
         />
