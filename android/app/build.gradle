@@ -179,6 +179,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-image-resizer')
+    implementation project(':react-native-image-picker')
     implementation project(':react-native-text-gradient')
     implementation project(':react-native-i18n')
     implementation project(':react-native-inappbrowser-reborn')
