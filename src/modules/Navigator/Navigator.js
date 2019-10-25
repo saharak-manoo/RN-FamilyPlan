@@ -12,6 +12,7 @@ import ProfileView from '../Profile/ProfileView';
 import LoginView from '../Auth/Login/LoginView';
 import RegisterView from '../Auth/Register/RegisterView';
 import ForgotPasswordView from '../Auth/ForgotPassword/ForgotPasswordView';
+import LogoView from '../Logo/LogoView';
 
 const HomeStack = createStackNavigator(
   {
@@ -101,12 +102,13 @@ const MainNavigator = createMaterialBottomTabNavigator(
 
 const AppNavigator = createStackNavigator(
   {
+    Logo: LogoView,
     Auth: AuthStack,
     App: MainNavigator,
   },
   {
     headerMode: 'none',
-    initialRouteName: 'Auth'
+    initialRouteName: 'Logo'
   }
 );
 
