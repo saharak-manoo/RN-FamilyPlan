@@ -13,7 +13,45 @@
     "forgotPassword": "ลืมรหัสผ่าน",
     "resetPassword": "รีเซ็ตรหัสผ่าน"
   },
-  "text": {},
-  "placeholder": {},
-  "message": {}
+  "text": {
+    "mr": "นาย",
+    "mrs": "นาง",
+    "miss": "นางสาว"
+  },
+  "placeholder": {
+    "prefix": "คำนำหน้า",
+    "firstName": "ชื่อ",
+    "lastName": "นามสกุล",
+    "email": "อีเมล",
+    "telephone": "โทรศัพท์",
+    "password": "รหัสผ่าน",
+    "confirmPassword": "ยืนยันรหัสผ่าน",
+    "changePassword": "อีเมลของคุณ",
+    "oldPassword": "รหัสผ่านเก่า",
+    "newPassword": "รหัสผ่านใหม่",
+    "newPasswordConfirmation": "ยืนยันรหัสผ่านใหม่"
+  },
+  "message": {
+    "notValidate": "ไม่ผ่านการตรวจสอบ",
+    "telephoneMustBeTen": "เบอร์โทรศัพท์ต้องไม่เกิน 10 ตัว และ ไม่น้อยกว่า 9 ตัว",
+    "registrationSuccess": "สมัครสมาชิกสำเร็จแล้ว",
+    "registrationFailed": "สมัครสมาชิกไม่สำเร็จ",
+    "blankEmail": "โปรดกรอกอีเมล",
+    "emailIsInvalid": "โปรดกรอกอีเมลให้ถูกต้อง",
+    "changePassword": "เปลี่ยนรหัสผ่าน",
+    "passwordNotMatch": "รหัสผ่านใหม่กับยืนยันรหัสผ่านใหม่ไม่ตรงกัน",
+    "pleaseInputAllValue": "กรุณากรอกให้ครบ",
+    "editProfileSuccess": "แก้ไขข้อมูลส่วนตัวสำเร็จ",
+    "editProfileFailed": "แก้ไขข้อมูลส่วนตัวล้มเหลว",
+    "passwordLessThanSix": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+    "passwordSameAsOld": "รหัสผ่านใหม่ไม่สามารถซ้ำกับรหัสผ่านเก่าได้",
+    "EmailOrPasswordMismatch": "อีเมล หรือเบอร์โทรศัพท์ หรือพาสเวิร์ดไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+    "MismatchOldPassword": "รหัสผ่านเดิมไม่ถูกต้อง",
+    "emailCannotBeBlank": "อีเมลไม่สามารถเป็นค่าว่างได้",
+    "emailHasAlreadyBeenTaken": "อีเมลถูกใช้ไปแล้ว",
+    "firstNameCannotBeBlank": "ชื่อไม่สามารถเป็นค่าว่างได้",
+    "lastNameCannotBeBlank": "นามสกุลไม่สามารถเป็นค่าว่างได้",
+    "titleCannotBeBlank": "คำนำหน้าไม่สามารถเป็นค่าว่างได้",
+    "NotHaveEmail": "อีเมลนี้ไม่มีในระบบ",
+  }
 }

@@ -13,7 +13,45 @@
     "forgotPassword": "Forgot password",
     "resetPassword": "Reset password"
   },
-  "text": {},
-  "placeholder": {},
-  "message": {}
+  "text": {
+    "mr": "Mr",
+    "mrs": "Mrs",
+    "miss": "Miss"
+  },
+  "placeholder": {
+    "prefix": "Prefix",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phoneNumber": "Phone number",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "changePassword": "Your Email",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "newPasswordConfirmation": "New Password Confirmation",
+  },
+  "message": {
+    "notValidate": "Not Validate",
+    "telephoneMustBeTen": "Telephone number must be 10 number.",
+    "registrationSuccess": "Registration successfully.",
+    "registrationFailed": "Registration failed.",
+    "blankEmail": "Email cannot be blank.",
+    "emailIsInvalid": "Email format is invalid.",
+    "changePassword": "Change your password.",
+    "passwordNotMatch": "New password and password \n confirmation does not match.",
+    "pleaseInputAllValue": "Please input all Field.",
+    "editProfileSuccess": "Edit Profile Successfully",
+    "editProfileFailed": "Edit Profile Failed.",
+    "passwordLessThanSix": "Password must be at least 6 characters.",
+    "passwordSameAsOld": "New password cannot be same as old password.",
+    "EmailOrPasswordMismatch": "Invalid Email or Telephone or Password.",
+    "MismatchOldPassword": "Old password is Invalid.",
+    "emailCannotBeBlank": "Email cannot be blank.",
+    "emailHasAlreadyBeenTaken": "Email has already been taken.",
+    "firstNameCannotBeBlank": "First name cannot be blank.",
+    "lastNameCannotBeBlank": "Last name cannot be blank.",
+    "titleCannotBeBlank": "Title cannot be blank.",
+    "NotHaveEmail": "This email does not exist."
+  }
 }
