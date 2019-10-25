@@ -1,15 +1,17 @@
 {
   "button": {
     "signIn": "Sign In",
+    "signUp": "Sign Up",
     "signOut": "Sign Out",
-    "register": "Register",
     "back": "Back",
     "logout": "Log out",
     "submit": "Submit",
     "cancel": "Cancel",
     "ok": "OK",
     "save": "Save",
-    "signinWith": "Sign in With"
+    "signinWith": "Sign in With",
+    "forgotPassword": "Forgot password",
+    "resetPassword": "Reset password"
   },
   "text": {},
   "placeholder": {},
