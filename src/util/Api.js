@@ -1,10 +1,10 @@
 const HOSTS = [
-  'http://192.168.2.103:3000'
+  'http://172.20.10.12:3000'
 ]
 
 const HOST = HOSTS[0];
 const CRESTE_USER_PATH = '/api/v1/users';
-const LOGIN_PATH = '/api/v1/sessions/login';
+const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
 const FORGOT_PASSWORD_PATH = '/api/v1/sessions/forgot_password';
 
 function joinUrl(host, path) {
@@ -19,6 +19,27 @@ function joinUrl(host, path) {
   }
   return host + path;
 }
+
+export async function signIn(params) {
+  try {
+    const resp = await fetch(joinUrl(HOST, SIGN_IN_PATH), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user: params })
+    });
+
+    let response = await resp.json();
+    if (response) {
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
 
 export async function createUser(params) {
   console.log(params)
@@ -45,5 +66,4 @@ export async function createUser(params) {
   } catch (e) {
     console.warn(e);
   }
-
 }

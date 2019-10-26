@@ -45,7 +45,7 @@
     "editProfileFailed": "Edit Profile Failed.",
     "passwordLessThanSix": "Password must be at least 6 characters.",
     "passwordSameAsOld": "New password cannot be same as old password.",
-    "EmailOrPasswordMismatch": "Invalid Email or Telephone or Password.",
+    "EmailOrPasswordMismatch": "Invalid Email or Password.",
     "MismatchOldPassword": "Old password is Invalid.",
     "emailCannotBeBlank": "Email cannot be blank.",
     "emailHasAlreadyBeenTaken": "Email has already been taken.",
