@@ -57,8 +57,8 @@ export default class RegisterView extends Component<Props> {
   appHerder() {
     return (
       <View>
-        <StatusBar backgroundColor='#1C83F7' barStyle='light-content' />
-        <Appbar.Header style={{ backgroundColor: '#1C83F7' }}>
+        <StatusBar backgroundColor='#1C83F6' barStyle='light-content' />
+        <Appbar.Header style={{ backgroundColor: '#1C83F6' }}>
           <Appbar.BackAction onPress={() => this.props.navigation.navigate('Login')} />
           <Appbar.Content
             title='Family Plan'
@@ -75,7 +75,7 @@ export default class RegisterView extends Component<Props> {
           message: I18n.t('message.notValidate'),
           description: I18n.t('message.passwordLessThanSix'),
           type: 'default',
-          backgroundColor: '#F60745',
+          backgroundColor: '#F60645',
           color: '#FFF',
           duration: 3000
         });
@@ -86,7 +86,7 @@ export default class RegisterView extends Component<Props> {
             message: I18n.t('message.notValidate'),
             description: I18n.t('message.passwordNotMatch'),
             type: 'default',
-            backgroundColor: '#F60745',
+            backgroundColor: '#F60645',
             color: '#FFF',
             duration: 3000
           });
@@ -100,7 +100,7 @@ export default class RegisterView extends Component<Props> {
         message: I18n.t('message.notValidate'),
         description: I18n.t('message.pleaseInputAllValue'),
         type: 'default',
-        backgroundColor: '#F60745',
+        backgroundColor: '#F60645',
         color: '#FFF',
         duration: 3000
       });
@@ -148,7 +148,7 @@ export default class RegisterView extends Component<Props> {
         message: I18n.t('message.notValidate'),
         description: errors.join('\n'),
         type: 'default',
-        backgroundColor: '#F60745',
+        backgroundColor: '#F60645',
         color: '#FFF',
         duration: 3000
       });
@@ -185,60 +185,98 @@ export default class RegisterView extends Component<Props> {
             />
 
             <TextInput
-              style={{ paddingBottom: 13 }}
+              style={{ paddingBottom: 6, paddingTop: 15 }}
               label={I18n.t('placeholder.firstName')}
               mode='outlined'
               value={this.state.firstName}
               onChangeText={firstName => this.setState({ firstName: firstName })}
             />
+            <HelperText
+              type='error'
+              visible={GFunction.validateEmail(this.state.email)}
+            >
+              {I18n.t('message.emailIsInvalid')}
+            </HelperText>
 
             <TextInput
-              style={{ paddingBottom: 13 }}
+              style={{ paddingBottom: 6 }}
               label={I18n.t('placeholder.lastName')}
               mode='outlined'
               value={this.state.lastName}
               onChangeText={lastName => this.setState({ lastName: lastName })}
             />
+            <HelperText
+              type='error'
+              visible={GFunction.validateEmail(this.state.email)}
+            >
+              {I18n.t('message.emailIsInvalid')}
+            </HelperText>
 
             <TextInput
-              style={{ paddingBottom: 13 }}
+              style={{ paddingBottom: 6 }}
               label={I18n.t('placeholder.email')}
               mode='outlined'
               value={this.state.email}
               onChangeText={email => this.setState({ email: email })}
             />
+            <HelperText
+              type='error'
+              visible={GFunction.validateEmail(this.state.email)}
+            >
+              {I18n.t('message.emailIsInvalid')}
+            </HelperText>
 
             <TextInput
               keyboardType='numeric'
               maxLength={10}
-              style={{ paddingBottom: 13 }}
+              style={{ paddingBottom: 6 }}
               label={I18n.t('placeholder.phoneNumber')}
               mode='outlined'
               value={this.state.phoneNumber}
               onChangeText={phoneNumber => this.setState({ phoneNumber: phoneNumber.replace(/[^0-9]/g, '') })}
             />
+            <HelperText
+              type='error'
+              visible={GFunction.validatePhoneNumber(this.state.phoneNumber)}
+            >
+              {I18n.t('message.telephoneMustBeTen')}
+            </HelperText>
 
             <TextInput
               secureTextEntry
               autoCorrect={false}
-              style={{ paddingBottom: 13 }}
+              style={{ paddingBottom: 6 }}
               label={I18n.t('placeholder.password')}
               mode='outlined'
               value={this.state.password}
               onChangeText={password => this.setState({ password: password })}
             />
+            <HelperText
+              type='error'
+              visible={GFunction.validatePasswordLessThanSix(this.state.password)}
+            >
+              {I18n.t('message.passwordLessThanSix')}
+            </HelperText>
 
             <TextInput
               secureTextEntry
               autoCorrect={false}
-              style={{ paddingBottom: 13 }}
+              style={{ paddingBottom: 6 }}
               label={I18n.t('placeholder.confirmPassword')}
               mode='outlined'
               value={this.state.confirmPassword}
               onChangeText={confirmPassword => this.setState({ confirmPassword: confirmPassword })}
             />
+            <HelperText
+              type='error'
+              visible={
+                GFunction.validatePasswordMatch(this.state.password, this.state.confirmPassword)
+              }
+            >
+              {I18n.t('message.passwordNotMatch')}
+            </HelperText>
 
-            <View style={{ justifyContent: 'center', paddingTop: 25 }}>
+            <View style={{ justifyContent: 'center', paddingTop: 10 }}>
               <AnimateLoadingButton
                 ref={load => (this.loadingSignUp = load)}
                 width={width - 25}
@@ -246,13 +284,13 @@ export default class RegisterView extends Component<Props> {
                 title={I18n.t('button.signUp')}
                 titleFontSize={18}
                 titleColor='#FFF'
-                backgroundColor='#1C83F7'
+                backgroundColor='#1C83F6'
                 borderRadius={25}
                 onPress={this.clickSignUp.bind(this)}
               />
 
               <TouchableOpacity
-                style={{ padding: 20, paddingTop: 30, alignItems: 'center' }}
+                style={{ padding: 20, paddingTop: 15, alignItems: 'center' }}
                 onPress={() => this.props.navigation.navigate('ForgotPassword')}>
                 <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>Forgot your password ?</Text>
               </TouchableOpacity>
@@ -264,7 +302,7 @@ export default class RegisterView extends Component<Props> {
                 title={I18n.t('button.signIn')}
                 titleFontSize={18}
                 titleColor='#FFF'
-                backgroundColor='#F71C58'
+                backgroundColor='#F61C58'
                 borderRadius={25}
                 onPress={this.goToSignIn.bind(this)}
               />
