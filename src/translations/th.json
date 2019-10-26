@@ -32,6 +32,9 @@
     "newPasswordConfirmation": "ยืนยันรหัสผ่านใหม่"
   },
   "message": {
+    "success": "สำเร็จ",
+    "signInSuccessful": "ลงชื่อเข้าใช้สำเร็จ",
+    "signUpSuccessful": "ลงทะเบียนสำเร็จ",
     "notValidate": "ไม่ผ่านการตรวจสอบ",
     "telephoneMustBeTen": "เบอร์โทรศัพท์ต้องไม่เกิน 10 ตัว และ ไม่น้อยกว่า 9 ตัว",
     "registrationSuccess": "สมัครสมาชิกสำเร็จแล้ว",

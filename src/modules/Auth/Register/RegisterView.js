@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   Alert,
-  AsyncStorage,
   View,
   Dimensions,
   Platform,
@@ -22,6 +21,7 @@ import { showMessage, hideMessage } from 'react-native-flash-message';
 import { Dropdown } from 'react-native-material-dropdown';
 import * as Api from '../../../util/Api'
 import * as GFunction from '../../../util/GlobalFunction'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -74,7 +74,10 @@ export default class RegisterView extends Component<Props> {
         showMessage({
           message: I18n.t('message.notValidate'),
           description: I18n.t('message.passwordLessThanSix'),
-          type: 'danger',
+          type: 'default',
+          backgroundColor: '#F60745',
+          color: '#FFF',
+          duration: 3000
         });
         this.loadingSignUp.showLoading(false)
       } else {
@@ -82,7 +85,10 @@ export default class RegisterView extends Component<Props> {
           showMessage({
             message: I18n.t('message.notValidate'),
             description: I18n.t('message.passwordNotMatch'),
-            type: 'danger',
+            type: 'default',
+            backgroundColor: '#F60745',
+            color: '#FFF',
+            duration: 3000
           });
           this.loadingSignUp.showLoading(false)
         } else {
@@ -93,7 +99,10 @@ export default class RegisterView extends Component<Props> {
       showMessage({
         message: I18n.t('message.notValidate'),
         description: I18n.t('message.pleaseInputAllValue'),
-        type: 'danger',
+        type: 'default',
+        backgroundColor: '#F60745',
+        color: '#FFF',
+        duration: 3000
       });
       this.loadingSignUp.showLoading(false)
     }
@@ -121,8 +130,12 @@ export default class RegisterView extends Component<Props> {
       this.loadingSignUp.showLoading(false)
       await AsyncStorage.setItem('userToken', response.user.authentication_token);
       showMessage({
-        message: 'Sign up success',
-        type: 'success',
+        message: I18n.t('message.success'),
+        description: I18n.t('message.signUpSuccessful'),
+        type: 'default',
+        backgroundColor: '#02E35E',
+        color: '#FFF',
+        duration: 3000
       });
       this.props.navigation.navigate('Home')
     } else {
@@ -134,7 +147,10 @@ export default class RegisterView extends Component<Props> {
       showMessage({
         message: I18n.t('message.notValidate'),
         description: errors.join('\n'),
-        type: 'danger',
+        type: 'default',
+        backgroundColor: '#F60745',
+        color: '#FFF',
+        duration: 3000
       });
     }
   }

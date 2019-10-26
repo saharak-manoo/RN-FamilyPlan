@@ -32,6 +32,9 @@
     "newPasswordConfirmation": "New Password Confirmation",
   },
   "message": {
+    "success": "Success",
+    "signInSuccessful": "Sign in successful",
+    "signUpSuccessful": "Sign up successful",
     "notValidate": "Not Validate",
     "telephoneMustBeTen": "Telephone number must be 10 number.",
     "registrationSuccess": "Registration successfully.",

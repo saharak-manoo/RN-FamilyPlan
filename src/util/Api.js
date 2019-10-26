@@ -1,5 +1,5 @@
 const HOSTS = [
-  'http://172.20.10.12:3000'
+  'http://192.168.2.102:3000'
 ]
 
 const HOST = HOSTS[0];
