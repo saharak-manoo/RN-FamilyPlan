@@ -33,6 +33,7 @@
   },
   "message": {
     "appName": "Family Plan",
+    "profile": "Profile",
     "forgotPassword": "Forgot password",
     "success": "Success",
     "signInSuccessful": "Sign in successful",
