@@ -53,4 +53,16 @@ export const styles = StyleSheet.create({
     borderRadius: 13,
     backgroundColor: '#FFF'
   },
+
+  popUpModal: {
+    backgroundColor: '#FFF'
+  },
+
+  overlayModal: {
+    backgroundColor: 'transparent',
+  },
+
+  handleModal: {
+    backgroundColor: '#C5C5C5'
+  },
 });

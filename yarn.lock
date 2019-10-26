@@ -5459,6 +5459,11 @@ react-native-modal@^11.0.2:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
 
+react-native-modalize@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-1.2.3.tgz#cf41f74520e85b925abd53f31861436ba2eef8f8"
+  integrity sha512-lecy8pFZnscgAMP2SWwEMeLUS74Soq65/x+Q3/IQIge3u3wFs+fJIU/ed6dXRhKxGd/9mXL1N6juwTrHHjIFcg==
+
 react-native-paper@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-3.0.0.tgz#b7d667dcb38f5e69552db140c398f50ea46ee98e"
