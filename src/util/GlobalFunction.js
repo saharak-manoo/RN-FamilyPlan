@@ -1,3 +1,32 @@
+import AsyncStorage from '@react-native-community/async-storage';
+import { showMessage, hideMessage } from 'react-native-flash-message';
+
+export async function user() {
+  return JSON.parse(await AsyncStorage.getItem('user'));
+}
+
+export function successMessage(message, description) {
+  showMessage({
+    message: message,
+    description: description,
+    type: 'default',
+    backgroundColor: '#02E35E',
+    color: '#FFF',
+    duration: 3000
+  });
+}
+
+export function errorMessage(message, description) {
+  showMessage({
+    message: message,
+    description: description,
+    type: 'default',
+    backgroundColor: '#F60645',
+    color: '#FFF',
+    duration: 3000
+  });
+}
+
 export function camelize(str) {
   return str
     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (letter, index) {

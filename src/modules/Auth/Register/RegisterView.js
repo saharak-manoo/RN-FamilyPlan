@@ -17,7 +17,6 @@ import {
 } from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
-import { showMessage, hideMessage } from 'react-native-flash-message';
 import { Dropdown } from 'react-native-material-dropdown';
 import * as Api from '../../../util/Api'
 import * as GFunction from '../../../util/GlobalFunction'
@@ -59,9 +58,9 @@ export default class RegisterView extends Component<Props> {
       <View>
         <StatusBar backgroundColor='#1C83F6' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#1C83F6' }}>
-          <Appbar.BackAction onPress={() => this.props.navigation.navigate('Login')} />
+          <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
-            title='Family Plan'
+            title={I18n.t('message.appName')}
           />
         </Appbar.Header>
       </View>
@@ -71,39 +70,18 @@ export default class RegisterView extends Component<Props> {
   validate() {
     if (this.state.password && this.state.confirmPassword) {
       if (this.state.password.length < 6 || this.state.confirmPassword < 6) {
-        showMessage({
-          message: I18n.t('message.notValidate'),
-          description: I18n.t('message.passwordLessThanSix'),
-          type: 'default',
-          backgroundColor: '#F60645',
-          color: '#FFF',
-          duration: 3000
-        });
+        GFunction.errorMessage(I18n.t('message.notValidate'), I18n.t('message.passwordLessThanSix'))
         this.loadingSignUp.showLoading(false)
       } else {
         if (this.state.password !== this.state.confirmPassword) {
-          showMessage({
-            message: I18n.t('message.notValidate'),
-            description: I18n.t('message.passwordNotMatch'),
-            type: 'default',
-            backgroundColor: '#F60645',
-            color: '#FFF',
-            duration: 3000
-          });
+          GFunction.errorMessage(I18n.t('message.notValidate'), I18n.t('message.passwordNotMatch'))
           this.loadingSignUp.showLoading(false)
         } else {
           this.saveUser();
         }
       }
     } else {
-      showMessage({
-        message: I18n.t('message.notValidate'),
-        description: I18n.t('message.pleaseInputAllValue'),
-        type: 'default',
-        backgroundColor: '#F60645',
-        color: '#FFF',
-        duration: 3000
-      });
+      GFunction.errorMessage(I18n.t('message.notValidate'), I18n.t('message.pleaseInputAllValue'))
       this.loadingSignUp.showLoading(false)
     }
   }
@@ -128,15 +106,8 @@ export default class RegisterView extends Component<Props> {
     let response = await Api.createUser(params);
     if (response.success) {
       this.loadingSignUp.showLoading(false)
-      await AsyncStorage.setItem('userToken', response.user.authentication_token);
-      showMessage({
-        message: I18n.t('message.success'),
-        description: I18n.t('message.signUpSuccessful'),
-        type: 'default',
-        backgroundColor: '#02E35E',
-        color: '#FFF',
-        duration: 3000
-      });
+      await AsyncStorage.setItem('user', JSON.stringify(response.user));
+      GFunction.successMessage(I18n.t('message.success'), I18n.t('message.signUpSuccessful'))
       this.props.navigation.navigate('Home')
     } else {
       this.loadingSignUp.showLoading(false)
@@ -144,14 +115,7 @@ export default class RegisterView extends Component<Props> {
       response.error.map((error, i) => {
         errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
       });
-      showMessage({
-        message: I18n.t('message.notValidate'),
-        description: errors.join('\n'),
-        type: 'default',
-        backgroundColor: '#F60645',
-        color: '#FFF',
-        duration: 3000
-      });
+      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'))
     }
   }
 

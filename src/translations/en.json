@@ -32,6 +32,8 @@
     "newPasswordConfirmation": "New Password Confirmation"
   },
   "message": {
+    "appName": "Family Plan",
+    "forgotPassword": "Forgot password",
     "success": "Success",
     "signInSuccessful": "Sign in successful",
     "signUpSuccessful": "Sign up successful",
@@ -56,6 +58,11 @@
     "lastNameCannotBeBlank": "Last name cannot be blank.",
     "titleCannotBeBlank": "Title cannot be blank.",
     "NotHaveEmail": "This email does not exist.",
-    "valueCannotBeBlank": "Cannot be blank."
+    "valueCannotBeBlank": "Cannot be blank.",
+    "resetPassword": "You will receive an email with instructions on how to reset your password in a few minutes.",
+    "areYouSure": "Are you sure ?",
+    "error": "Error",
+    "signOutFail": "Sign out fail",
+    "signOutSuccessful": "Sign out successful"
   }
 }

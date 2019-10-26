@@ -22,7 +22,7 @@ export default class LogoView extends Component<Props> {
   }
 
   async UNSAFE_componentWillMount() {
-    let isSignIn = await AsyncStorage.getItem('userToken')
+    let isSignIn = await AsyncStorage.getItem('user')
     await this.setState({ isSignIn: isSignIn != null })
     if (this.state.isSignIn) {
       this.props.navigation.navigate('Home')
