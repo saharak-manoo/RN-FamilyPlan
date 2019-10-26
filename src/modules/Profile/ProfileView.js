@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  AsyncStorage,
   Dimensions,
   StatusBar,
   View
@@ -11,6 +10,7 @@ import {
 } from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../components/i18n';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -21,6 +21,9 @@ export default class ProfileView extends Component<Props> {
     this.state = {
       isLogin: false
     };
+  }
+
+  componentDidMount = async () => {
   }
 
   AppHerder() {

@@ -46,6 +46,8 @@ target 'FamilyPlan' do
 
   pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

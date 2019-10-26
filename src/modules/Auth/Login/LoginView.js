@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  AsyncStorage,
   Alert,
   View,
   Dimensions,
@@ -18,6 +17,7 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 import * as Api from '../../../util/Api'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -29,6 +29,9 @@ export default class LoginView extends Component<Props> {
       email: '',
       password: ''
     };
+  }
+
+  componentDidMount = async () => {
   }
 
   appHerder() {
@@ -45,8 +48,8 @@ export default class LoginView extends Component<Props> {
   }
 
   clickSignIn() {
-    this.loadingLogin.showLoading(true)
-    this.signIn()
+    this.loadingLogin.showLoading(true);
+    this.signIn();
   }
 
   async signIn() {
@@ -55,24 +58,28 @@ export default class LoginView extends Component<Props> {
       password: this.state.password
     }
 
-    console.log(">>>>")
-    console.log(params)
     let response = await Api.signIn(params);
-    console.log(response)
     if (response.success) {
-      this.loadingSignUp.showLoading(false)
+      this.loadingLogin.showLoading(false);
       await AsyncStorage.setItem('userToken', response.user.authentication_token);
       showMessage({
-        message: 'Sign In success',
-        type: 'success',
+        message: I18n.t('message.success'),
+        description: I18n.t('message.signInSuccessful'),
+        type: 'default',
+        backgroundColor: '#02E35E',
+        color: '#FFF',
+        duration: 3000
       });
       this.props.navigation.navigate('Home')
     } else {
-      this.loadingSignUp.showLoading(false)
+      this.loadingLogin.showLoading(false);
       showMessage({
         message: I18n.t('message.notValidate'),
         description: I18n.t('message.EmailOrPasswordMismatch'),
-        type: 'danger',
+        type: 'default',
+        backgroundColor: '#F60745',
+        color: '#FFF',
+        duration: 3000
       });
     }
   }
@@ -85,6 +92,11 @@ export default class LoginView extends Component<Props> {
     }, 500);
   }
 
+  validateEmail(email) {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return reg.test(email) === false
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -94,22 +106,34 @@ export default class LoginView extends Component<Props> {
         </View>
         <View style={{ padding: 15 }}>
           <TextInput
-            style={{ paddingBottom: 13 }}
-            label='Email'
+            style={{ paddingBottom: 7 }}
+            label={I18n.t('placeholder.email')}
             mode='outlined'
             value={this.state.email}
             onChangeText={email => this.setState({ email: email })}
           />
+          <HelperText
+            type='error'
+            visible={this.validateEmail(this.state.email) && this.state.email != ''}
+          >
+            {I18n.t('message.emailIsInvalid')}
+          </HelperText>
 
           <TextInput
             secureTextEntry
             autoCorrect={false}
-            style={{ paddingBottom: 13 }}
-            label='Password'
+            style={{ paddingBottom: 7 }}
+            label={I18n.t('placeholder.password')}
             mode='outlined'
             value={this.state.password}
             onChangeText={password => this.setState({ password: password })}
           />
+          <HelperText
+            type='error'
+            visible={this.state.password.length < 6 && this.state.password != ''}
+          >
+            {I18n.t('message.passwordLessThanSix')}
+          </HelperText>
 
           <View style={{ justifyContent: 'center', paddingTop: 25 }}>
             <AnimateLoadingButton

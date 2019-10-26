@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  AsyncStorage,
   Alert,
   View,
   Dimensions,
@@ -9,6 +8,7 @@ import {
   StatusBar
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -21,7 +21,7 @@ export default class LogoView extends Component<Props> {
     };
   }
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     let isSignIn = await AsyncStorage.getItem('userToken')
     await this.setState({ isSignIn: isSignIn != null })
     if (this.state.isSignIn) {
