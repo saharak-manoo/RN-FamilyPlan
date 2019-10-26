@@ -110,7 +110,7 @@ export default class LoginView extends Component<Props> {
           />
           <HelperText
             type='error'
-            visible={GFunction.validateEmail(this.state.email) && this.state.email != ''}
+            visible={GFunction.validateEmail(this.state.email)}
           >
             {I18n.t('message.emailIsInvalid')}
           </HelperText>

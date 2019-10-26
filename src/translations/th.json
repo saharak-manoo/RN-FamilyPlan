@@ -55,6 +55,7 @@
     "firstNameCannotBeBlank": "ชื่อไม่สามารถเป็นค่าว่างได้",
     "lastNameCannotBeBlank": "นามสกุลไม่สามารถเป็นค่าว่างได้",
     "titleCannotBeBlank": "คำนำหน้าไม่สามารถเป็นค่าว่างได้",
-    "NotHaveEmail": "อีเมลนี้ไม่มีในระบบ"
+    "NotHaveEmail": "อีเมลนี้ไม่มีในระบบ",
+    "valueCannotBeBlank": "ไม่สามารถเป็นค่าว่างได้"
   }
 }

@@ -55,6 +55,7 @@
     "firstNameCannotBeBlank": "First name cannot be blank.",
     "lastNameCannotBeBlank": "Last name cannot be blank.",
     "titleCannotBeBlank": "Title cannot be blank.",
-    "NotHaveEmail": "This email does not exist."
+    "NotHaveEmail": "This email does not exist.",
+    "valueCannotBeBlank": "Cannot be blank."
   }
 }

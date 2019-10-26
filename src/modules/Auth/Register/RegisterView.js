@@ -45,8 +45,8 @@ export default class RegisterView extends Component<Props> {
         }
       ],
       prefix: 'Mr',
-      firstName: '',
-      lastName: '',
+      firstName: null,
+      lastName: null,
       email: '',
       phoneNumber: '',
       password: '',
@@ -193,9 +193,9 @@ export default class RegisterView extends Component<Props> {
             />
             <HelperText
               type='error'
-              visible={GFunction.validateEmail(this.state.email)}
+              visible={GFunction.validateBlank(this.state.firstName)}
             >
-              {I18n.t('message.emailIsInvalid')}
+              {I18n.t('message.valueCannotBeBlank')}
             </HelperText>
 
             <TextInput
@@ -207,9 +207,9 @@ export default class RegisterView extends Component<Props> {
             />
             <HelperText
               type='error'
-              visible={GFunction.validateEmail(this.state.email)}
+              visible={GFunction.validateBlank(this.state.lastName)}
             >
-              {I18n.t('message.emailIsInvalid')}
+              {I18n.t('message.valueCannotBeBlank')}
             </HelperText>
 
             <TextInput
