@@ -45,7 +45,7 @@
     "editProfileFailed": "แก้ไขข้อมูลส่วนตัวล้มเหลว",
     "passwordLessThanSix": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
     "passwordSameAsOld": "รหัสผ่านใหม่ไม่สามารถซ้ำกับรหัสผ่านเก่าได้",
-    "EmailOrPasswordMismatch": "อีเมล หรือเบอร์โทรศัพท์ หรือพาสเวิร์ดไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+    "EmailOrPasswordMismatch": "อีเมล หรือพาสเวิร์ดไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
     "MismatchOldPassword": "รหัสผ่านเดิมไม่ถูกต้อง",
     "emailCannotBeBlank": "อีเมลไม่สามารถเป็นค่าว่างได้",
     "emailHasAlreadyBeenTaken": "อีเมลถูกใช้ไปแล้ว",

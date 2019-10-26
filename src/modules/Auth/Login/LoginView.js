@@ -17,6 +17,7 @@ import {
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import { showMessage, hideMessage } from 'react-native-flash-message';
+import * as Api from '../../../util/Api'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -25,18 +26,9 @@ export default class LoginView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isSignIn: false,
       email: '',
       password: ''
     };
-  }
-
-  async componentWillMount() {
-    let isSignIn = await AsyncStorage.getItem('userToken')
-    await this.setState({ isSignIn: isSignIn != null })
-    if (this.state.isSignIn) {
-      this.props.navigation.navigate('Home')
-    }
   }
 
   appHerder() {
@@ -52,18 +44,37 @@ export default class LoginView extends Component<Props> {
     )
   }
 
-  signIn() {
-    this.loadingLogin.showLoading(true);
-    setTimeout(() => {
-      AsyncStorage.setItem('isSignIn', 'true')
-      this.loadingLogin.showLoading(false);
+  clickSignIn() {
+    this.loadingLogin.showLoading(true)
+    this.signIn()
+  }
+
+  async signIn() {
+    let params = {
+      email: this.state.email,
+      password: this.state.password
+    }
+
+    console.log(">>>>")
+    console.log(params)
+    let response = await Api.signIn(params);
+    console.log(response)
+    if (response.success) {
+      this.loadingSignUp.showLoading(false)
+      await AsyncStorage.setItem('userToken', response.user.authentication_token);
       showMessage({
-        message: 'Login',
-        description: 'Login done.',
+        message: 'Sign In success',
         type: 'success',
       });
       this.props.navigation.navigate('Home')
-    }, 300);
+    } else {
+      this.loadingSignUp.showLoading(false)
+      showMessage({
+        message: I18n.t('message.notValidate'),
+        description: I18n.t('message.EmailOrPasswordMismatch'),
+        type: 'danger',
+      });
+    }
   }
 
   goToSignUp() {
@@ -91,6 +102,8 @@ export default class LoginView extends Component<Props> {
           />
 
           <TextInput
+            secureTextEntry
+            autoCorrect={false}
             style={{ paddingBottom: 13 }}
             label='Password'
             mode='outlined'
@@ -108,7 +121,7 @@ export default class LoginView extends Component<Props> {
               titleColor='#FFF'
               backgroundColor='#1C83F7'
               borderRadius={25}
-              onPress={this.signIn.bind(this)}
+              onPress={this.clickSignIn.bind(this)}
             />
 
             <TouchableOpacity

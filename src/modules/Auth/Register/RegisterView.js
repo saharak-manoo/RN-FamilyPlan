@@ -137,7 +137,6 @@ export default class RegisterView extends Component<Props> {
         type: 'danger',
       });
     }
-
   }
 
   goToSignIn() {

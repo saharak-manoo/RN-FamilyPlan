@@ -18,6 +18,7 @@
     "run-android": "react-native run-android"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.6.2",
     "react": "16.9.0",
     "react-native": "0.61.2",
     "react-native-action-button": "^2.8.5",
