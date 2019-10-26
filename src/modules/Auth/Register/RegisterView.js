@@ -104,6 +104,7 @@ export default class RegisterView extends Component<Props> {
     }
 
     let response = await Api.createUser(params);
+    console.log(response)
     if (response.success) {
       this.loadingSignUp.showLoading(false)
       await AsyncStorage.setItem('user', JSON.stringify(response.user));

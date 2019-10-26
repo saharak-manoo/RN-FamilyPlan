@@ -15,6 +15,7 @@ import {
 } from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { styles } from '../../components/styles';
 import I18n from '../../components/i18n';
 
 // View
@@ -34,7 +35,7 @@ export default class Home extends Component<Props> {
         <StatusBar backgroundColor='#2370E6' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#2370E6' }}>
           <Appbar.Content
-            title='Family Plan'
+            title={I18n.t('message.appName')}
           />
         </Appbar.Header>
       </View>
@@ -43,7 +44,7 @@ export default class Home extends Component<Props> {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.defaultView}>
         {this.AppHerder()}
         <View style={{ padding: 15 }}>
           <Searchbar

@@ -4,6 +4,25 @@ const height = Dimensions.get('window').height;
 const IS_ANDROID = Platform.OS === 'android';
 
 export const styles = StyleSheet.create({
+
+  defaultView: {
+    flex: 1,
+    backgroundColor: '#D1D1D1'
+  },
+
+  cardProfile: {
+    flex: 1,
+    margin: 10,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+  },
+
+  profilePhoto: {
+    width: 180,
+    height: 180,
+    borderRadius: 180 / 2
+  },
+
   homeColor: {
     backgroundColor: '#2370E6'
   },
