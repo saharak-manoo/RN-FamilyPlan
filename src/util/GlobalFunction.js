@@ -23,3 +23,7 @@ export function validatePasswordLessThanSix(password) {
 export function validatePasswordMatch(password, confirmPassword) {
   return password != confirmPassword && confirmPassword != ''
 }
+
+export function validateBlank(value) {
+  return value == ''
+}
