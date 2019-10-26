@@ -17,6 +17,7 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 import * as Api from '../../../util/Api'
+import * as GFunction from '../../../util/GlobalFunction'
 import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
@@ -92,11 +93,6 @@ export default class LoginView extends Component<Props> {
     }, 500);
   }
 
-  validateEmail(email) {
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    return reg.test(email) === false
-  }
-
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -106,7 +102,7 @@ export default class LoginView extends Component<Props> {
         </View>
         <View style={{ padding: 15 }}>
           <TextInput
-            style={{ paddingBottom: 7 }}
+            style={{ paddingBottom: 6 }}
             label={I18n.t('placeholder.email')}
             mode='outlined'
             value={this.state.email}
@@ -114,7 +110,7 @@ export default class LoginView extends Component<Props> {
           />
           <HelperText
             type='error'
-            visible={this.validateEmail(this.state.email) && this.state.email != ''}
+            visible={GFunction.validateEmail(this.state.email) && this.state.email != ''}
           >
             {I18n.t('message.emailIsInvalid')}
           </HelperText>
@@ -122,7 +118,7 @@ export default class LoginView extends Component<Props> {
           <TextInput
             secureTextEntry
             autoCorrect={false}
-            style={{ paddingBottom: 7 }}
+            style={{ paddingBottom: 6 }}
             label={I18n.t('placeholder.password')}
             mode='outlined'
             value={this.state.password}
@@ -130,12 +126,12 @@ export default class LoginView extends Component<Props> {
           />
           <HelperText
             type='error'
-            visible={this.state.password.length < 6 && this.state.password != ''}
+            visible={GFunction.validatePasswordLessThanSix(this.state.password)}
           >
             {I18n.t('message.passwordLessThanSix')}
           </HelperText>
 
-          <View style={{ justifyContent: 'center', paddingTop: 25 }}>
+          <View style={{ justifyContent: 'center', paddingTop: 10 }}>
             <AnimateLoadingButton
               ref={load => (this.loadingLogin = load)}
               width={width - 25}
@@ -149,7 +145,7 @@ export default class LoginView extends Component<Props> {
             />
 
             <TouchableOpacity
-              style={{ padding: 20, paddingTop: 30, alignItems: 'center' }}
+              style={{ padding: 20, paddingTop: 15, alignItems: 'center' }}
               onPress={() => this.props.navigation.navigate('ForgotPassword')}>
               <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>Forgot your password ?</Text>
             </TouchableOpacity>
