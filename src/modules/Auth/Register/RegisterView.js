@@ -195,7 +195,7 @@ export default class RegisterView extends Component<Props> {
               type='error'
               visible={GFunction.validateBlank(this.state.firstName)}
             >
-              {I18n.t('message.valueCannotBeBlank')}
+              {I18n.t('message.firstNameCannotBeBlank')}
             </HelperText>
 
             <TextInput
@@ -209,7 +209,7 @@ export default class RegisterView extends Component<Props> {
               type='error'
               visible={GFunction.validateBlank(this.state.lastName)}
             >
-              {I18n.t('message.valueCannotBeBlank')}
+              {I18n.t('message.lastNameCannotBeBlank')}
             </HelperText>
 
             <TextInput

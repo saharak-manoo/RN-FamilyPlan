@@ -29,7 +29,7 @@
     "changePassword": "Your Email",
     "oldPassword": "Old Password",
     "newPassword": "New Password",
-    "newPasswordConfirmation": "New Password Confirmation",
+    "newPasswordConfirmation": "New Password Confirmation"
   },
   "message": {
     "success": "Success",
