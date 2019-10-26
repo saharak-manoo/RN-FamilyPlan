@@ -48,6 +48,8 @@ target 'FamilyPlan' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing
