@@ -5,6 +5,7 @@ const HOSTS = [
 const HOST = HOSTS[0];
 const CRESTE_USER_PATH = '/api/v1/users';
 const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
+const SIGN_OUT_PATH = '/api/v1/sessions/sign_out';
 const FORGOT_PASSWORD_PATH = '/api/v1/sessions/forgot_password';
 
 function joinUrl(host, path) {
@@ -40,7 +41,6 @@ export async function signIn(params) {
   }
 }
 
-
 export async function createUser(params) {
   console.log(params)
   try {
@@ -67,3 +67,46 @@ export async function createUser(params) {
     console.warn(e);
   }
 }
+
+export async function forgotPassword(params) {
+  try {
+    const resp = await fetch(joinUrl(HOST, FORGOT_PASSWORD_PATH), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user: params })
+    });
+
+    let response = await resp.json();
+    if (response) {
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function signOut(token) {
+  try {
+    console.log('Auth-Token')
+    console.log(token)
+    const resp = await fetch(joinUrl(HOST, SIGN_OUT_PATH), {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    let response = await resp.json();
+    if (response) {
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+

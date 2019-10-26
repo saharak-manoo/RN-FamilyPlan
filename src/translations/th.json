@@ -32,6 +32,8 @@
     "newPasswordConfirmation": "ยืนยันรหัสผ่านใหม่"
   },
   "message": {
+    "appName": "Family Plan",
+    "forgotPassword": "ลืมรหัสผ่าน",
     "success": "สำเร็จ",
     "signInSuccessful": "ลงชื่อเข้าใช้สำเร็จ",
     "signUpSuccessful": "ลงทะเบียนสำเร็จ",
@@ -56,6 +58,11 @@
     "lastNameCannotBeBlank": "นามสกุลไม่สามารถเป็นค่าว่างได้",
     "titleCannotBeBlank": "คำนำหน้าไม่สามารถเป็นค่าว่างได้",
     "NotHaveEmail": "อีเมลนี้ไม่มีในระบบ",
-    "valueCannotBeBlank": "ไม่สามารถเป็นค่าว่างได้"
+    "valueCannotBeBlank": "ไม่สามารถเป็นค่าว่างได้",
+    "resetPassword": "ท่านจะได้รับอีเมลเพื่อรีเซ็ตรหัสผ่านของท่าน",
+    "areYouSure": "คุณแน่ใจแล้วใช่ไหม ?",
+    "error": "มีข้อผิดพลาดเกิดขึ้น",
+    "signOutFail": "ออกจากระบบล้มเหลว",
+    "signOutSuccessful": "ออกจากระบบสำเร็จ"
   }
 }

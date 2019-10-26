@@ -15,7 +15,6 @@ import {
 } from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
-import { showMessage, hideMessage } from 'react-native-flash-message';
 import * as Api from '../../../util/Api'
 import * as GFunction from '../../../util/GlobalFunction'
 import AsyncStorage from '@react-native-community/async-storage';
@@ -41,7 +40,7 @@ export default class LoginView extends Component<Props> {
         <StatusBar backgroundColor='#1C83F7' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#1C83F7' }}>
           <Appbar.Content
-            title='Family Plan'
+            title={I18n.t('message.appName')}
           />
         </Appbar.Header>
       </View>
@@ -62,26 +61,12 @@ export default class LoginView extends Component<Props> {
     let response = await Api.signIn(params);
     if (response.success) {
       this.loadingLogin.showLoading(false);
-      await AsyncStorage.setItem('userToken', response.user.authentication_token);
-      showMessage({
-        message: I18n.t('message.success'),
-        description: I18n.t('message.signInSuccessful'),
-        type: 'default',
-        backgroundColor: '#02E35E',
-        color: '#FFF',
-        duration: 3000
-      });
+      await AsyncStorage.setItem('user', JSON.stringify(response.user));
+      GFunction.successMessage(I18n.t('message.success'), I18n.t('message.signInSuccessful'))
       this.props.navigation.navigate('Home')
     } else {
       this.loadingLogin.showLoading(false);
-      showMessage({
-        message: I18n.t('message.notValidate'),
-        description: I18n.t('message.EmailOrPasswordMismatch'),
-        type: 'default',
-        backgroundColor: '#F60745',
-        color: '#FFF',
-        duration: 3000
-      });
+      GFunction.errorMessage(I18n.t('message.notValidate'), I18n.t('message.EmailOrPasswordMismatch'))
     }
   }
 
