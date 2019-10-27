@@ -11,7 +11,8 @@
     "save": "บันทึก",
     "signinWith": "เข้าสู่ระบบด้วย",
     "forgotPassword": "ลืมรหัสผ่าน",
-    "resetPassword": "รีเซ็ตรหัสผ่าน"
+    "resetPassword": "รีเซ็ตรหัสผ่าน",
+    "editProfile": "แก้ไขโปรไฟล์"
   },
   "text": {
     "mr": "นาย",
@@ -30,11 +31,21 @@
     "oldPassword": "รหัสผ่านเก่า",
     "newPassword": "รหัสผ่านใหม่",
     "newPasswordConfirmation": "ยืนยันรหัสผ่านใหม่",
-    "name": "ชื่อ"
+    "name": "ชื่อ",
+    "th": "ภาษาไทย",
+    "appVersion": "เวอร์ชั่น"
   },
   "message": {
     "appName": "Family Plan",
     "profile": "โปรไฟล์",
+    "home": "หน้าแรก",
+    "chat": "แชท",
+    "notifications": "แจ้งเตือน",
+    "newGroup": "เพิ่มกลุ่ม",
+    "qrCode": "คิวอาร์โค้ด",
+    "members": "สมาชิก",
+    "search": "ค้นหา",
+    "loading": "กำลังโหลด",
     "forgotPassword": "ลืมรหัสผ่าน",
     "success": "สำเร็จ",
     "signInSuccessful": "ลงชื่อเข้าใช้สำเร็จ",

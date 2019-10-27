@@ -26,6 +26,8 @@ import * as Api from '../../util/Api'
 import * as GFunction from '../../util/GlobalFunction'
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import { Icon } from 'react-native-elements'
+import MatIcon from 'react-native-vector-icons/MaterialIcons';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 // View
 import LoginView from '../Auth/Login/LoginView';
@@ -148,7 +150,7 @@ export default class Home extends Component<Props> {
         {this.AppHerder()}
         <View style={{ padding: 15 }}>
           <Searchbar
-            placeholder='Search'
+            placeholder={I18n.t('message.search')}
             onChangeText={searching => { this.setState({ search: searching }); }}
             value={this.state.search}
           />
@@ -158,10 +160,18 @@ export default class Home extends Component<Props> {
         </View>
 
         {this.popUpModalNewGroup()}
-        <ActionButton
+        <ActionButton buttonColor='rgba(231,76,60,1)'>
+          <ActionButton.Item buttonColor='#03C8A1' title={I18n.t('message.newGroup')} onPress={this.showNewGroupModal}>
+            <MatIcon name='group-add' style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor='#3D71FB' title={I18n.t('message.qrCode')} onPress={() => { }}>
+            <FAIcon name='qrcode' style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
+        {/* <ActionButton
           buttonColor='rgba(231,76,60,1)'
           onPress={this.showNewGroupModal}
-        />
+        /> */}
       </View >
     );
   }

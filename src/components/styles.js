@@ -13,14 +13,23 @@ export const styles = StyleSheet.create({
   cardProfile: {
     flex: 1,
     margin: 10,
+    marginTop: 90,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+  },
+
+  cardSetting: {
+    flex: 0.3,
+    margin: 10,
     backgroundColor: '#FFF',
     borderRadius: 10,
   },
 
   profilePhoto: {
-    width: 180,
-    height: 180,
-    borderRadius: 180 / 2
+    marginTop: -85,
+    width: 150,
+    height: 150,
+    borderRadius: 150 / 2
   },
 
   homeColor: {
@@ -69,4 +78,34 @@ export const styles = StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFF'
   },
+
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
+
+  buttonSignOut: {
+    flex: 0.25,
+    justifyContent: 'flex-end',
+    paddingBottom: 20
+  },
+
+  profile: {
+    flex: 1,
+    padding: 10,
+    alignSelf: 'center'
+  },
+
+  profileName: {
+    fontSize: 35,
+    alignSelf: 'center',
+    paddingTop: 22
+  },
+
+  profileText: {
+    fontSize: 20,
+    alignSelf: 'center',
+    paddingTop: 22
+  }
 });
