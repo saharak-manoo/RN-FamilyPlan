@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Linking,
   StatusBar,
   View,
 } from 'react-native';
@@ -22,59 +23,8 @@ export default class QrCodeView extends Component<Props> {
   render() {
     return (
       <View style={{ padding: 30 }}>
-        <Text style={{ fontSize: 30 }}>{I18n.t('message.qrCode')}</Text>
+        <Text style={{ fontSize: 30 }}>{I18n.t('placeholder.qrCode')}</Text>
         <View style={{ paddingTop: 15 }}>
-          <TextInput
-            style={{ backgroundColor: '#FFF' }}
-            label={I18n.t('placeholder.name')}
-            value={this.state.groupName}
-            onChangeText={groupName => this.setState({ groupName: groupName })}
-          />
-        </View>
-
-        <View style={{ paddingTop: 20 }}>
-          <Text style={{ fontSize: 30 }}>{I18n.t('message.members')}</Text>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ flex: 1 }}>
-              <TextInput
-                style={{ backgroundColor: '#FFF' }}
-                label={I18n.t('placeholder.email')}
-                value={this.state.groupName}
-                onChangeText={groupName => this.setState({ groupName: groupName })}
-              />
-            </View>
-
-            <View>
-              <Icon
-                size={15}
-                reverse
-                name='ios-remove'
-                type='ionicon'
-                color='#F60645'
-              />
-            </View>
-          </View>
-
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ flex: 1 }}>
-              <TextInput
-                style={{ backgroundColor: '#FFF' }}
-                label={I18n.t('placeholder.email')}
-                value={this.state.groupName}
-                onChangeText={groupName => this.setState({ groupName: groupName })}
-              />
-            </View>
-
-            <View>
-              <Icon
-                size={15}
-                reverse
-                name='ios-remove'
-                type='ionicon'
-                color='#F60645'
-              />
-            </View>
-          </View>
         </View>
       </View>
     );

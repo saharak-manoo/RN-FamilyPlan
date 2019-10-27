@@ -54,6 +54,10 @@ target 'FamilyPlan' do
 
   pod 'RCTRestart', :path => '../node_modules/react-native-restart/ios'
 
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing
