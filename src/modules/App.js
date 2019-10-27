@@ -12,6 +12,14 @@ export default class App extends Component<Props> {
     this.state = {};
   }
 
+  componentWillMount = async () => {
+    let locale = await AsyncStorage.getItem('locale');
+    if (locale == null) {
+      locale = 'en'
+    }
+    this.setState((I18n.locale = locale))
+  }
+
   render() {
     return (
       <PaperProvider>

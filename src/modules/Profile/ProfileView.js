@@ -29,15 +29,27 @@ export default class ProfileView extends Component<Props> {
     this.state = {
       spinner: false,
       user: null,
-      isSwitchOn: false,
+      isLanguageTH: false
     };
     this.getProfile();
   }
 
   componentDidMount = async () => {
     this.setState({ spinner: true });
+    let locale = await AsyncStorage.getItem('locale');
+    if (locale == null) {
+      locale = 'en'
+    }
+    this.setState((I18n.locale = locale), { isLanguageTH: locale == 'th' })
     this.setState({ user: await GFunction.user() })
   }
+
+  onSelectedLanguageTh = async isLanguageTH => {
+    let locale = !isLanguageTH ? 'th' : 'en'
+    this.setState((I18n.locale = locale));
+    await AsyncStorage.setItem('locale', locale);
+  };
+
 
   getProfile = async () => {
     this.setState({ spinner: true });
@@ -164,9 +176,9 @@ export default class ProfileView extends Component<Props> {
                 title={I18n.t('placeholder.th')}
                 chevron={
                   <Switch
-                    value={this.state.isSwitchOn}
-                    onValueChange={() => { this.setState({ isSwitchOn: !this.state.isSwitchOn }); }
-                    }
+                    value={this.state.isLanguageTH}
+                    onPress={this.onSelectedLanguageTh(this.state.isLanguageTH)}
+                    onValueChange={() => { this.setState({ isLanguageTH: !this.state.isLanguageTH }); }}
                   />
                 }
               />
