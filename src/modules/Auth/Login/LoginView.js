@@ -40,7 +40,7 @@ export default class LoginView extends Component<Props> {
         <StatusBar backgroundColor='#1C83F7' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#1C83F7' }}>
           <Appbar.Content
-            title={I18n.t('message.appName')}
+            title={I18n.t('placeholder.appName')}
           />
         </Appbar.Header>
       </View>

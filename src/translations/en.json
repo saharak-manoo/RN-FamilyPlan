@@ -17,7 +17,11 @@
   "text": {
     "mr": "Mr",
     "mrs": "Mrs",
-    "miss": "Miss"
+    "miss": "Miss",
+    "appleMusic": "Apple music",
+    "disneyPlus": "Disney plus",
+    "netflix": "Netflix",
+    "spotify": "Spotify"
   },
   "placeholder": {
     "prefix": "Prefix",
@@ -33,9 +37,7 @@
     "newPasswordConfirmation": "New Password Confirmation",
     "name": "Name",
     "th": "TH",
-    "appVersion": "Versions"
-  },
-  "message": {
+    "appVersion": "Versions",
     "appName": "Family Plan",
     "profile": "Profile",
     "home": "Home",
@@ -46,6 +48,10 @@
     "members": "Members",
     "search": "Search",
     "loading": "Loading",
+    "service": "Service",
+    "chooseService": "Choose Service"
+  },
+  "message": {
     "forgotPassword": "Forgot password",
     "success": "Success",
     "signInSuccessful": "Sign in successful",
@@ -76,6 +82,7 @@
     "areYouSure": "Are you sure ?",
     "error": "Error",
     "signOutFail": "Sign out fail",
-    "signOutSuccessful": "Sign out successful"
+    "signOutSuccessful": "Sign out successful",
+    "createGroupSuccessful": "Create group successful"
   }
 }

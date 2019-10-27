@@ -66,7 +66,7 @@ export default class RegisterView extends Component<Props> {
         <Appbar.Header style={{ backgroundColor: '#1C83F6' }}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
-            title={I18n.t('message.appName')}
+            title={I18n.t('placeholder.appName')}
           />
         </Appbar.Header>
       </View>

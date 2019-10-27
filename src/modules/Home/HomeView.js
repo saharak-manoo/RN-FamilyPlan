@@ -47,7 +47,7 @@ export default class Home extends Component<Props> {
         <StatusBar backgroundColor='#2370E6' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#2370E6' }}>
           <Appbar.Content
-            title={I18n.t('message.appName')}
+            title={I18n.t('placeholder.appName')}
           />
         </Appbar.Header>
       </View>
@@ -78,8 +78,9 @@ export default class Home extends Component<Props> {
           spring: { speed: 10, bounciness: 10 }
         }}
         withReactModal
+        adjustToContentHeight
       >
-        <NewGroupView />
+        <NewGroupView modal={this.newGroupModal} />
       </Modalize >
     )
   }
@@ -120,7 +121,7 @@ export default class Home extends Component<Props> {
         {this.AppHerder()}
         <View style={{ padding: 15 }}>
           <Searchbar
-            placeholder={I18n.t('message.search')}
+            placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => { this.setState({ search: searching }); }}
             value={this.state.search}
           />
@@ -132,10 +133,10 @@ export default class Home extends Component<Props> {
         {this.popUpModalNewGroup()}
         {this.popUpModalScanQrCode()}
         <ActionButton buttonColor='rgba(231,76,60,1)'>
-          <ActionButton.Item buttonColor='#03C8A1' title={I18n.t('message.newGroup')} onPress={this.showNewGroupModal}>
+          <ActionButton.Item buttonColor='#03C8A1' title={I18n.t('placeholder.newGroup')} onPress={this.showNewGroupModal}>
             <MatIcon name='group-add' style={styles.actionButtonIcon} />
           </ActionButton.Item>
-          <ActionButton.Item buttonColor='#3D71FB' title={I18n.t('message.qrCode')} onPress={this.showScanQrCodeModal}>
+          <ActionButton.Item buttonColor='#3D71FB' title={I18n.t('placeholder.qrCode')} onPress={this.showScanQrCodeModal}>
             <FAIcon name='qrcode' style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>

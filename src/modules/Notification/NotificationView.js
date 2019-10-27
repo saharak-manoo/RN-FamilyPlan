@@ -21,7 +21,7 @@ export default class NotificationView extends Component<Props> {
         <StatusBar backgroundColor='#F93636' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#F93636' }}>
           <Appbar.Content
-            title={I18n.t('message.notifications')}
+            title={I18n.t('placeholder.notifications')}
           />
         </Appbar.Header>
       </View>

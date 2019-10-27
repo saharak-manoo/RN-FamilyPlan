@@ -33,9 +33,7 @@
     "newPasswordConfirmation": "ยืนยันรหัสผ่านใหม่",
     "name": "ชื่อ",
     "th": "ภาษาไทย",
-    "appVersion": "เวอร์ชั่น"
-  },
-  "message": {
+    "appVersion": "เวอร์ชั่น",
     "appName": "หน้าแรก",
     "profile": "โปรไฟล์",
     "home": "หน้าแรก",
@@ -46,7 +44,11 @@
     "members": "สมาชิก",
     "search": "ค้นหา",
     "loading": "กำลังโหลด",
+    "service": "บริการ",
     "forgotPassword": "ลืมรหัสผ่าน",
+    "chooseService": "เลือกบริการ"
+  },
+  "message": {
     "success": "สำเร็จ",
     "signInSuccessful": "ลงชื่อเข้าใช้สำเร็จ",
     "signUpSuccessful": "ลงทะเบียนสำเร็จ",
@@ -76,6 +78,7 @@
     "areYouSure": "คุณแน่ใจแล้วใช่ไหม ?",
     "error": "มีข้อผิดพลาดเกิดขึ้น",
     "signOutFail": "ออกจากระบบล้มเหลว",
-    "signOutSuccessful": "ออกจากระบบสำเร็จ"
+    "signOutSuccessful": "ออกจากระบบสำเร็จ",
+    "createGroupSuccessful": "สร้างกลุ่มสำเร็จ"
   }
 }

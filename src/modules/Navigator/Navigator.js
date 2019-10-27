@@ -17,10 +17,22 @@ import LoginView from '../Auth/Login/LoginView';
 import RegisterView from '../Auth/Register/RegisterView';
 import ForgotPasswordView from '../Auth/ForgotPassword/ForgotPasswordView';
 import LogoView from '../Logo/LogoView';
+import NewGroupView from '../Modal/NewGroupVew';
+
+const GroupModalStack = createStackNavigator(
+  {
+    NewGroup: { screen: NewGroupView },
+  },
+  {
+    headerMode: 'none',
+    mode: 'modal'
+  }
+);
 
 const HomeStack = createStackNavigator(
   {
     Home: { screen: HomeView },
+    GroupModal: { screen: GroupModalStack }
   },
   {
     headerMode: 'none'
@@ -54,8 +66,8 @@ const MainNavigator = createMaterialBottomTabNavigator(
     Home: {
       screen: HomeStack,
       navigationOptions: {
-        title: I18n.t('message.home'),
-        tabBarLabel: I18n.t('message.home'),
+        title: I18n.t('placeholder.home'),
+        tabBarLabel: I18n.t('placeholder.home'),
         tabBarColor: '#2370E6',
         tabBarIcon: () => (
           <MatIcon size={26} name='home' color='#FFF' />
@@ -65,8 +77,8 @@ const MainNavigator = createMaterialBottomTabNavigator(
     Chat: {
       screen: ChatView,
       navigationOptions: {
-        title: I18n.t('message.chat'),
-        tabBarLabel: I18n.t('message.chat'),
+        title: I18n.t('placeholder.chat'),
+        tabBarLabel: I18n.t('placeholder.chat'),
         tabBarColor: '#09A650',
         tabBarIcon: () => (
           <MatIcon size={26} name='chat' color='#FFF' />
@@ -76,8 +88,8 @@ const MainNavigator = createMaterialBottomTabNavigator(
     Notification: {
       screen: NotificationView,
       navigationOptions: {
-        title: I18n.t('message.notifications'),
-        tabBarLabel: I18n.t('message.notifications'),
+        title: I18n.t('placeholder.notifications'),
+        tabBarLabel: I18n.t('placeholder.notifications'),
         tabBarColor: '#F93636',
         tabBarIcon: () => (
           <MatIcon size={26} name='notifications' color='#FFF' />
@@ -87,8 +99,8 @@ const MainNavigator = createMaterialBottomTabNavigator(
     Profile: {
       screen: ProfileStack,
       navigationOptions: {
-        title: I18n.t('message.profile'),
-        tabBarLabel: I18n.t('message.profile'),
+        title: I18n.t('placeholder.profile'),
+        tabBarLabel: I18n.t('placeholder.profile'),
         tabBarColor: '#6D06F9',
         tabBarIcon: () => (
           <MatIcon size={26} name='account-box' color='#FFF' />

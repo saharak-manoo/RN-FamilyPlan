@@ -77,7 +77,7 @@ export default class ProfileView extends Component<Props> {
         <StatusBar backgroundColor='#6D06F9' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#6D06F9' }}>
           <Appbar.Content
-            title={I18n.t('message.profile')}
+            title={I18n.t('placeholder.profile')}
           />
         </Appbar.Header>
       </View>
@@ -132,7 +132,7 @@ export default class ProfileView extends Component<Props> {
         {this.state.spinner ?
           (<Spinner
             visible={this.state.spinner}
-            textContent={I18n.t('message.loading') + '...'}
+            textContent={I18n.t('placeholder.loading') + '...'}
             textStyle={styles.spinnerTextStyle}
           />) :
           (<View style={{ flex: 1 }}>

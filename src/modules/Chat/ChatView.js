@@ -21,7 +21,7 @@ export default class Chat extends Component<Props> {
         <StatusBar backgroundColor='#09A650' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#09A650' }}>
           <Appbar.Content
-            title={I18n.t('message.chat')}
+            title={I18n.t('placeholder.chat')}
           />
         </Appbar.Header>
       </View>
