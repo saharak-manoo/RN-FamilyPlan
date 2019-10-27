@@ -304,10 +304,11 @@ export default class Home extends Component<Props> {
                 </View>
               </View>
             </PTRView>
-          )}
+          )
+        }
 
-        {this.popUpModalNewGroup}
-        {this.popUpModalScanQrCode}
+        {this.popUpModalNewGroup()}
+        {this.popUpModalScanQrCode()}
         <ActionButton buttonColor='rgba(231,76,60,1)'>
           <ActionButton.Item buttonColor='#03C8A1' title={I18n.t('placeholder.newGroup')} onPress={this.showNewGroupModal}>
             <MatIcon name='group-add' style={styles.actionButtonIcon} />
