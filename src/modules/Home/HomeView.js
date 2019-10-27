@@ -19,6 +19,7 @@ import * as GFunction from '../../util/GlobalFunction'
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import PTRView from 'react-native-pull-to-refresh';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -107,6 +108,9 @@ export default class Home extends Component<Props> {
 
   componentDidMount = async () => {
     this.setState({ spinner: true });
+    setTimeout(() => {
+      this.setState({ spinner: false });
+    }, 2000)
   }
 
   newGroupModal = React.createRef();
@@ -274,29 +278,36 @@ export default class Home extends Component<Props> {
           />
         </View>
 
-        <PTRView onRefresh={this.refreshGroup}>
-          <View style={{ flex: 1, padding: 15, paddingTop: 35 }}>
-            <View style={{ flex: 1 }}>
-              <View style={styles.listCard}>
-                <Text style={styles.textCardList}>{I18n.t('placeholder.myGroup')}</Text>
+        {this.state.spinner ?
+          (<Spinner
+            visible={this.state.spinner}
+            textContent={I18n.t('placeholder.loading') + '...'}
+            textStyle={styles.spinnerTextStyle}
+          />) : (
+            <PTRView onRefresh={this.refreshGroup}>
+              <View style={{ flex: 1, padding: 15, paddingTop: 35 }}>
+                <View style={{ flex: 1 }}>
+                  <View style={styles.listCard}>
+                    <Text style={styles.textCardList}>{I18n.t('placeholder.myGroup')}</Text>
+                  </View>
+                  <View style={styles.listCards}>
+                    {this.listMyGroup(myGroup)}
+                  </View>
+                </View>
+                <View style={{ flex: 1, paddingTop: 20 }}>
+                  <View style={styles.listPubilcCard}>
+                    <Text style={styles.textCardList}>{I18n.t('placeholder.publicGroup')}</Text>
+                  </View>
+                  <View style={styles.listCards}>
+                    {this.listPubilcGroup(publicGroup)}
+                  </View>
+                </View>
               </View>
-              <View style={styles.listCards}>
-                {this.listMyGroup(myGroup)}
-              </View>
-            </View>
-            <View style={{ flex: 1, paddingTop: 20 }}>
-              <View style={styles.listPubilcCard}>
-                <Text style={styles.textCardList}>{I18n.t('placeholder.publicGroup')}</Text>
-              </View>
-              <View style={styles.listCards}>
-                {this.listPubilcGroup(publicGroup)}
-              </View>
-            </View>
-          </View>
-        </PTRView>
+            </PTRView>
+          )}
 
-        {this.popUpModalNewGroup()}
-        {this.popUpModalScanQrCode()}
+        {this.popUpModalNewGroup}
+        {this.popUpModalScanQrCode}
         <ActionButton buttonColor='rgba(231,76,60,1)'>
           <ActionButton.Item buttonColor='#03C8A1' title={I18n.t('placeholder.newGroup')} onPress={this.showNewGroupModal}>
             <MatIcon name='group-add' style={styles.actionButtonIcon} />
