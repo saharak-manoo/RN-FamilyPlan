@@ -1,22 +1,12 @@
 import React, { Component, useRef } from 'react';
 import {
-  Alert,
-  Linking,
-  Modal,
   Dimensions,
   StatusBar,
-  TouchableOpacity,
-  TouchableHighlight,
   View,
-  StyleSheet,
 } from 'react-native';
 import {
   Appbar,
-  Button,
-  Text,
   Searchbar,
-  TextInput,
-  HelperText
 } from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import { styles } from '../../components/styles';
@@ -24,13 +14,12 @@ import I18n from '../../components/i18n';
 import Modalize from 'react-native-modalize';
 import * as Api from '../../util/Api'
 import * as GFunction from '../../util/GlobalFunction'
-import AnimateLoadingButton from 'react-native-animate-loading-button';
-import { Icon } from 'react-native-elements'
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 // View
-import LoginView from '../Auth/Login/LoginView';
+import NewGroupView from '../Modal/NewGroupVew';
+import QrCodeView from '../Modal/QrCodeView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -50,6 +39,7 @@ export default class Home extends Component<Props> {
   }
 
   newGroupModal = React.createRef();
+  scanQrCodeModal = React.createRef();
 
   AppHerder() {
     return (
@@ -89,62 +79,37 @@ export default class Home extends Component<Props> {
         }}
         withReactModal
       >
-        <View style={{ padding: 30 }}>
-          <Text style={{ fontSize: 30 }}>{I18n.t('message.newGroup')}</Text>
-          <View style={{ paddingTop: 15 }}>
-            <TextInput
-              style={{ backgroundColor: '#FFF' }}
-              label={I18n.t('placeholder.name')}
-              value={this.state.groupName}
-              onChangeText={groupName => this.setState({ groupName: groupName })}
-            />
-          </View>
+        <NewGroupView />
+      </Modalize >
+    )
+  }
 
-          <View style={{ paddingTop: 20 }}>
-            <Text style={{ fontSize: 30 }}>{I18n.t('message.members')}</Text>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ flex: 1 }}>
-                <TextInput
-                  style={{ backgroundColor: '#FFF' }}
-                  label={I18n.t('placeholder.email')}
-                  value={this.state.groupName}
-                  onChangeText={groupName => this.setState({ groupName: groupName })}
-                />
-              </View>
+  showScanQrCodeModal = () => {
+    if (this.scanQrCodeModal.current) {
+      this.scanQrCodeModal.current.open();
+    }
+  };
 
-              <View>
-                <Icon
-                  size={15}
-                  reverse
-                  name='ios-remove'
-                  type='ionicon'
-                  color='#F60645'
-                />
-              </View>
-            </View>
-
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ flex: 1 }}>
-                <TextInput
-                  style={{ backgroundColor: '#FFF' }}
-                  label={I18n.t('placeholder.email')}
-                  value={this.state.groupName}
-                  onChangeText={groupName => this.setState({ groupName: groupName })}
-                />
-              </View>
-
-              <View>
-                <Icon
-                  size={15}
-                  reverse
-                  name='ios-remove'
-                  type='ionicon'
-                  color='#F60645'
-                />
-              </View>
-            </View>
-          </View>
-        </View>
+  popUpModalScanQrCode() {
+    return (
+      <Modalize
+        ref={this.scanQrCodeModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition='inside'
+        openAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 10, bounciness: 10 }
+        }}
+        closeAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 10, bounciness: 10 }
+        }}
+        withReactModal
+      >
+        <QrCodeView />
       </Modalize >
     )
   }
@@ -165,18 +130,15 @@ export default class Home extends Component<Props> {
         </View>
 
         {this.popUpModalNewGroup()}
+        {this.popUpModalScanQrCode()}
         <ActionButton buttonColor='rgba(231,76,60,1)'>
           <ActionButton.Item buttonColor='#03C8A1' title={I18n.t('message.newGroup')} onPress={this.showNewGroupModal}>
             <MatIcon name='group-add' style={styles.actionButtonIcon} />
           </ActionButton.Item>
-          <ActionButton.Item buttonColor='#3D71FB' title={I18n.t('message.qrCode')} onPress={() => { }}>
+          <ActionButton.Item buttonColor='#3D71FB' title={I18n.t('message.qrCode')} onPress={this.showScanQrCodeModal}>
             <FAIcon name='qrcode' style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>
-        {/* <ActionButton
-          buttonColor='rgba(231,76,60,1)'
-          onPress={this.showNewGroupModal}
-        /> */}
       </View >
     );
   }
