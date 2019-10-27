@@ -115,6 +115,7 @@ export default class Home extends Component<Props> {
                 />
               </View>
             </View>
+
             <View style={{ flexDirection: 'row' }}>
               <View style={{ flex: 1 }}>
                 <TextInput

@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import * as Api from '../../util/Api'
 import * as GFunction from '../../util/GlobalFunction'
 import { styles } from '../../components/styles';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -24,16 +25,19 @@ export default class ProfileView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      spinner: false,
       user: null,
     };
     this.getProfile();
   }
 
   componentDidMount = async () => {
+    this.setState({ spinner: true });
     this.setState({ user: await GFunction.user() })
   }
 
   getProfile = async () => {
+    this.setState({ spinner: true });
     let user = await GFunction.user()
     let response = await Api.getProfile(user.authentication_token, user.id);
     if (response.success) {
@@ -44,7 +48,8 @@ export default class ProfileView extends Component<Props> {
         lastName: response.user.last_name,
         email: response.user.email,
         phoneNumber: response.user.phone_number,
-        photo: response.user.photo
+        photo: response.user.photo,
+        spinner: false
       });
     } else {
       this.loadingSignOut.showLoading(false);
@@ -106,7 +111,11 @@ export default class ProfileView extends Component<Props> {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
-        <View style={{ flex: 1 }}>
+        {this.state.spinner ? (<Spinner
+          visible={this.state.spinner}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+        />) : (<View style={{ flex: 1 }}>
           <View style={styles.cardProfile}>
             <View style={{ flex: 1, padding: 10, alignSelf: 'center' }}>
               <Image
@@ -130,7 +139,7 @@ export default class ProfileView extends Component<Props> {
               onPress={this.clickSignOut.bind(this)}
             />
           </View>
-        </View>
+        </View>)}
       </View>
     );
   }
