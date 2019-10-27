@@ -12,7 +12,8 @@
     "signinWith": "Sign in With",
     "forgotPassword": "Forgot your password ?",
     "resetPassword": "Reset password",
-    "editProfile": "Edit profile"
+    "editProfile": "Edit profile",
+    "joinGroup": "Join Group"
   },
   "text": {
     "mr": "Mr",
@@ -54,7 +55,8 @@
     "group": "Group",
     "public": "Public",
     "myGroup": "My\nGroup",
-    "publicGroup": "Public\nGroup"
+    "publicGroup": "Public\nGroup",
+    "joinGroup": "Join Group"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -88,6 +90,7 @@
     "error": "Error",
     "signOutFail": "Sign out fail",
     "signOutSuccessful": "Sign out successful",
-    "createGroupSuccessful": "Create group successful"
+    "createGroupSuccessful": "Create group successful",
+    "joinGroupSuccessful": "Join group successful"
   }
 }

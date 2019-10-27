@@ -2,6 +2,8 @@ import React, { Component, useRef } from 'react';
 import {
   Dimensions,
   FlatList,
+  Modal,
+  TouchableOpacity,
   StatusBar,
   View,
 } from 'react-native';
@@ -24,11 +26,13 @@ import Spinner from 'react-native-loading-spinner-overlay';
 // View
 import NewGroupView from '../Modal/NewGroupVew';
 import QrCodeView from '../Modal/QrCodeView';
+import JoinGroupView from '../Modal/JoinGroupView';
+import GroupView from '../Modal/GroupView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const myGroup = [
+const groups = [
   {
     name: 'G Netflix',
     service: 'Netflix',
@@ -39,7 +43,7 @@ const myGroup = [
   {
     name: 'G Spotify',
     service: 'Spotify',
-    color: '#00DF70',
+    color: '#009652',
     members: 2,
     max_member: 5
   },
@@ -56,10 +60,7 @@ const myGroup = [
     color: '#FF116F',
     members: 1,
     max_member: 6
-  }
-]
-
-const publicGroup = [
+  },
   {
     name: 'G Apple Music',
     service: 'Apple Music',
@@ -77,7 +78,7 @@ const publicGroup = [
   {
     name: 'G Spotify',
     service: 'Spotify',
-    color: '#00DF70',
+    color: '#009652',
     members: 2,
     max_member: 5
   },
@@ -96,13 +97,15 @@ const publicGroup = [
     max_member: 6
   }
 ]
-export default class Home extends Component<Props> {
+export default class HomeView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
       search: '',
       groupName: '',
-      spinner: false
+      spinner: false,
+      modalGroup: false,
+      group: null
     };
   }
 
@@ -115,6 +118,7 @@ export default class Home extends Component<Props> {
 
   newGroupModal = React.createRef();
   scanQrCodeModal = React.createRef();
+  joinGroupModal = React.createRef();
 
   AppHerder() {
     return (
@@ -185,7 +189,43 @@ export default class Home extends Component<Props> {
         }}
         withReactModal
       >
-        <QrCodeView />
+        <QrCodeView modal={this.scanQrCodeModal} />
+      </Modalize >
+    )
+  }
+
+  showJoinGroupModal = (group) => {
+    if (this.joinGroupModal.current) {
+      this.setState({ group: group })
+      this.joinGroupModal.current.open();
+    }
+  };
+
+  popUpModalJoinGroup(group) {
+    return (
+      <Modalize
+        ref={this.joinGroupModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition='inside'
+        openAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 10, bounciness: 10 }
+        }}
+        closeAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 10, bounciness: 10 }
+        }}
+        withReactModal
+        adjustToContentHeight
+      >
+        <JoinGroupView
+          modal={this.joinGroupModal}
+          group={group}
+          onGoToModalGroup={this.goToModalGroup}
+        />
       </Modalize >
     )
   }
@@ -205,7 +245,7 @@ export default class Home extends Component<Props> {
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => {
           return (
-            <View style={styles.card}>
+            <TouchableOpacity style={styles.card} onPress={() => this.goToModalGroup(item)}>
               <View style={{ flex: 1 }}>
                 <View style={[styles.headerCard, { backgroundColor: item.color }]}>
                   <Text numberOfLines={1} style={styles.textHeadCard}>
@@ -219,11 +259,11 @@ export default class Home extends Component<Props> {
                 </View>
                 <View style={{ flex: 0.3 }}>
                   <Text numberOfLines={1} style={styles.totalMembersCard}>
-                    Total member: {item.members}/{item.max_member}
+                    {I18n.t('placeholder.members')} : {item.members}/{item.max_member}
                   </Text>
                 </View>
               </View>
-            </View>)
+            </TouchableOpacity>)
         }
         }
         keyExtractor={item => item}
@@ -231,16 +271,16 @@ export default class Home extends Component<Props> {
     )
   }
 
-  listPubilcGroup = (pubilcGroup) => {
+  listPublicGroup = (publicGroup) => {
     return (
       <FlatList
         style={{ flex: 1 }}
-        data={pubilcGroup}
+        data={publicGroup}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => {
           return (
-            <View style={styles.card}>
+            <TouchableOpacity style={styles.card} onPress={() => this.showJoinGroupModal(item)}>
               <View style={{ flex: 1 }}>
                 <View style={[styles.headerCard, { backgroundColor: item.color }]}>
                   <Text numberOfLines={1} style={styles.textHeadCard}>
@@ -254,11 +294,11 @@ export default class Home extends Component<Props> {
                 </View>
                 <View style={{ flex: 0.3 }}>
                   <Text numberOfLines={1} style={{ fontSize: 13, color: '#000', alignSelf: 'center', justifyContent: 'flex-end', padding: 10 }}>
-                    Total member: {item.members}/{item.max_member}
+                    {I18n.t('placeholder.members')} : {item.members}/{item.max_member}
                   </Text>
                 </View>
               </View>
-            </View>)
+            </TouchableOpacity>)
         }
         }
         keyExtractor={item => item}
@@ -266,10 +306,38 @@ export default class Home extends Component<Props> {
     )
   }
 
+  goToModalGroup = (group) => {
+    setTimeout(() => {
+      this.setState({ modalGroup: true, group: group });
+    }, 400)
+  }
+
+  showModalGroup() {
+    return (
+      <Modal
+        animationType='slide'
+        transparent={false}
+        visible={this.state.modalGroup}
+        presentationStyle='fullScreen'
+        onRequestClose={() => {
+          this.setState({ modalGroup: false });
+        }}
+      >
+        <GroupView
+          group={this.state.group}
+          back={() => {
+            this.setState({ modalGroup: false });
+          }}
+        />
+      </Modal>
+    )
+  }
+
   render() {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
+        {this.showModalGroup()}
         <View style={{ padding: 15 }}>
           <Searchbar
             placeholder={I18n.t('placeholder.search')}
@@ -291,23 +359,26 @@ export default class Home extends Component<Props> {
                     <Text style={styles.textCardList}>{I18n.t('placeholder.myGroup')}</Text>
                   </View>
                   <View style={styles.listCards}>
-                    {this.listMyGroup(myGroup)}
+                    {this.listMyGroup(groups)}
                   </View>
                 </View>
+
                 <View style={{ flex: 1, paddingTop: 20 }}>
-                  <View style={styles.listPubilcCard}>
+                  <View style={styles.listPublicCard}>
                     <Text style={styles.textCardList}>{I18n.t('placeholder.publicGroup')}</Text>
                   </View>
                   <View style={styles.listCards}>
-                    {this.listPubilcGroup(publicGroup)}
+                    {this.listPublicGroup(groups)}
                   </View>
                 </View>
               </View>
             </PTRView>
-          )}
+          )
+        }
 
-        {this.popUpModalNewGroup}
-        {this.popUpModalScanQrCode}
+        {this.popUpModalJoinGroup(this.state.group)}
+        {this.popUpModalNewGroup()}
+        {this.popUpModalScanQrCode()}
         <ActionButton buttonColor='rgba(231,76,60,1)'>
           <ActionButton.Item buttonColor='#03C8A1' title={I18n.t('placeholder.newGroup')} onPress={this.showNewGroupModal}>
             <MatIcon name='group-add' style={styles.actionButtonIcon} />

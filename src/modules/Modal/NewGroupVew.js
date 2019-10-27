@@ -50,6 +50,7 @@ export default class NewGroupView extends Component<Props> {
     this.loadingCreateGroup.showLoading(true);
     setTimeout(() => {
       if (this.props.modal.current) {
+        this.loadingJoinGroup.showLoading(false);
         GFunction.successMessage(I18n.t('message.success'), I18n.t('message.createGroupSuccessful'))
         this.props.modal.current.close();
       }

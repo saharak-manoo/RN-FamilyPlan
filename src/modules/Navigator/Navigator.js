@@ -17,22 +17,10 @@ import LoginView from '../Auth/Login/LoginView';
 import RegisterView from '../Auth/Register/RegisterView';
 import ForgotPasswordView from '../Auth/ForgotPassword/ForgotPasswordView';
 import LogoView from '../Logo/LogoView';
-import NewGroupView from '../Modal/NewGroupVew';
-
-const GroupModalStack = createStackNavigator(
-  {
-    NewGroup: { screen: NewGroupView },
-  },
-  {
-    headerMode: 'none',
-    mode: 'modal'
-  }
-);
 
 const HomeStack = createStackNavigator(
   {
     Home: { screen: HomeView },
-    GroupModal: { screen: GroupModalStack }
   },
   {
     headerMode: 'none'
