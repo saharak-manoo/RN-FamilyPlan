@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import {
   StatusBar,
-  View
+  View,
 } from 'react-native';
 import {
   Appbar,
   Text
 } from 'react-native-paper';
+import I18n from '../../components/i18n';
 
 export default class NotificationView extends Component<Props> {
   constructor(props) {
@@ -20,7 +21,7 @@ export default class NotificationView extends Component<Props> {
         <StatusBar backgroundColor='#F93636' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#F93636' }}>
           <Appbar.Content
-            title='Notification'
+            title={I18n.t('placeholder.notifications')}
           />
         </Appbar.Header>
       </View>

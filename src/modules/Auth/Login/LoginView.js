@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  AsyncStorage,
   Alert,
   View,
   Dimensions,
@@ -16,7 +15,9 @@ import {
 } from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
-import { showMessage, hideMessage } from 'react-native-flash-message';
+import * as Api from '../../../util/Api'
+import * as GFunction from '../../../util/GlobalFunction'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -25,18 +26,12 @@ export default class LoginView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isSignIn: false,
       email: '',
       password: ''
     };
   }
 
-  async componentWillMount() {
-    let isSignIn = await AsyncStorage.getItem('isSignIn')
-    await this.setState({ isSignIn: isSignIn != null })
-    if (this.state.isSignIn) {
-      this.props.navigation.navigate('Home')
-    }
+  componentDidMount = async () => {
   }
 
   appHerder() {
@@ -45,25 +40,34 @@ export default class LoginView extends Component<Props> {
         <StatusBar backgroundColor='#1C83F7' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#1C83F7' }}>
           <Appbar.Content
-            title='Family Plan'
+            title={I18n.t('placeholder.appName')}
           />
         </Appbar.Header>
       </View>
     )
   }
 
-  signIn() {
+  clickSignIn() {
     this.loadingLogin.showLoading(true);
-    setTimeout(() => {
-      AsyncStorage.setItem('isSignIn', 'true')
+    this.signIn();
+  }
+
+  async signIn() {
+    let params = {
+      email: this.state.email,
+      password: this.state.password
+    }
+
+    let response = await Api.signIn(params);
+    if (response.success) {
       this.loadingLogin.showLoading(false);
-      showMessage({
-        message: 'Login',
-        description: 'Login done.',
-        type: 'success',
-      });
+      await AsyncStorage.setItem('user', JSON.stringify(response.user));
+      GFunction.successMessage(I18n.t('message.success'), I18n.t('message.signInSuccessful'))
       this.props.navigation.navigate('Home')
-    }, 300);
+    } else {
+      this.loadingLogin.showLoading(false);
+      GFunction.errorMessage(I18n.t('message.notValidate'), I18n.t('message.EmailOrPasswordMismatch'))
+    }
   }
 
   goToSignUp() {
@@ -79,26 +83,40 @@ export default class LoginView extends Component<Props> {
       <View style={{ flex: 1 }}>
         {this.appHerder()}
         <View style={{ padding: 45, alignSelf: 'center' }}>
-          <Text style={{ alignItems: 'center', fontSize: 58 }}>Sign In</Text>
+          <Text style={{ alignSelf: 'center', fontSize: 38 }}>{I18n.t('button.signIn')}</Text>
         </View>
         <View style={{ padding: 15 }}>
           <TextInput
-            style={{ paddingBottom: 13 }}
-            label='Email'
+            style={{ paddingBottom: 6 }}
+            label={I18n.t('placeholder.email')}
             mode='outlined'
             value={this.state.email}
             onChangeText={email => this.setState({ email: email })}
           />
+          <HelperText
+            type='error'
+            visible={GFunction.validateEmail(this.state.email)}
+          >
+            {I18n.t('message.emailIsInvalid')}
+          </HelperText>
 
           <TextInput
-            style={{ paddingBottom: 13 }}
-            label='Password'
+            secureTextEntry
+            autoCorrect={false}
+            style={{ paddingBottom: 6 }}
+            label={I18n.t('placeholder.password')}
             mode='outlined'
             value={this.state.password}
             onChangeText={password => this.setState({ password: password })}
           />
+          <HelperText
+            type='error'
+            visible={GFunction.validatePasswordLessThanSix(this.state.password)}
+          >
+            {I18n.t('message.passwordLessThanSix')}
+          </HelperText>
 
-          <View style={{ justifyContent: 'center', paddingTop: 25 }}>
+          <View style={{ justifyContent: 'center', paddingTop: 10 }}>
             <AnimateLoadingButton
               ref={load => (this.loadingLogin = load)}
               width={width - 25}
@@ -108,13 +126,13 @@ export default class LoginView extends Component<Props> {
               titleColor='#FFF'
               backgroundColor='#1C83F7'
               borderRadius={25}
-              onPress={this.signIn.bind(this)}
+              onPress={this.clickSignIn.bind(this)}
             />
 
             <TouchableOpacity
-              style={{ padding: 20, paddingTop: 30, alignItems: 'center' }}
+              style={{ padding: 20, paddingTop: 15, alignItems: 'center' }}
               onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-              <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>Forgot your password ?</Text>
+              <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>{I18n.t('button.forgotPassword')}</Text>
             </TouchableOpacity>
 
             <AnimateLoadingButton

@@ -7,6 +7,7 @@ import {
   Appbar,
   Text
 } from 'react-native-paper';
+import I18n from '../../components/i18n';
 
 export default class Chat extends Component<Props> {
   constructor(props) {
@@ -20,7 +21,7 @@ export default class Chat extends Component<Props> {
         <StatusBar backgroundColor='#09A650' barStyle='light-content' />
         <Appbar.Header style={{ backgroundColor: '#09A650' }}>
           <Appbar.Content
-            title='Chat'
+            title={I18n.t('placeholder.chat')}
           />
         </Appbar.Header>
       </View>

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import { View } from 'react-native'
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MatIcon from 'react-native-vector-icons/MaterialIcons';
+import I18n from '../../components/i18n';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Badge } from 'react-native-elements'
 
 // View
 import HomeView from '../Home/HomeView';
@@ -13,10 +17,22 @@ import LoginView from '../Auth/Login/LoginView';
 import RegisterView from '../Auth/Register/RegisterView';
 import ForgotPasswordView from '../Auth/ForgotPassword/ForgotPasswordView';
 import LogoView from '../Logo/LogoView';
+import NewGroupView from '../Modal/NewGroupVew';
+
+const GroupModalStack = createStackNavigator(
+  {
+    NewGroup: { screen: NewGroupView },
+  },
+  {
+    headerMode: 'none',
+    mode: 'modal'
+  }
+);
 
 const HomeStack = createStackNavigator(
   {
     Home: { screen: HomeView },
+    GroupModal: { screen: GroupModalStack }
   },
   {
     headerMode: 'none'
@@ -50,44 +66,44 @@ const MainNavigator = createMaterialBottomTabNavigator(
     Home: {
       screen: HomeStack,
       navigationOptions: {
-        title: 'Home',
-        tabBarLabel: 'Home',
+        title: I18n.t('placeholder.home'),
+        tabBarLabel: I18n.t('placeholder.home'),
         tabBarColor: '#2370E6',
         tabBarIcon: () => (
-          <Icon size={26} name='home' color='#FFF' />
+          <MatIcon size={26} name='home' color='#FFF' />
         )
       }
     },
     Chat: {
       screen: ChatView,
       navigationOptions: {
-        title: 'Chat',
-        tabBarLabel: 'Chat',
+        title: I18n.t('placeholder.chat'),
+        tabBarLabel: I18n.t('placeholder.chat'),
         tabBarColor: '#09A650',
         tabBarIcon: () => (
-          <Icon size={26} name='chat' color='#FFF' />
+          <MatIcon size={26} name='chat' color='#FFF' />
         )
       }
     },
     Notification: {
       screen: NotificationView,
       navigationOptions: {
-        title: 'Notifications',
-        tabBarLabel: 'Notifications',
+        title: I18n.t('placeholder.notifications'),
+        tabBarLabel: I18n.t('placeholder.notifications'),
         tabBarColor: '#F93636',
         tabBarIcon: () => (
-          <Icon size={26} name='notifications' color='#FFF' />
+          <MatIcon size={26} name='notifications' color='#FFF' />
         )
       }
     },
     Profile: {
       screen: ProfileStack,
       navigationOptions: {
-        title: 'Profile',
-        tabBarLabel: 'Profile',
+        title: I18n.t('placeholder.profile'),
+        tabBarLabel: I18n.t('placeholder.profile'),
         tabBarColor: '#6D06F9',
         tabBarIcon: () => (
-          <Icon size={26} name='account-box' color='#FFF' />
+          <MatIcon size={26} name='account-box' color='#FFF' />
         )
       }
     },
