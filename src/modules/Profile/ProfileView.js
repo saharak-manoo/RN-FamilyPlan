@@ -19,6 +19,7 @@ import * as GFunction from '../../util/GlobalFunction'
 import { styles } from '../../components/styles';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { ListItem } from 'react-native-elements'
+import RNRestart from 'react-native-restart';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -36,18 +37,16 @@ export default class ProfileView extends Component<Props> {
 
   componentDidMount = async () => {
     this.setState({ spinner: true });
-    let locale = await AsyncStorage.getItem('locale');
-    if (locale == null) {
-      locale = 'en'
-    }
-    this.setState((I18n.locale = locale), { isLanguageTH: locale == 'th' })
-    this.setState({ user: await GFunction.user() })
+    let locale = await AsyncStorage.getItem('locale')
+    this.setState({ user: await GFunction.user(), isLanguageTH: locale === 'th' })
   }
 
   onSelectedLanguageTh = async isLanguageTH => {
-    let locale = !isLanguageTH ? 'th' : 'en'
-    this.setState((I18n.locale = locale));
-    await AsyncStorage.setItem('locale', locale);
+    let locale = isLanguageTH ? 'th' : 'en'
+    I18n.locale = locale;
+    await AsyncStorage.setItem('locale', locale)
+    this.setState({ isLanguageTH: isLanguageTH })
+    RNRestart.Restart();
   };
 
 
@@ -177,8 +176,7 @@ export default class ProfileView extends Component<Props> {
                 chevron={
                   <Switch
                     value={this.state.isLanguageTH}
-                    onPress={this.onSelectedLanguageTh(this.state.isLanguageTH)}
-                    onValueChange={() => { this.setState({ isLanguageTH: !this.state.isLanguageTH }); }}
+                    onValueChange={(isLanguageTH) => this.onSelectedLanguageTh(isLanguageTH)}
                   />
                 }
               />

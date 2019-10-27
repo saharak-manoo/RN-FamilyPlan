@@ -10,7 +10,7 @@
     "ok": "ตกลง",
     "save": "บันทึก",
     "signinWith": "เข้าสู่ระบบด้วย",
-    "forgotPassword": "ลืมรหัสผ่าน",
+    "forgotPassword": "ลืมรหัสผ่าน ?",
     "resetPassword": "รีเซ็ตรหัสผ่าน",
     "editProfile": "แก้ไขโปรไฟล์"
   },
@@ -24,7 +24,7 @@
     "firstName": "ชื่อ",
     "lastName": "นามสกุล",
     "email": "อีเมล",
-    "telephone": "โทรศัพท์",
+    "phoneNumber": "โทรศัพท์",
     "password": "รหัสผ่าน",
     "confirmPassword": "ยืนยันรหัสผ่าน",
     "changePassword": "อีเมลของคุณ",
@@ -36,7 +36,7 @@
     "appVersion": "เวอร์ชั่น"
   },
   "message": {
-    "appName": "Family Plan",
+    "appName": "หน้าแรก",
     "profile": "โปรไฟล์",
     "home": "หน้าแรก",
     "chat": "แชท",
