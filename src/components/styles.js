@@ -48,21 +48,6 @@ export const styles = StyleSheet.create({
     backgroundColor: '#2370E6'
   },
 
-  listCard: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  card: {
-    justifyContent: 'center',
-    marginTop: 10,
-    height: (height / 5),
-    width: (width / 1.1),
-    borderRadius: 13,
-    backgroundColor: '#FFF'
-  },
-
   popUpModal: {
     backgroundColor: '#FFF'
   },
@@ -107,5 +92,65 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
     paddingTop: 22
+  },
+
+  listCard: {
+    flex: 0.1,
+    borderLeftColor: '#03C8A1',
+    borderLeftWidth: 4
+  },
+
+  listPubilcCard: {
+    flex: 0.1,
+    borderLeftColor: '#FAA829',
+    borderLeftWidth: 4
+  },
+
+  textCardList: {
+    paddingLeft: 15,
+    fontSize: 21
+  },
+
+  listCards: {
+    flex: 0.4,
+    flexDirection: 'row'
+  },
+
+  card: {
+    flex: 0.7,
+    backgroundColor: '#FFF',
+    margin: 10,
+    borderRadius: 20,
+    maxWidth: width / 2.7
+  },
+
+  headerCard: {
+    flex: 0.5,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderBottomLeftRadius: 90,
+    borderBottomRightRadius: 90
+  },
+
+  textHeadCard: {
+    fontSize: 24,
+    color: '#FFF',
+    alignSelf: 'center',
+    padding: 20
+  },
+
+  textNameCard: {
+    fontSize: 20,
+    color: '#000',
+    alignSelf: 'center',
+    padding: 15
+  },
+
+  totalMembersCard: {
+    fontSize: 13,
+    color: '#000',
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    padding: 10
   }
 });

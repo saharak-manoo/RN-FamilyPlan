@@ -46,7 +46,12 @@
     "loading": "กำลังโหลด",
     "service": "บริการ",
     "forgotPassword": "ลืมรหัสผ่าน",
-    "chooseService": "เลือกบริการ"
+    "chooseService": "เลือกบริการ",
+    "my": "ฉัน",
+    "group": "กลุ่ม",
+    "public": "สาธารณะ",
+    "myGroup": "กลุ่ม\nของฉัน",
+    "publicGroup": "กลุ่ม\nสาธารณะ"
   },
   "message": {
     "success": "สำเร็จ",

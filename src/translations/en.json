@@ -49,7 +49,12 @@
     "search": "Search",
     "loading": "Loading",
     "service": "Service",
-    "chooseService": "Choose Service"
+    "chooseService": "Choose Service",
+    "my": "My",
+    "group": "Group",
+    "public": "Public",
+    "myGroup": "My\nGroup",
+    "publicGroup": "Public\nGroup"
   },
   "message": {
     "forgotPassword": "Forgot password",

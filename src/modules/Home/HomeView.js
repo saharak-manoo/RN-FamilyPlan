@@ -1,11 +1,13 @@
 import React, { Component, useRef } from 'react';
 import {
   Dimensions,
+  FlatList,
   StatusBar,
   View,
 } from 'react-native';
 import {
   Appbar,
+  Text,
   Searchbar,
 } from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
@@ -16,6 +18,7 @@ import * as Api from '../../util/Api'
 import * as GFunction from '../../util/GlobalFunction'
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import PTRView from 'react-native-pull-to-refresh';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -24,6 +27,74 @@ import QrCodeView from '../Modal/QrCodeView';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
+const myGroup = [
+  {
+    name: 'G Netflix',
+    service: 'Netflix',
+    color: '#F30635',
+    members: 3,
+    max_member: 4
+  },
+  {
+    name: 'G Spotify',
+    service: 'Spotify',
+    color: '#00DF70',
+    members: 2,
+    max_member: 5
+  },
+  {
+    name: 'G Disney Plus',
+    service: 'Disney Plus',
+    color: '#454746',
+    members: 2,
+    max_member: 5
+  },
+  {
+    name: 'G Apple Music',
+    service: 'Apple Music',
+    color: '#FF116F',
+    members: 1,
+    max_member: 6
+  }
+]
+
+const publicGroup = [
+  {
+    name: 'G Apple Music',
+    service: 'Apple Music',
+    color: '#FF116F',
+    members: 1,
+    max_member: 6
+  },
+  {
+    name: 'G Netflix',
+    service: 'Netflix',
+    color: '#F30635',
+    members: 3,
+    max_member: 4
+  },
+  {
+    name: 'G Spotify',
+    service: 'Spotify',
+    color: '#00DF70',
+    members: 2,
+    max_member: 5
+  },
+  {
+    name: 'G Disney Plus',
+    service: 'Disney Plus',
+    color: '#454746',
+    members: 2,
+    max_member: 5
+  },
+  {
+    name: 'T Apple Music',
+    service: 'Apple Music',
+    color: '#FF116F',
+    members: 1,
+    max_member: 6
+  }
+]
 export default class Home extends Component<Props> {
   constructor(props) {
     super(props);
@@ -115,6 +186,82 @@ export default class Home extends Component<Props> {
     )
   }
 
+  refreshGroup() {
+    return new Promise((resolve) => {
+      setTimeout(() => { resolve() }, 2000)
+    });
+  }
+
+  listMyGroup = (myGroup) => {
+    return (
+      <FlatList
+        style={{ flex: 1 }}
+        data={myGroup}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item, index }) => {
+          return (
+            <View style={styles.card}>
+              <View style={{ flex: 1 }}>
+                <View style={[styles.headerCard, { backgroundColor: item.color }]}>
+                  <Text numberOfLines={1} style={styles.textHeadCard}>
+                    {item.service}
+                  </Text>
+                </View>
+                <View style={{ flex: 0.4 }}>
+                  <Text numberOfLines={1} style={styles.textNameCard}>
+                    {item.name}
+                  </Text>
+                </View>
+                <View style={{ flex: 0.3 }}>
+                  <Text numberOfLines={1} style={styles.totalMembersCard}>
+                    Total member: {item.members}/{item.max_member}
+                  </Text>
+                </View>
+              </View>
+            </View>)
+        }
+        }
+        keyExtractor={item => item}
+      />
+    )
+  }
+
+  listPubilcGroup = (pubilcGroup) => {
+    return (
+      <FlatList
+        style={{ flex: 1 }}
+        data={pubilcGroup}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item, index }) => {
+          return (
+            <View style={styles.card}>
+              <View style={{ flex: 1 }}>
+                <View style={[styles.headerCard, { backgroundColor: item.color }]}>
+                  <Text numberOfLines={1} style={styles.textHeadCard}>
+                    {item.service}
+                  </Text>
+                </View>
+                <View style={{ flex: 0.4 }}>
+                  <Text numberOfLines={1} style={{ fontSize: 20, color: '#000', alignSelf: 'center', padding: 15 }}>
+                    {item.name}
+                  </Text>
+                </View>
+                <View style={{ flex: 0.3 }}>
+                  <Text numberOfLines={1} style={{ fontSize: 13, color: '#000', alignSelf: 'center', justifyContent: 'flex-end', padding: 10 }}>
+                    Total member: {item.members}/{item.max_member}
+                  </Text>
+                </View>
+              </View>
+            </View>)
+        }
+        }
+        keyExtractor={item => item}
+      />
+    )
+  }
+
   render() {
     return (
       <View style={styles.defaultView}>
@@ -127,8 +274,26 @@ export default class Home extends Component<Props> {
           />
         </View>
 
-        <View style={{ flex: 1 }}>
-        </View>
+        <PTRView onRefresh={this.refreshGroup}>
+          <View style={{ flex: 1, padding: 15, paddingTop: 35 }}>
+            <View style={{ flex: 1 }}>
+              <View style={styles.listCard}>
+                <Text style={styles.textCardList}>{I18n.t('placeholder.myGroup')}</Text>
+              </View>
+              <View style={styles.listCards}>
+                {this.listMyGroup(myGroup)}
+              </View>
+            </View>
+            <View style={{ flex: 1, paddingTop: 20 }}>
+              <View style={styles.listPubilcCard}>
+                <Text style={styles.textCardList}>{I18n.t('placeholder.publicGroup')}</Text>
+              </View>
+              <View style={styles.listCards}>
+                {this.listPubilcGroup(publicGroup)}
+              </View>
+            </View>
+          </View>
+        </PTRView>
 
         {this.popUpModalNewGroup()}
         {this.popUpModalScanQrCode()}
