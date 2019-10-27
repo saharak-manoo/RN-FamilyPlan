@@ -12,7 +12,8 @@
     "signinWith": "เข้าสู่ระบบด้วย",
     "forgotPassword": "ลืมรหัสผ่าน ?",
     "resetPassword": "รีเซ็ตรหัสผ่าน",
-    "editProfile": "แก้ไขโปรไฟล์"
+    "editProfile": "แก้ไขโปรไฟล์",
+    "joinGroup": "เข้าร่วมกลุ่ม"
   },
   "text": {
     "mr": "นาย",
@@ -51,7 +52,8 @@
     "group": "กลุ่ม",
     "public": "สาธารณะ",
     "myGroup": "กลุ่ม\nของฉัน",
-    "publicGroup": "กลุ่ม\nสาธารณะ"
+    "publicGroup": "กลุ่ม\nสาธารณะ",
+    "joinGroup": "เข้าร่วมกลุ่ม"
   },
   "message": {
     "success": "สำเร็จ",
@@ -84,6 +86,7 @@
     "error": "มีข้อผิดพลาดเกิดขึ้น",
     "signOutFail": "ออกจากระบบล้มเหลว",
     "signOutSuccessful": "ออกจากระบบสำเร็จ",
-    "createGroupSuccessful": "สร้างกลุ่มสำเร็จ"
+    "createGroupSuccessful": "สร้างกลุ่มสำเร็จ",
+    "joinGroupSuccessful": "เข้าร่วมกลุ่มสำเร็จ"
   }
 }
