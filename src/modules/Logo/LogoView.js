@@ -4,11 +4,13 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  Text,
   Modal,
   StatusBar
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
+import I18n from '../../components/i18n';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -36,7 +38,7 @@ export default class LogoView extends Component<Props> {
       <View style={{ flex: 1, backgroundColor: '#1C83F7' }}>
         <StatusBar backgroundColor='#1C83F7' barStyle='light-content' />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'stretch', alignSelf: 'center' }}>
-          <Icon size={150} name='face' color='#FFF' />
+          <MatIcon size={160} name='group' color='#FFF' />
         </View>
       </View>
     )
