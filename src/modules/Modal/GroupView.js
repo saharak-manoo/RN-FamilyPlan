@@ -23,7 +23,7 @@ export default class GroupView extends Component<Props> {
         <Appbar.Header style={{ backgroundColor: this.props.group.color }}>
           <Appbar.Action icon='close' onPress={() => this.props.back()} />
           <Appbar.Content
-            title={I18n.t('placeholder.group')}
+            title={this.props.group.name}
           />
         </Appbar.Header>
       </View>
