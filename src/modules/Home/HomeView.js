@@ -41,7 +41,12 @@ export default class Home extends Component<Props> {
     this.state = {
       search: '',
       groupName: '',
+      spinner: false
     };
+  }
+
+  componentDidMount = async () => {
+    this.setState({ spinner: true });
   }
 
   newGroupModal = React.createRef();
@@ -85,7 +90,7 @@ export default class Home extends Component<Props> {
         withReactModal
       >
         <View style={{ padding: 30 }}>
-          <Text style={{ fontSize: 30 }}>New Group</Text>
+          <Text style={{ fontSize: 30 }}>{I18n.t('message.newGroup')}</Text>
           <View style={{ paddingTop: 15 }}>
             <TextInput
               style={{ backgroundColor: '#FFF' }}
@@ -96,7 +101,7 @@ export default class Home extends Component<Props> {
           </View>
 
           <View style={{ paddingTop: 20 }}>
-            <Text style={{ fontSize: 30 }}>Member</Text>
+            <Text style={{ fontSize: 30 }}>{I18n.t('message.members')}</Text>
             <View style={{ flexDirection: 'row' }}>
               <View style={{ flex: 1 }}>
                 <TextInput
