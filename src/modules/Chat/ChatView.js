@@ -9,7 +9,7 @@ import {
 } from 'react-native-paper';
 import I18n from '../../components/i18n';
 
-export default class Chat extends Component<Props> {
+export default class ChatView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {};

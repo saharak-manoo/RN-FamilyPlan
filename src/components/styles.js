@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
     borderLeftWidth: 4
   },
 
-  listPubilcCard: {
+  listPublicCard: {
     flex: 0.1,
     borderLeftColor: '#FAA829',
     borderLeftWidth: 4
@@ -121,7 +121,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     margin: 10,
     borderRadius: 20,
-    maxWidth: width / 2.7
+    width: width / 3
   },
 
   headerCard: {
