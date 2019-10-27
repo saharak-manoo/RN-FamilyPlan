@@ -65,4 +65,8 @@ export const styles = StyleSheet.create({
   handleModal: {
     backgroundColor: '#C5C5C5'
   },
+
+  spinnerTextStyle: {
+    color: '#FFF'
+  },
 });
