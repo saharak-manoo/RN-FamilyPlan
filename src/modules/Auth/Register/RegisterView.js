@@ -53,6 +53,12 @@ export default class RegisterView extends Component<Props> {
     };
   }
 
+  componentDidMount = async () => {
+    this.setState({ spinner: true });
+    let locale = await AsyncStorage.getItem('locale')
+    this.setState({ prefix: locale === 'th' ? 'นาย' : 'Mr' })
+  }
+
   appHerder() {
     return (
       <View>
@@ -134,7 +140,7 @@ export default class RegisterView extends Component<Props> {
         {this.appHerder()}
         <ScrollView style={{ flex: 1 }}>
           <View style={{ padding: 25, alignSelf: 'center' }}>
-            <Text style={{ alignItems: 'center', fontSize: 58 }}>Sign Up</Text>
+            <Text style={{ alignSelf: 'center', fontSize: 38 }}>{I18n.t('button.signUp')}</Text>
           </View>
           <View style={{ padding: 15 }}>
             <Dropdown
@@ -257,7 +263,7 @@ export default class RegisterView extends Component<Props> {
               <TouchableOpacity
                 style={{ padding: 20, paddingTop: 15, alignItems: 'center' }}
                 onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-                <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>Forgot your password ?</Text>
+                <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>{I18n.t('button.forgotPassword')}</Text>
               </TouchableOpacity>
 
               <AnimateLoadingButton

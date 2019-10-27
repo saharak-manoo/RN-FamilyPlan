@@ -50,6 +50,10 @@ target 'FamilyPlan' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
+  pod 'RNLanguages', :path => '../node_modules/react-native-languages'
+
+  pod 'RCTRestart', :path => '../node_modules/react-native-restart/ios'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

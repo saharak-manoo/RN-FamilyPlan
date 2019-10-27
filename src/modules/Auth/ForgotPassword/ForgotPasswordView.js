@@ -69,7 +69,7 @@ export default class ForgotPasswordView extends Component<Props> {
       <View style={{ flex: 1 }}>
         {this.appHerder()}
         <View style={{ padding: 45, alignContent: 'center' }}>
-          <Text style={{ alignItems: 'center', fontSize: 38 }}>{I18n.t('message.forgotPassword')}</Text>
+          <Text style={{ alignSelf: 'center', fontSize: 38 }}>{I18n.t('message.forgotPassword')}</Text>
         </View>
         <View style={{ padding: 15 }}>
           <TextInput

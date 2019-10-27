@@ -83,7 +83,7 @@ export default class LoginView extends Component<Props> {
       <View style={{ flex: 1 }}>
         {this.appHerder()}
         <View style={{ padding: 45, alignSelf: 'center' }}>
-          <Text style={{ alignItems: 'center', fontSize: 58 }}>Sign In</Text>
+          <Text style={{ alignSelf: 'center', fontSize: 38 }}>{I18n.t('button.signIn')}</Text>
         </View>
         <View style={{ padding: 15 }}>
           <TextInput
@@ -132,7 +132,7 @@ export default class LoginView extends Component<Props> {
             <TouchableOpacity
               style={{ padding: 20, paddingTop: 15, alignItems: 'center' }}
               onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-              <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>Forgot your password ?</Text>
+              <Text style={{ fontSize: 15, textDecorationLine: 'underline' }}>{I18n.t('button.forgotPassword')}</Text>
             </TouchableOpacity>
 
             <AnimateLoadingButton

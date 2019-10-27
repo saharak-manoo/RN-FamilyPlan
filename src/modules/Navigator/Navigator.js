@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { View } from 'react-native'
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import I18n from '../../components/i18n';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Badge } from 'react-native-elements'
 
 // View
 import HomeView from '../Home/HomeView';
