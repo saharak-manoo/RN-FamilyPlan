@@ -10,6 +10,7 @@ import Modalize from 'react-native-modalize';
 import {ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import LinearGradient from 'react-native-linear-gradient';
+import Swipeout from 'react-native-swipeout';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
@@ -18,6 +19,18 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const members = [
+  {
+    name: 'Amy Farha',
+    avatar_url:
+      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Vice President',
+  },
+  {
+    name: 'Chris Jackson',
+    avatar_url:
+      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    subtitle: 'Vice Chairman',
+  },
   {
     name: 'Amy Farha',
     avatar_url:
@@ -96,7 +109,7 @@ export default class GroupView extends Component<Props> {
           />
           <Text
             style={{
-              padding: 12,
+              padding: 14,
               paddingLeft: 35,
               fontSize: 28,
               justifyContent: 'center',
@@ -114,7 +127,7 @@ export default class GroupView extends Component<Props> {
           />
           <Text
             style={{
-              padding: 12,
+              padding: 14,
               paddingLeft: 35,
               fontSize: 28,
               justifyContent: 'center',
@@ -126,6 +139,10 @@ export default class GroupView extends Component<Props> {
     );
   };
 
+  removeMember(id) {
+    alert(id);
+  }
+
   listMembers = members => {
     return (
       <FlatList
@@ -133,18 +150,31 @@ export default class GroupView extends Component<Props> {
         data={members}
         renderItem={({item, index}) => {
           return (
-            <ListItem
-              key={index}
-              containerStyle={{borderRadius: 15}}
-              Component={TouchableScale}
-              friction={90}
-              tension={100}
-              activeScale={0.95}
-              leftAvatar={{source: {uri: item.avatar_url}}}
-              title={item.name}
-              subtitle={item.subtitle}
-              bottomDivider
-            />
+            <Swipeout
+              autoClose={true}
+              right={[
+                {
+                  text: 'Delete',
+                  type: 'delete',
+                  onPress: () => {
+                    this.removeMember(item.id);
+                  },
+                },
+              ]}
+              style={{backgroundColor: '#FFF', borderRadius: 15}}>
+              <ListItem
+                key={index}
+                containerStyle={{borderRadius: 15}}
+                Component={TouchableScale}
+                friction={90}
+                tension={100}
+                activeScale={0.95}
+                leftAvatar={{source: {uri: item.avatar_url}}}
+                title={item.name}
+                subtitle={item.subtitle}
+                bottomDivider
+              />
+            </Swipeout>
           );
         }}
         keyExtractor={item => item}
