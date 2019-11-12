@@ -3,6 +3,8 @@ import {
   Dimensions,
   FlatList,
   Modal,
+  RefreshControl,
+  ScrollView,
   TouchableOpacity,
   StatusBar,
   View,
@@ -102,6 +104,7 @@ export default class HomeView extends Component<Props> {
       spinner: false,
       modalGroup: false,
       group: null,
+      refreshing: false,
     };
   }
 
@@ -221,13 +224,12 @@ export default class HomeView extends Component<Props> {
     );
   }
 
-  refreshGroup() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, 2000);
-    });
-  }
+  refreshGroup = async () => {
+    await this.setState({refreshing: true});
+    setTimeout(async () => {
+      await this.setState({refreshing: false});
+    }, 3000);
+  };
 
   listMyGroup = myGroup => {
     return (
@@ -350,7 +352,13 @@ export default class HomeView extends Component<Props> {
             textStyle={styles.spinnerTextStyle}
           />
         ) : (
-          <PTRView onRefresh={this.refreshGroup}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.refreshGroup}
+              />
+            }>
             <View style={{flex: 1, padding: 15, paddingTop: 35}}>
               <View style={{flex: 1}}>
                 <View style={styles.listCard}>
@@ -361,7 +369,7 @@ export default class HomeView extends Component<Props> {
                 <View style={styles.listCards}>{this.listMyGroup(groups)}</View>
               </View>
 
-              <View style={{flex: 1, paddingTop: 20}}>
+              <View style={{flex: 1, paddingTop: 40}}>
                 <View style={styles.listPublicCard}>
                   <Text style={styles.textCardList}>
                     {I18n.t('placeholder.publicGroup')}
@@ -372,7 +380,7 @@ export default class HomeView extends Component<Props> {
                 </View>
               </View>
             </View>
-          </PTRView>
+          </ScrollView>
         )}
 
         {this.popUpModalJoinGroup(this.state.group)}
