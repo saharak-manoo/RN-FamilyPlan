@@ -23,7 +23,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import NewGroupView from '../Modal/NewGroupVew';
 import QrCodeView from '../Modal/QrCodeView';
 import JoinGroupView from '../Modal/JoinGroupView';
-import GroupView from '../Modal/GroupView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -324,36 +323,16 @@ export default class HomeView extends Component<Props> {
   };
 
   goToModalGroup = group => {
-    setTimeout(() => {
-      this.setState({modalGroup: true, group: group});
-    }, 400);
+    this.props.navigation.navigate('Group', {group: group});
+    // setTimeout(() => {
+    //   this.setState({modalGroup: true, group: group});
+    // }, 400);
   };
-
-  showModalGroup() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={this.state.modalGroup}
-        presentationStyle="fullScreen"
-        onRequestClose={() => {
-          this.setState({modalGroup: false});
-        }}>
-        <GroupView
-          group={this.state.group}
-          back={() => {
-            this.setState({modalGroup: false});
-          }}
-        />
-      </Modal>
-    );
-  }
 
   render() {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
-        {this.showModalGroup()}
         <View style={{padding: 15}}>
           <Searchbar
             placeholder={I18n.t('placeholder.search')}

@@ -1,13 +1,12 @@
-import { Dimensions, StyleSheet, Platform } from 'react-native';
+import {Dimensions, StyleSheet, Platform} from 'react-native';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_ANDROID = Platform.OS === 'android';
 
 export const styles = StyleSheet.create({
-
   defaultView: {
     flex: 1,
-    backgroundColor: '#D1D1D1'
+    backgroundColor: '#D1D1D1',
   },
 
   cardProfile: {
@@ -29,27 +28,27 @@ export const styles = StyleSheet.create({
     marginTop: -85,
     width: 150,
     height: 150,
-    borderRadius: 150 / 2
+    borderRadius: 150 / 2,
   },
 
   homeColor: {
-    backgroundColor: '#2370E6'
+    backgroundColor: '#2370E6',
   },
 
   chatColor: {
-    backgroundColor: '#09A650'
+    backgroundColor: '#09A650',
   },
 
   notiColor: {
-    backgroundColor: '#2370E6'
+    backgroundColor: '#2370E6',
   },
 
   settingColor: {
-    backgroundColor: '#2370E6'
+    backgroundColor: '#2370E6',
   },
 
   popUpModal: {
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
 
   overlayModal: {
@@ -57,11 +56,11 @@ export const styles = StyleSheet.create({
   },
 
   handleModal: {
-    backgroundColor: '#C5C5C5'
+    backgroundColor: '#C5C5C5',
   },
 
   spinnerTextStyle: {
-    color: '#FFF'
+    color: '#FFF',
   },
 
   actionButtonIcon: {
@@ -73,47 +72,47 @@ export const styles = StyleSheet.create({
   buttonSignOut: {
     flex: 0.25,
     justifyContent: 'flex-end',
-    paddingBottom: 20
+    paddingBottom: 20,
   },
 
   profile: {
     flex: 1,
     padding: 10,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
 
   profileName: {
     fontSize: 35,
     alignSelf: 'center',
-    paddingTop: 22
+    paddingTop: 22,
   },
 
   profileText: {
     fontSize: 20,
     alignSelf: 'center',
-    paddingTop: 22
+    paddingTop: 22,
   },
 
   listCard: {
     flex: 0.1,
     borderLeftColor: '#03C8A1',
-    borderLeftWidth: 4
+    borderLeftWidth: 4,
   },
 
   listPublicCard: {
     flex: 0.1,
     borderLeftColor: '#FAA829',
-    borderLeftWidth: 4
+    borderLeftWidth: 4,
   },
 
   textCardList: {
     paddingLeft: 15,
-    fontSize: 21
+    fontSize: 21,
   },
 
   listCards: {
     flex: 0.4,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
 
   card: {
@@ -121,7 +120,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     margin: 10,
     borderRadius: 20,
-    width: width / 3
+    width: width / 3,
   },
 
   headerCard: {
@@ -129,21 +128,21 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderBottomLeftRadius: 90,
-    borderBottomRightRadius: 90
+    borderBottomRightRadius: 90,
   },
 
   textHeadCard: {
     fontSize: 24,
     color: '#FFF',
     alignSelf: 'center',
-    padding: 20
+    padding: 20,
   },
 
   textNameCard: {
     fontSize: 20,
     color: '#000',
     alignSelf: 'center',
-    padding: 15
+    padding: 15,
   },
 
   totalMembersCard: {
@@ -151,6 +150,6 @@ export const styles = StyleSheet.create({
     color: '#000',
     alignSelf: 'center',
     justifyContent: 'flex-end',
-    padding: 10
-  }
+    padding: 10,
+  },
 });
