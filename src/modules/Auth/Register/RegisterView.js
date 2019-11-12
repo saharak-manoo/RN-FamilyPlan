@@ -109,7 +109,7 @@ export default class RegisterView extends Component<Props> {
       confirm_password: this.state.confirmPassword
     }
 
-    let response = await Api.createUser(params);
+    let response = await Api.signUp(params);
     console.log(response)
     if (response.success) {
       this.loadingSignUp.showLoading(false)
