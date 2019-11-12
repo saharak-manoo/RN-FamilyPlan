@@ -56,7 +56,8 @@
     "joinGroup": "เข้าร่วมกลุ่ม",
     "forgotPassword": "ลืมรหัสผ่าน",
     "inviteMember": "เชิญสมาชิก",
-    "setUpAReminder": "ตั้งค่าเตือนความจำ"
+    "setUpAReminder": "ตั้งค่าเตือนความจำ",
+    "dueDate": "วันที่ครบกำหนด"
   },
   "message": {
     "success": "สำเร็จ",
