@@ -152,4 +152,18 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     padding: 10,
   },
+
+  cardListInfo: {
+    flex: 0.6,
+    margin: 10,
+    backgroundColor: '#FFF',
+    borderRadius: 15,
+  },
+
+  cardListMember: {
+    flex: 1,
+    margin: 10,
+    backgroundColor: '#FFF',
+    borderRadius: 15,
+  },
 });
