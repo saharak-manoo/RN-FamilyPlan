@@ -1,10 +1,11 @@
 const HOSTS = [
   'http://192.168.2.102:3000',
-  'http://10.251.1.204:3000'
-]
+  'http://10.251.1.204:3000',
+  'http://192.168.1.37:3000',
+];
 
-const HOST = HOSTS[1];
-const SIGN_UP_PATH = '/registrations';
+const HOST = HOSTS[2];
+const SIGN_UP_PATH = '/api/v1/users';
 const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
 const SIGN_OUT_PATH = '/api/v1/sessions/sign_out';
 const FORGOT_PASSWORD_PATH = '/api/v1/sessions/forgot_password';
