@@ -6,7 +6,7 @@ I18n.locale = RNLanguages.language;
 I18n.fallbacks = true;
 I18n.translations = {
   th: require('../translations/th'),
-  en: require('../translations/en')
+  en: require('../translations/en'),
 };
 
 export default I18n;
