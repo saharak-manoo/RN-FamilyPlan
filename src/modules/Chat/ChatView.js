@@ -1,12 +1,6 @@
-import React, { Component } from 'react';
-import {
-  StatusBar,
-  View
-} from 'react-native';
-import {
-  Appbar,
-  Text
-} from 'react-native-paper';
+import React, {Component} from 'react';
+import {StatusBar, View} from 'react-native';
+import {Appbar, Text} from 'react-native-paper';
 import I18n from '../../components/i18n';
 
 export default class ChatView extends Component<Props> {
@@ -18,14 +12,12 @@ export default class ChatView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor='#09A650' barStyle='light-content' />
-        <Appbar.Header style={{ backgroundColor: '#09A650' }}>
-          <Appbar.Content
-            title={I18n.t('placeholder.chat')}
-          />
+        <StatusBar backgroundColor="#09A650" barStyle="light-content" />
+        <Appbar.Header style={{backgroundColor: '#09A650'}}>
+          <Appbar.Content title={I18n.t('placeholder.chat')} />
         </Appbar.Header>
       </View>
-    )
+    );
   }
 
   render() {
@@ -36,4 +28,4 @@ export default class ChatView extends Component<Props> {
       </View>
     );
   }
-};
+}
