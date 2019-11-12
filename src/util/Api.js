@@ -1,10 +1,11 @@
 const HOSTS = [
+  'https://family-plan.herokuapp.com',
   'http://192.168.2.102:3000',
   'http://10.251.1.204:3000',
   'http://192.168.1.37:3000',
 ];
 
-const HOST = HOSTS[2];
+const HOST = HOSTS[0];
 const SIGN_UP_PATH = '/api/v1/users';
 const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
 const SIGN_OUT_PATH = '/api/v1/sessions/sign_out';
@@ -30,9 +31,9 @@ export async function signIn(params) {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ user: params })
+      body: JSON.stringify({user: params}),
     });
 
     let response = await resp.json();
@@ -50,9 +51,9 @@ export async function signUp(params) {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ user: params })
+      body: JSON.stringify({user: params}),
     });
 
     let response = await resp.json();
@@ -70,9 +71,9 @@ export async function forgotPassword(params) {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ user: params })
+      body: JSON.stringify({user: params}),
     });
 
     let response = await resp.json();
@@ -91,8 +92,8 @@ export async function signOut(token) {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     let response = await resp.json();
@@ -106,14 +107,17 @@ export async function signOut(token) {
 
 export async function getProfile(token, user_id) {
   try {
-    const resp = await fetch(joinUrl(HOST, PROFILE_PATH.replace(':user_id', user_id)), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    const resp = await fetch(
+      joinUrl(HOST, PROFILE_PATH.replace(':user_id', user_id)),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     let response = await resp.json();
     if (response) {
@@ -123,4 +127,3 @@ export async function getProfile(token, user_id) {
     console.warn(e);
   }
 }
-

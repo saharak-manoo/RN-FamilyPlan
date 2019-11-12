@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 // View
 import NavigatorStack from './Navigator';
@@ -10,8 +10,6 @@ export default class NavigatorView extends Component<Props> {
   }
 
   render() {
-    return (
-      <NavigatorStack />
-    );
+    return <NavigatorStack />;
   }
-};
+}
