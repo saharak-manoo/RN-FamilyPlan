@@ -36,7 +36,7 @@ export default class ForgotPasswordView extends Component<Props> {
         <Appbar.Header style={{ backgroundColor: '#0144A4' }}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
-            title={I18n.t('placeholder.forgotPassword')}
+            title={I18n.t('placeholder.appName')}
           />
         </Appbar.Header>
       </View>
