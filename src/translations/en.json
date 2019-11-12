@@ -60,7 +60,8 @@
     "joinGroup": "Join Group",
     "forgotPassword": "Forgot your password",
     "inviteMember": "Invite member",
-    "setUpAReminder": "Set up a reminder"
+    "setUpAReminder": "Set up a reminder",
+    "dueDate": "Due date"
   },
   "message": {
     "forgotPassword": "Forgot password",

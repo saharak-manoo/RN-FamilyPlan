@@ -36,6 +36,7 @@ const groups = [
     color: '#F30635',
     members: 3,
     max_member: 4,
+    due_date: '05/11/2019',
   },
   {
     name: 'G Spotify',
@@ -43,6 +44,7 @@ const groups = [
     color: '#009652',
     members: 2,
     max_member: 5,
+    due_date: '06/11/2019',
   },
   {
     name: 'G Disney Plus',
@@ -50,6 +52,7 @@ const groups = [
     color: '#454746',
     members: 2,
     max_member: 5,
+    due_date: '03/11/2019',
   },
   {
     name: 'G Apple Music',
@@ -57,6 +60,7 @@ const groups = [
     color: '#FF116F',
     members: 1,
     max_member: 6,
+    due_date: '09/11/2019',
   },
   {
     name: 'G Apple Music',
@@ -64,6 +68,7 @@ const groups = [
     color: '#FF116F',
     members: 1,
     max_member: 6,
+    due_date: '12/11/2019',
   },
   {
     name: 'G Netflix',
@@ -71,6 +76,7 @@ const groups = [
     color: '#F30635',
     members: 3,
     max_member: 4,
+    due_date: '23/11/2019',
   },
   {
     name: 'G Spotify',
@@ -78,6 +84,7 @@ const groups = [
     color: '#009652',
     members: 2,
     max_member: 5,
+    due_date: '21/11/2019',
   },
   {
     name: 'G Disney Plus',
@@ -85,6 +92,7 @@ const groups = [
     color: '#454746',
     members: 2,
     max_member: 5,
+    due_date: '19/11/2019',
   },
   {
     name: 'T Apple Music',
@@ -92,6 +100,7 @@ const groups = [
     color: '#FF116F',
     members: 1,
     max_member: 6,
+    due_date: '16/11/2019',
   },
 ];
 
