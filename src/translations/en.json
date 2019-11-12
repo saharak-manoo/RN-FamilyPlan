@@ -56,7 +56,8 @@
     "public": "Public",
     "myGroup": "My\nGroup",
     "publicGroup": "Public\nGroup",
-    "joinGroup": "Join Group"
+    "joinGroup": "Join Group",
+    "forgotPassword": "Forgot your password"
   },
   "message": {
     "forgotPassword": "Forgot password",
