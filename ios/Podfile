@@ -58,6 +58,10 @@ target 'FamilyPlan' do
 
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing
