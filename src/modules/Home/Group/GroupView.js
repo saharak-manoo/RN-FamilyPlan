@@ -14,6 +14,7 @@ import Swipeout from 'react-native-swipeout';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
+import SetUpReminderView from '../../Modal/SetUpReminderView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -48,11 +49,17 @@ const members = [
 export default class GroupView extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {};
-    this.params = this.props.navigation.state.params;
+    this.state = {
+      group: this.props.navigation.state.params.group,
+    };
   }
 
   inviteMemberModal = React.createRef();
+  setUpReminderModal = React.createRef();
+
+  async componentWillMount() {
+    await this.setState({group: this.props.navigation.state.params.group});
+  }
 
   AppHerder() {
     return (
@@ -60,7 +67,7 @@ export default class GroupView extends Component<Props> {
         <StatusBar backgroundColor="#2370E6" barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#2370E6'}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-          <Appbar.Content title={this.params.group.name} />
+          <Appbar.Content title={this.state.group.name} />
         </Appbar.Header>
       </View>
     );
@@ -91,10 +98,52 @@ export default class GroupView extends Component<Props> {
         }}
         withReactModal
         adjustToContentHeight>
-        <InviteMemberView modal={this.inviteMemberModal} />
+        <InviteMemberView
+          modal={this.inviteMemberModal}
+          group={this.state.group}
+          onSetNewData={this.setNewData}
+        />
       </Modalize>
     );
   }
+
+  showSetUpReminderModal = () => {
+    if (this.setUpReminderModal.current) {
+      this.setUpReminderModal.current.open();
+    }
+  };
+
+  popUpModalSetUpReminder() {
+    return (
+      <Modalize
+        ref={this.setUpReminderModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <SetUpReminderView
+          modal={this.setUpReminderModal}
+          group={this.state.group}
+          onSetNewData={this.setNewData}
+        />
+      </Modalize>
+    );
+  }
+
+  setNewData = async group => {
+    await this.setState({group: group});
+  };
 
   listInfo = () => {
     return (
@@ -104,7 +153,7 @@ export default class GroupView extends Component<Props> {
             raised
             name="add-alert"
             type="mat-icon"
-            color={this.params.group.color}
+            color={this.state.group.color}
             onPress={() => console.log('hello')}
           />
           <Text
@@ -114,7 +163,7 @@ export default class GroupView extends Component<Props> {
               fontSize: 28,
               justifyContent: 'center',
             }}>
-            12/09/2019
+            {this.state.group.due_date}
           </Text>
         </View>
         <View style={{flex: 1, flexDirection: 'row', padding: 15}}>
@@ -197,6 +246,7 @@ export default class GroupView extends Component<Props> {
         <View style={styles.cardListMember}>{this.listMembers(members)}</View>
 
         {this.popUpModalInviteMember()}
+        {this.popUpModalSetUpReminder()}
         <ActionButton buttonColor="rgba(231,76,60,1)">
           <ActionButton.Item
             buttonColor="#03C8A1"
@@ -207,7 +257,7 @@ export default class GroupView extends Component<Props> {
           <ActionButton.Item
             buttonColor="#3D71FB"
             title={I18n.t('placeholder.setUpAReminder')}
-            onPress={this.showSetUpAReminderModal}>
+            onPress={this.showSetUpReminderModal}>
             <MatIcon name="add-alert" style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>

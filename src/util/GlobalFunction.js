@@ -56,3 +56,16 @@ export function validatePasswordMatch(password, confirmPassword) {
 export function validateBlank(value) {
   return value == '';
 }
+
+export function strToDate(dateStr) {
+  let date = dateStr.split('/');
+  let day = date[1];
+  let month = date[0];
+  let year = date[2];
+  return new Date(day + '/' + month + '/' + year) || new Date();
+}
+
+export function dateToStr(date) {
+  let month = date.getMonth() + 1;
+  return date.getDate() + '/' + month + '/' + date.getFullYear();
+}
