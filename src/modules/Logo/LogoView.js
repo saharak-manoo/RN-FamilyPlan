@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   Alert,
   View,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Text,
   Modal,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -24,23 +24,29 @@ export default class LogoView extends Component<Props> {
   }
 
   async UNSAFE_componentWillMount() {
-    let isSignIn = await AsyncStorage.getItem('user')
-    await this.setState({ isSignIn: isSignIn != null })
+    let isSignIn = await AsyncStorage.getItem('user');
+    await this.setState({isSignIn: isSignIn != null});
     if (this.state.isSignIn) {
-      this.props.navigation.navigate('Home')
+      this.props.navigation.navigate('Home');
     } else {
-      this.props.navigation.navigate('Login')
+      this.props.navigation.navigate('Login');
     }
   }
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: '#1C83F7' }}>
-        <StatusBar backgroundColor='#1C83F7' barStyle='light-content' />
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'stretch', alignSelf: 'center' }}>
-          <MatIcon size={160} name='group' color='#FFF' />
+      <View style={{flex: 1, backgroundColor: '#1C83F7'}}>
+        <StatusBar backgroundColor="#1C83F7" barStyle="light-content" />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'stretch',
+            alignSelf: 'center',
+          }}>
+          <MatIcon size={160} name="group" color="#FFF" />
         </View>
       </View>
-    )
+    );
   }
 }
