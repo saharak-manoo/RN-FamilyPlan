@@ -9,11 +9,27 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 
-export default class ChatView extends Component<Props> {
+const members = [
+  {
+    name: 'Amy Farha',
+    avatar_url:
+      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Vice President',
+  },
+  {
+    name: 'Chris Jackson',
+    avatar_url:
+      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    subtitle: 'Vice Chairman',
+  },
+];
+
+export default class ChatListView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
       search: '',
+      members: members,
     };
   }
 
@@ -22,18 +38,17 @@ export default class ChatView extends Component<Props> {
       <View>
         <StatusBar backgroundColor="#09A650" barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#09A650'}}>
-          <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content title={I18n.t('placeholder.chat')} />
         </Appbar.Header>
       </View>
     );
   }
 
-  listChat = chats => {
+  listMembers = members => {
     return (
       <FlatList
         style={{flex: 1}}
-        data={chats}
+        data={members}
         renderItem={({item, index}) => {
           return (
             <Swipeout
@@ -57,6 +72,7 @@ export default class ChatView extends Component<Props> {
                 leftAvatar={{source: {uri: item.avatar_url}}}
                 title={item.name}
                 subtitle={item.subtitle}
+                onPress={() => this.goToChatRoom(item)}
                 bottomDivider
                 chevron
               />
@@ -68,39 +84,53 @@ export default class ChatView extends Component<Props> {
     );
   };
 
-  // alertRemoveChatMember(id, index) {
-  //   Alert.alert(
-  //     '',
-  //     'Are your sure tou want to delete this chat ?',
-  //     [
-  //       {
-  //         text: 'Cancel',
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: 'Delete',
-  //         onPress: () => this.removeChatMember(id, index),
-  //         style: 'destructive',
-  //       },
-  //     ],
-  //     {cancelable: false},
-  //   );
-  // }
+  alertRemoveChatMember(id, index) {
+    Alert.alert(
+      '',
+      'Are your sure tou want to delete this chat ?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => this.removeChatMember(id, index),
+          style: 'destructive',
+        },
+      ],
+      {cancelable: false},
+    );
+  }
 
-  // async removeChatMember(id, index) {
-  //   this.state.members.splice(index, 1);
-  //   await this.setState({group: this.state.members});
-  //   GFunction.successMessage(
-  //     I18n.t('message.success'),
-  //     I18n.t('message.removeChatSuccessful'),
-  //   );
-  // }
+  async removeChatMember(id, index) {
+    this.state.members.splice(index, 1);
+    await this.setState({group: this.state.members});
+    GFunction.successMessage(
+      I18n.t('message.success'),
+      I18n.t('message.removeChatSuccessful'),
+    );
+  }
+
+  goToChatRoom(member) {
+    console.log(member);
+    this.props.navigation.navigate('ChatRoom', {member: member});
+  }
 
   render() {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
-        <View style={{flex: 1, padding: 15}}></View>
+        <View style={{padding: 15}}>
+          <Searchbar
+            placeholder={I18n.t('placeholder.search')}
+            onChangeText={searching => {
+              this.setState({search: searching});
+            }}
+            value={this.state.search}
+          />
+        </View>
+        <View style={{flex: 1, padding: 15}}>{this.listMembers(members)}</View>
       </View>
     );
   }

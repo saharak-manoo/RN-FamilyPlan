@@ -10,6 +10,7 @@ import {Badge} from 'react-native-elements';
 
 // View
 import HomeView from '../Home/HomeView';
+import ChatListView from '../Chat/ChatListView';
 import ChatView from '../Chat/ChatView';
 import NotificationView from '../Notification/NotificationView';
 import ProfileView from '../Profile/ProfileView';
@@ -23,6 +24,16 @@ const HomeStack = createStackNavigator(
   {
     Home: {screen: HomeView},
     Group: {screen: GroupView},
+  },
+  {
+    headerMode: 'none',
+  },
+);
+
+const ChatStack = createStackNavigator(
+  {
+    ChatList: {screen: ChatListView},
+    ChatRoom: {screen: ChatView},
   },
   {
     headerMode: 'none',
@@ -61,13 +72,24 @@ const MainNavigator = createMaterialBottomTabNavigator(
       },
     },
     Chat: {
-      screen: ChatView,
-      navigationOptions: {
-        title: I18n.t('placeholder.chat'),
-        tabBarLabel: I18n.t('placeholder.chat'),
-        tabBarColor: '#09A650',
-        tabBarIcon: () => <MatIcon size={26} name="chat" color="#FFF" />,
+      screen: ChatStack,
+      navigationOptions: ({navigation}) => {
+        let last = navigation.state.routes.length - 1;
+        let visible = navigation.state.routes[last].routeName !== 'ChatRoom';
+        return {
+          tabBarVisible: visible,
+          title: I18n.t('placeholder.chat'),
+          tabBarLabel: I18n.t('placeholder.chat'),
+          tabBarColor: '#09A650',
+          tabBarIcon: () => <MatIcon size={26} name="chat" color="#FFF" />,
+        };
       },
+      // navigationOptions: {
+      //   title: I18n.t('placeholder.chat'),
+      //   tabBarLabel: I18n.t('placeholder.chat'),
+      //   tabBarColor: '#09A650',
+      //   tabBarIcon: () => <MatIcon size={26} name="chat" color="#FFF" />,
+      // },
     },
     Notification: {
       screen: NotificationView,
