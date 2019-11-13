@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Alert, FlatList, StatusBar, View} from 'react-native';
-import {Appbar, Text, Searchbar} from 'react-native-paper';
+import {Appbar, Text, Searchbar, TextInput} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
 import {ListItem, Icon} from 'react-native-elements';
@@ -8,11 +8,13 @@ import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
+import {GiftedChat} from 'react-native-gifted-chat';
 
 export default class ChatView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      messages: [],
       search: '',
     };
   }
@@ -27,6 +29,39 @@ export default class ChatView extends Component<Props> {
         </Appbar.Header>
       </View>
     );
+  }
+
+  componentWillMount() {
+    this.setState({
+      messages: [
+        {
+          _id: 1,
+          text: 'Hello developer',
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'React Native',
+            avatar: 'https://placeimg.com/140/140/any',
+          },
+        },
+        {
+          _id: 2,
+          text: 'Hello Family Plan',
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'React Native',
+            avatar: 'https://placeimg.com/140/140/any',
+          },
+        },
+      ],
+    });
+  }
+
+  onSend(messages = []) {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
   }
 
   listChat = chats => {
@@ -68,39 +103,18 @@ export default class ChatView extends Component<Props> {
     );
   };
 
-  // alertRemoveChatMember(id, index) {
-  //   Alert.alert(
-  //     '',
-  //     'Are your sure tou want to delete this chat ?',
-  //     [
-  //       {
-  //         text: 'Cancel',
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: 'Delete',
-  //         onPress: () => this.removeChatMember(id, index),
-  //         style: 'destructive',
-  //       },
-  //     ],
-  //     {cancelable: false},
-  //   );
-  // }
-
-  // async removeChatMember(id, index) {
-  //   this.state.members.splice(index, 1);
-  //   await this.setState({group: this.state.members});
-  //   GFunction.successMessage(
-  //     I18n.t('message.success'),
-  //     I18n.t('message.removeChatSuccessful'),
-  //   );
-  // }
-
   render() {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
-        <View style={{flex: 1, padding: 15}}></View>
+        <View style={{flex: 1}}>
+          <GiftedChat
+            loadEarlier
+            isLoadingEarlier
+            messages={this.state.messages}
+            onSend={messages => this.onSend(messages)}
+          />
+        </View>
       </View>
     );
   }

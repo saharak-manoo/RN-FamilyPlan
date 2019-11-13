@@ -84,12 +84,6 @@ const MainNavigator = createMaterialBottomTabNavigator(
           tabBarIcon: () => <MatIcon size={26} name="chat" color="#FFF" />,
         };
       },
-      // navigationOptions: {
-      //   title: I18n.t('placeholder.chat'),
-      //   tabBarLabel: I18n.t('placeholder.chat'),
-      //   tabBarColor: '#09A650',
-      //   tabBarIcon: () => <MatIcon size={26} name="chat" color="#FFF" />,
-      // },
     },
     Notification: {
       screen: NotificationView,
