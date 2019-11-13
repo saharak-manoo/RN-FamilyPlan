@@ -3,6 +3,7 @@ import {
   Alert,
   Dimensions,
   FlatList,
+  Platform,
   Modal,
   StatusBar,
   View,
@@ -27,6 +28,7 @@ import SettingServiceChargeView from '../../Modal/SettingServiceChargeView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const IS_IOS = Platform.OS === 'ios';
 
 export default class GroupView extends Component<Props> {
   constructor(props) {
@@ -165,7 +167,8 @@ export default class GroupView extends Component<Props> {
   listInfo = () => {
     return (
       <View style={{flex: 1, flexDirection: 'column'}}>
-        <View style={{flex: 1, flexDirection: 'row', padding: 15}}>
+        <View
+          style={{flex: 1, flexDirection: 'row', padding: IS_IOS ? 15 : 10}}>
           <Icon
             raised
             name="add-alert"
@@ -175,7 +178,7 @@ export default class GroupView extends Component<Props> {
           />
           <Text
             style={{
-              padding: 14,
+              padding: IS_IOS ? 15 : 5,
               paddingLeft: 35,
               fontSize: 28,
               justifyContent: 'center',
@@ -183,7 +186,8 @@ export default class GroupView extends Component<Props> {
             {this.state.group.due_date}
           </Text>
         </View>
-        <View style={{flex: 1, flexDirection: 'row', padding: 15}}>
+        <View
+          style={{flex: 1, flexDirection: 'row', padding: IS_IOS ? 14 : 10}}>
           <Icon
             raised
             name="dollar"
@@ -193,7 +197,7 @@ export default class GroupView extends Component<Props> {
           />
           <Text
             style={{
-              padding: 14,
+              padding: IS_IOS ? 14 : 4,
               paddingLeft: 35,
               fontSize: 28,
               justifyContent: 'center',
