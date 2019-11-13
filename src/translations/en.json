@@ -20,6 +20,8 @@
     "mr": "Mr",
     "mrs": "Mrs",
     "miss": "Miss",
+    "info": "Info",
+    "members": "Members",
     "appleMusic": "Apple music",
     "disneyPlus": "Disney plus",
     "netflix": "Netflix",
@@ -61,7 +63,9 @@
     "forgotPassword": "Forgot your password",
     "inviteMember": "Invite member",
     "setUpAReminder": "Set up a reminder",
-    "dueDate": "Due date"
+    "dueDate": "Due date",
+    "settingServiceCharge": "Setting service charge",
+    "serviceCharge": "Service charge"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -97,6 +101,9 @@
     "signOutSuccessful": "Sign out successful",
     "createGroupSuccessful": "Create group successful",
     "joinGroupSuccessful": "Join group successful",
-    "inviteMemberSuccessful": "Invite member successful"
+    "inviteMemberSuccessful": "Invite member successful",
+    "settingServiceChargeSuccessful": "Setting service charge successful",
+    "settingDueDateSuccessful": "Setting due date successful",
+    "removeMemberSuccessful": "Remove member successful"
   }
 }
