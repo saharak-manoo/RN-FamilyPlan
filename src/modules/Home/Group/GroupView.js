@@ -235,9 +235,9 @@ export default class GroupView extends Component<Props> {
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{source: {uri: item.avatar_url}}}
-                title={item.name}
-                subtitle={item.subtitle}
+                leftAvatar={{source: {uri: item.photo}}}
+                title={item.full_name}
+                subtitle={item.email}
                 bottomDivider
               />
             </Swipeout>

@@ -101,7 +101,7 @@ export default class RegisterView extends Component<Props> {
 
   async saveUser() {
     let titleSelected = this.state.prefixs.filter(
-      f => f.value == this.state.prefix,
+      f => f.value === this.state.prefix,
     )[0].en;
     let params = {
       prefix: titleSelected,
@@ -114,7 +114,7 @@ export default class RegisterView extends Component<Props> {
     };
 
     let response = await Api.signUp(params);
-    console.log(response);
+
     if (response.success) {
       this.loadingSignUp.showLoading(false);
       await AsyncStorage.setItem('user', JSON.stringify(response.user));

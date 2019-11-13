@@ -19,19 +19,30 @@ export default class InviteMemberView extends Component<Props> {
     };
   }
 
-  clickInviteMember() {
-    this.loadingInviteMember.showLoading(true);
-    setTimeout(() => {
-      if (this.props.modal.current) {
-        this.loadingInviteMember.showLoading(false);
-        GFunction.successMessage(
-          I18n.t('message.success'),
-          I18n.t('message.inviteMemberSuccessful'),
-        );
-        this.setState({newMemberEmail: ''});
-        this.props.modal.current.close();
-      }
-    }, 1000);
+  async clickInviteMember() {
+    let user = await GFunction.user();
+    let response = await Api.inviteGroup(
+      user.authentication_token,
+      this.props.group.id,
+      this.state.newMemberEmail,
+    );
+
+    if (response.success) {
+      this.loadingInviteMember.showLoading(false);
+      GFunction.successMessage(
+        I18n.t('message.success'),
+        I18n.t('message.inviteMemberSuccessful'),
+      );
+      this.setState({newMemberEmail: ''});
+      this.props.modal.current.close();
+    } else {
+      this.loadingInviteMember.showLoading(false);
+      let errors = [];
+      response.error.map((error, i) => {
+        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+      });
+      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+    }
   }
 
   render() {

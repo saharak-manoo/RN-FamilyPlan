@@ -7,6 +7,7 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -15,40 +16,53 @@ export default class NewGroupView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      services: [
-        {
-          value: I18n.t('text.appleMusic'),
-          en: 'appleMusic',
-        },
-        {
-          value: I18n.t('text.disneyPlus'),
-          en: 'disneyPlus',
-        },
-        {
-          value: I18n.t('text.netflix'),
-          en: 'netflix',
-        },
-        {
-          value: I18n.t('text.spotify'),
-          en: 'spotify',
-        },
-      ],
-      service: I18n.t('text.appleMusic'),
+      groupName: '',
+      services: this.props.services.map(function(s) {
+        return {
+          value: s.name,
+        };
+      }),
+      serviceId: this.props.services[0].id,
+      serviceName: this.props.services[0].name,
     };
   }
 
-  clickCreateGroup() {
+  async clickCreateGroup() {
+    await this.setState({
+      serviceId: this.props.services.filter(
+        s => s.name === this.state.serviceName,
+      )[0].id,
+    });
     this.loadingCreateGroup.showLoading(true);
-    setTimeout(() => {
-      if (this.props.modal.current) {
-        this.loadingJoinGroup.showLoading(false);
-        GFunction.successMessage(
-          I18n.t('message.success'),
-          I18n.t('message.createGroupSuccessful'),
-        );
-        this.props.modal.current.close();
-      }
-    }, 1000);
+    this.createGroup();
+  }
+
+  async createGroup() {
+    let user = await GFunction.user();
+    let params = {
+      name: this.state.groupName,
+      service_id: this.state.serviceId,
+    };
+
+    let response = await Api.createGroup(user.authentication_token, params);
+
+    if (response.success) {
+      this.props.myGroups.unshift(response.group);
+      this.loadingCreateGroup.showLoading(false);
+      GFunction.successMessage(
+        I18n.t('message.success'),
+        I18n.t('message.createGroupSuccessful'),
+      );
+      this.props.modal.current.close();
+      this.props.onSetAndGoToModalGroup(this.props.myGroups);
+    } else {
+      this.loadingCreateGroup.showLoading(false);
+      let errors = [];
+      response.error.map((error, i) => {
+        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+      });
+      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+    }
   }
 
   render() {
@@ -81,8 +95,10 @@ export default class NewGroupView extends Component<Props> {
               baseColor="#2d2c2c"
               selectedItemColor="#222"
               dropdownPosition={4}
-              value={this.state.service}
-              onChangeText={service => this.setState({service: service})}
+              value={this.state.serviceName}
+              onChangeText={serviceName =>
+                this.setState({serviceName: serviceName})
+              }
             />
           </View>
         </View>

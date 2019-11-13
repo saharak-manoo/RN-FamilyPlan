@@ -61,7 +61,8 @@
     "setUpAReminder": "ตั้งค่าเตือนความจำ",
     "dueDate": "วันที่ครบกำหนด",
     "settingServiceCharge": "ตั้งค่าบริการ",
-    "serviceCharge": "ค่าบริการ"
+    "serviceCharge": "ค่าบริการ",
+    "clickNewGroup": "คลิกเพื่อสร้างกลุ่ม"
   },
   "message": {
     "success": "สำเร็จ",
@@ -99,6 +100,7 @@
     "inviteMemberSuccessful": "ส่งคำเชิญเข้าร่วมกลุ่มสำเร็จ",
     "settingServiceChargeSuccessful": "ตั้งค่า ค่าบริการสำเร็จ",
     "settingDueDateSuccessful": "ตั้งค่าวันที่ครบกำหนดสำเร็จ",
-    "removeMemberSuccessful": "ลบสมาชิกที่เลือกสำเร็จ"
+    "removeMemberSuccessful": "ลบสมาชิกที่เลือกสำเร็จ",
+    "nameHasAlreadyBeenTaken": "ชื่อนี้ซ้ำกับที่มีอยู่แล้ว"
   }
 }
