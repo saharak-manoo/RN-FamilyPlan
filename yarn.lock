@@ -4584,7 +4584,7 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.19.0:
+moment@^2.19.0, moment@^2.22.1:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
@@ -5382,6 +5382,13 @@ react-native-communications@2.2.1:
   resolved "https://registry.yarnpkg.com/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
   integrity sha1-eIO1ayCgAu63kMET+GFuqGksp5U=
 
+react-native-date-picker@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-2.7.0.tgz#91c6cd85c45309763e58982c46fcf3dba2d1da55"
+  integrity sha512-pevfIzZ2jnYZe3jrDsUN2EM0fGcal3lL2aqExDux7d01C4QWOJJdHbut2URjL/EzS1v2ByLQJNT0ErjniheRiw==
+  dependencies:
+    moment "^2.22.1"
+
 react-native-elements@^1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.2.6.tgz#fda0f49ddf87abdb287de1ec9bc057c103430455"
@@ -5564,9 +5571,9 @@ react-native-paper@^3.0.0:
     color "^3.1.2"
     react-native-safe-area-view "^0.12.0"
 
-"react-native-parsed-text@git+https://github.com/EvanBacon/react-native-parsed-text.git":
+"react-native-parsed-text@https://github.com/EvanBacon/react-native-parsed-text.git":
   version "0.0.22"
-  resolved "git+https://github.com/EvanBacon/react-native-parsed-text.git#f55c4713c62961f13a2eec99cbc1ec619615ee72"
+  resolved "https://github.com/EvanBacon/react-native-parsed-text.git#f55c4713c62961f13a2eec99cbc1ec619615ee72"
   dependencies:
     prop-types "^15.5.10"
 

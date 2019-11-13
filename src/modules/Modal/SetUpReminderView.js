@@ -7,7 +7,8 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from 'react-native-date-picker';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -17,19 +18,8 @@ export default class SetUpReminderView extends Component<Props> {
     super(props);
     this.state = {
       dueDate: GFunction.strToDate(this.props.group.due_date) || new Date(),
-      mode: 'date',
-      show: true,
     };
   }
-
-  setDate = (event, date) => {
-    date = date || this.state.dueDate;
-
-    this.setState({
-      show: Platform.OS === 'ios' ? true : false,
-      dueDate: date,
-    });
-  };
 
   clickSettingDueDate() {
     this.loadingSettingDueDate.showLoading(true);
@@ -54,15 +44,11 @@ export default class SetUpReminderView extends Component<Props> {
           {I18n.t('placeholder.setUpAReminder')}
         </Text>
         <View style={{paddingTop: 15}}>
-          {this.state.show && (
-            <DateTimePicker
-              value={this.state.dueDate}
-              mode={'date'}
-              is24Hour={true}
-              display="default"
-              onChange={this.setDate}
-            />
-          )}
+          <DatePicker
+            date={this.state.dueDate}
+            mode="date"
+            onDateChange={dueDate => this.setState({dueDate})}
+          />
         </View>
 
         <View style={{paddingTop: 35}}>

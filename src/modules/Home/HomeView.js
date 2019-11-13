@@ -2,6 +2,7 @@ import React, {Component, useRef} from 'react';
 import {
   Dimensions,
   FlatList,
+  Platform,
   Modal,
   RefreshControl,
   ScrollView,
@@ -379,7 +380,7 @@ export default class HomeView extends Component<Props> {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
-        <View style={{padding: 15}}>
+        <View style={{padding: 10}}>
           <Searchbar
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
