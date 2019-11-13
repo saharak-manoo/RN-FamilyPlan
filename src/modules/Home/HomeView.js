@@ -373,9 +373,6 @@ export default class HomeView extends Component<Props> {
 
   goToModalGroup = group => {
     this.props.navigation.navigate('Group', {group: group});
-    // setTimeout(() => {
-    //   this.setState({modalGroup: true, group: group});
-    // }, 400);
   };
 
   render() {

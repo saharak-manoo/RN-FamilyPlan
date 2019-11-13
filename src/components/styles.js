@@ -25,6 +25,7 @@ export const styles = StyleSheet.create({
   },
 
   profilePhoto: {
+    alignSelf: 'center',
     marginTop: -85,
     width: 150,
     height: 150,

@@ -205,34 +205,6 @@ export default class GroupView extends Component<Props> {
     );
   };
 
-  alertRemoveMember(id, index) {
-    Alert.alert(
-      '',
-      'Are your sure tou want to delete this member ?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: () => this.removeMember(id, index),
-          style: 'destructive',
-        },
-      ],
-      {cancelable: false},
-    );
-  }
-
-  async removeMember(id, index) {
-    this.state.group.members.splice(index, 1);
-    await this.setState({group: this.state.group});
-    GFunction.successMessage(
-      I18n.t('message.success'),
-      I18n.t('message.removeMemberSuccessful'),
-    );
-  }
-
   listMembers = members => {
     return (
       <FlatList
@@ -271,6 +243,34 @@ export default class GroupView extends Component<Props> {
       />
     );
   };
+
+  alertRemoveMember(id, index) {
+    Alert.alert(
+      '',
+      'Are your sure tou want to delete this member ?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => this.removeMember(id, index),
+          style: 'destructive',
+        },
+      ],
+      {cancelable: false},
+    );
+  }
+
+  async removeMember(id, index) {
+    this.state.group.members.splice(index, 1);
+    await this.setState({group: this.state.group});
+    GFunction.successMessage(
+      I18n.t('message.success'),
+      I18n.t('message.removeMemberSuccessful'),
+    );
+  }
 
   render() {
     return (
