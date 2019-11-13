@@ -46,7 +46,7 @@ export default class JoinGroupView extends Component<Props> {
           <Text style={{fontSize: 20}}>
             {I18n.t('placeholder.members') +
               ' : ' +
-              this.props.group.members +
+              this.props.group.members.length +
               '/' +
               this.props.group.max_member}
           </Text>

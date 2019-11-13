@@ -29,78 +29,114 @@ import JoinGroupView from '../Modal/JoinGroupView';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
+const members = [
+  {
+    name: 'Amy Farha',
+    avatar_url:
+      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Vice President',
+  },
+  {
+    name: 'Chris Jackson',
+    avatar_url:
+      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    subtitle: 'Vice Chairman',
+  },
+  {
+    name: 'Amy Farha',
+    avatar_url:
+      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Vice President',
+  },
+  {
+    name: 'Chris Jackson',
+    avatar_url:
+      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    subtitle: 'Vice Chairman',
+  },
+];
+
 const groups = [
   {
     name: 'G Netflix',
     service: 'Netflix',
     color: '#F30635',
-    members: 3,
+    members: members,
     max_member: 4,
     due_date: '05/11/2019',
+    service_charge: 205,
   },
   {
     name: 'G Spotify',
     service: 'Spotify',
     color: '#009652',
-    members: 2,
+    members: members,
     max_member: 5,
     due_date: '06/11/2019',
+    service_charge: 105,
   },
   {
     name: 'G Disney Plus',
     service: 'Disney Plus',
     color: '#454746',
-    members: 2,
+    members: members,
     max_member: 5,
     due_date: '03/11/2019',
+    service_charge: 35,
   },
   {
     name: 'G Apple Music',
     service: 'Apple Music',
     color: '#FF116F',
-    members: 1,
+    members: members,
     max_member: 6,
     due_date: '09/11/2019',
+    service_charge: 46,
   },
   {
     name: 'G Apple Music',
     service: 'Apple Music',
     color: '#FF116F',
-    members: 1,
+    members: members,
     max_member: 6,
     due_date: '12/11/2019',
+    service_charge: 79,
   },
   {
     name: 'G Netflix',
     service: 'Netflix',
     color: '#F30635',
-    members: 3,
+    members: members,
     max_member: 4,
     due_date: '23/11/2019',
+    service_charge: 80,
   },
   {
     name: 'G Spotify',
     service: 'Spotify',
     color: '#009652',
-    members: 2,
+    members: members,
     max_member: 5,
     due_date: '21/11/2019',
+    service_charge: 90,
   },
   {
     name: 'G Disney Plus',
     service: 'Disney Plus',
     color: '#454746',
-    members: 2,
+    members: members,
     max_member: 5,
     due_date: '19/11/2019',
+    service_charge: 150,
   },
   {
     name: 'T Apple Music',
     service: 'Apple Music',
     color: '#FF116F',
-    members: 1,
+    members: members,
     max_member: 6,
     due_date: '16/11/2019',
+    service_charge: 199,
   },
 ];
 
@@ -266,7 +302,7 @@ export default class HomeView extends Component<Props> {
                 </View>
                 <View style={{flex: 0.3}}>
                   <Text numberOfLines={1} style={styles.totalMembersCard}>
-                    {I18n.t('placeholder.members')} : {item.members}/
+                    {I18n.t('placeholder.members')} : {item.members.length}/
                     {item.max_member}
                   </Text>
                 </View>
@@ -283,7 +319,9 @@ export default class HomeView extends Component<Props> {
     return (
       <FlatList
         style={{flex: 1}}
-        data={publicGroup}
+        data={publicGroup.filter(
+          group => group.members.length < group.max_member,
+        )}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => {
@@ -320,7 +358,7 @@ export default class HomeView extends Component<Props> {
                       justifyContent: 'flex-end',
                       padding: 10,
                     }}>
-                    {I18n.t('placeholder.members')} : {item.members}/
+                    {I18n.t('placeholder.members')} : {item.members.length}/
                     {item.max_member}
                   </Text>
                 </View>
