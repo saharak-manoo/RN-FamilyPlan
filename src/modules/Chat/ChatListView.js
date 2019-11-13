@@ -3,7 +3,7 @@ import {Alert, FlatList, StatusBar, View} from 'react-native';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
-import {ListItem, Icon} from 'react-native-elements';
+import {Badge, ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
@@ -74,7 +74,7 @@ export default class ChatListView extends Component<Props> {
                 subtitle={item.subtitle}
                 onPress={() => this.goToChatRoom(item)}
                 bottomDivider
-                chevron
+                chevron={<Badge value={index + 10} status="error" />}
               />
             </Swipeout>
           );
@@ -113,7 +113,6 @@ export default class ChatListView extends Component<Props> {
   }
 
   goToChatRoom(member) {
-    console.log(member);
     this.props.navigation.navigate('ChatRoom', {member: member});
   }
 
