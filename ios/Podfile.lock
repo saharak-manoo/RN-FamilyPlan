@@ -194,6 +194,8 @@ PODS:
     - React
   - react-native-camera/RN (3.8.0):
     - React
+  - react-native-date-picker (2.7.0):
+    - React
   - react-native-image-picker (1.1.0):
     - React
   - react-native-image-resizer (1.0.1):
@@ -273,6 +275,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -336,6 +339,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-date-picker:
+    :path: "../node_modules/react-native-date-picker"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-image-resizer:
@@ -400,6 +405,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 8909917ff7d8f21a57e443a866fd8d4560e50c65
   React-jsinspector: 111d7d342b07a904c400592e02a2b958f1098b60
   react-native-camera: 21cf4ed26cf432ceb1fae959aa6924943fd6f714
+  react-native-date-picker: 648606a44e21d15725a61cc9f28e864f40ae8cdd
   react-native-image-picker: 7a85cf7b0a53845f03ae52fb4592a2748ded069b
   react-native-image-resizer: 48eb06a18a6d0a632ffa162a51ca61a68fb5322f
   React-RCTActionSheet: 89b037c0fb7d2671607cb645760164e7e0c013f6
@@ -423,6 +429,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: 27425f7b891b5f6c98bee104cd249b147f2a7d7a
+PODFILE CHECKSUM: 948327c83452d6220542820fd76cd8a3bbe8b4c4
 
 COCOAPODS: 1.8.4

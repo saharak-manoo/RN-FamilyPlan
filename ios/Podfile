@@ -62,6 +62,8 @@ target 'FamilyPlan' do
 
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
 
+  pod 'react-native-date-picker', :path => '../node_modules/react-native-date-picker'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

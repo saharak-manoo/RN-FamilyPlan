@@ -38,23 +38,23 @@ export function camelize(str) {
 
 export function validateEmail(email) {
   let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return reg.test(email) === false && email != '';
+  return reg.test(email) === false && email !== '';
 }
 
 export function validatePhoneNumber(phoneNumber) {
-  return phoneNumber.length < 10 && phoneNumber != '';
+  return phoneNumber.length < 10 && phoneNumber !== '';
 }
 
 export function validatePasswordLessThanSix(password) {
-  return password.length < 6 && password != '';
+  return password.length < 6 && password !== '';
 }
 
 export function validatePasswordMatch(password, confirmPassword) {
-  return password != confirmPassword && confirmPassword != '';
+  return password !== confirmPassword && confirmPassword !== '';
 }
 
 export function validateBlank(value) {
-  return value == '';
+  return value === '';
 }
 
 export function strToDate(dateStr) {

@@ -19,7 +19,9 @@
   "text": {
     "mr": "นาย",
     "mrs": "นาง",
-    "miss": "นางสาว"
+    "miss": "นางสาว",
+    "info": "ข้อมูล",
+    "members": "สมาชิก"
   },
   "placeholder": {
     "prefix": "คำนำหน้า",
@@ -57,7 +59,9 @@
     "forgotPassword": "ลืมรหัสผ่าน",
     "inviteMember": "เชิญสมาชิก",
     "setUpAReminder": "ตั้งค่าเตือนความจำ",
-    "dueDate": "วันที่ครบกำหนด"
+    "dueDate": "วันที่ครบกำหนด",
+    "settingServiceCharge": "ตั้งค่าบริการ",
+    "serviceCharge": "ค่าบริการ"
   },
   "message": {
     "success": "สำเร็จ",
@@ -92,6 +96,9 @@
     "signOutSuccessful": "ออกจากระบบสำเร็จ",
     "createGroupSuccessful": "สร้างกลุ่มสำเร็จ",
     "joinGroupSuccessful": "เข้าร่วมกลุ่มสำเร็จ",
-    "inviteMemberSuccessful": "ส่งคำเชิญเข้าร่วมกลุ่มสำเร็จ"
+    "inviteMemberSuccessful": "ส่งคำเชิญเข้าร่วมกลุ่มสำเร็จ",
+    "settingServiceChargeSuccessful": "ตั้งค่า ค่าบริการสำเร็จ",
+    "settingDueDateSuccessful": "ตั้งค่าวันที่ครบกำหนดสำเร็จ",
+    "removeMemberSuccessful": "ลบสมาชิกที่เลือกสำเร็จ"
   }
 }
