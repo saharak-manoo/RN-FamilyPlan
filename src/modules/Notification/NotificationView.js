@@ -22,60 +22,6 @@ const notifications = [
       'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
     subtitle: 'Vice Chairman',
   },
-  {
-    name: 'Chris Jackson',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Chris Jackson',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Chris Jackson',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Chris Jackson',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Chris Jackson',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Amy Farha',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Amy Farha',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Amy Farha',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Amy Farha',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
 ];
 
 export default class NotificationView extends Component<Props> {
@@ -125,7 +71,7 @@ export default class NotificationView extends Component<Props> {
                 subtitle={item.subtitle}
                 bottomDivider
                 containerStyle={{
-                  backgroundColor: index == 0 ? '#DADADA' : '#FFF',
+                  backgroundColor: index == 0 ? '#D4FDE8' : '#FFF',
                 }}
               />
             </Swipeout>
