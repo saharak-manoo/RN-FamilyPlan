@@ -132,6 +132,15 @@ export const styles = StyleSheet.create({
     borderBottomRightRadius: 90,
   },
 
+  headerCardNewGroup: {
+    flex: 0.5,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderBottomLeftRadius: 90,
+    borderBottomRightRadius: 90,
+    alignSelf: 'center',
+  },
+
   textHeadCard: {
     fontSize: 24,
     color: '#FFF',

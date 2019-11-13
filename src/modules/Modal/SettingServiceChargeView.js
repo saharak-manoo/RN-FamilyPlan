@@ -19,20 +19,35 @@ export default class SettingServiceChargeView extends Component<Props> {
     };
   }
 
-  clickSettingServiceCharge() {
-    this.loadingSettingServiceCharge.showLoading(true);
-    setTimeout(() => {
-      if (this.props.modal.current) {
-        this.loadingSettingServiceCharge.showLoading(false);
-        GFunction.successMessage(
-          I18n.t('message.success'),
-          I18n.t('message.settingServiceChargeSuccessful'),
-        );
-        this.props.modal.current.close();
-        this.props.group.service_charge = this.state.serviceCharge;
-        this.props.onSetNewData(this.props.group);
-      }
-    }, 1000);
+  async clickSettingServiceCharge() {
+    let user = await GFunction.user();
+    let params = {
+      service_charge: this.state.serviceCharge,
+    };
+
+    let response = await Api.updateGroup(
+      user.authentication_token,
+      this.props.group.id,
+      params,
+    );
+
+    if (response.success) {
+      this.loadingSettingServiceCharge.showLoading(false);
+      GFunction.successMessage(
+        I18n.t('message.success'),
+        I18n.t('message.settingServiceChargeSuccessful'),
+      );
+      this.props.modal.current.close();
+      this.props.group.service_charge = this.state.serviceCharge;
+      this.props.onSetNewData(this.props.group);
+    } else {
+      this.loadingSettingServiceCharge.showLoading(false);
+      let errors = [];
+      response.error.map((error, i) => {
+        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+      });
+      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+    }
   }
 
   render() {

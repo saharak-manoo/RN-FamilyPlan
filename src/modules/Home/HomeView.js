@@ -21,6 +21,7 @@ import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import PTRView from 'react-native-pull-to-refresh';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {Icon} from 'react-native-elements';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -151,14 +152,24 @@ export default class HomeView extends Component<Props> {
       modalGroup: false,
       group: null,
       refreshing: false,
+      services: [],
+      myGroups: [],
+      publicGroups: [],
     };
   }
 
   componentDidMount = async () => {
     this.setState({spinner: true});
-    setTimeout(() => {
-      this.setState({spinner: false});
-    }, 2000);
+    let user = await GFunction.user();
+    let resp = await Api.getGroup(user.authentication_token);
+    if (resp.success) {
+      this.setState({
+        spinner: false,
+        myGroups: resp.my_groups,
+        publicGroups: resp.public_groups,
+        services: resp.services,
+      });
+    }
   };
 
   newGroupModal = React.createRef();
@@ -201,7 +212,12 @@ export default class HomeView extends Component<Props> {
         }}
         withReactModal
         adjustToContentHeight>
-        <NewGroupView modal={this.newGroupModal} />
+        <NewGroupView
+          modal={this.newGroupModal}
+          services={this.state.services}
+          myGroups={this.state.myGroups}
+          onSetAndGoToModalGroup={this.setAndGoToModalGroup}
+        />
       </Modalize>
     );
   }
@@ -272,9 +288,16 @@ export default class HomeView extends Component<Props> {
 
   refreshGroup = async () => {
     await this.setState({refreshing: true});
-    setTimeout(async () => {
-      await this.setState({refreshing: false});
-    }, 3000);
+    let user = await GFunction.user();
+    let resp = await Api.getGroup(user.authentication_token);
+    if (resp.success) {
+      await this.setState({
+        refreshing: false,
+        myGroups: resp.my_groups,
+        publicGroups: resp.public_groups,
+        services: resp.services,
+      });
+    }
   };
 
   listMyGroup = myGroup => {
@@ -293,7 +316,7 @@ export default class HomeView extends Component<Props> {
                 <View
                   style={[styles.headerCard, {backgroundColor: item.color}]}>
                   <Text numberOfLines={1} style={styles.textHeadCard}>
-                    {item.service}
+                    {item.serviceName}
                   </Text>
                 </View>
                 <View style={{flex: 0.4}}>
@@ -334,7 +357,7 @@ export default class HomeView extends Component<Props> {
                 <View
                   style={[styles.headerCard, {backgroundColor: item.color}]}>
                   <Text numberOfLines={1} style={styles.textHeadCard}>
-                    {item.service}
+                    {item.serviceName}
                   </Text>
                 </View>
                 <View style={{flex: 0.4}}>
@@ -376,6 +399,13 @@ export default class HomeView extends Component<Props> {
     this.props.navigation.navigate('Group', {group: group});
   };
 
+  setAndGoToModalGroup = async myGroups => {
+    await this.setState({myGroups: myGroups});
+    this.props.navigation.navigate('Group', {
+      group: myGroups[0],
+    });
+  };
+
   render() {
     return (
       <View style={styles.defaultView}>
@@ -411,19 +441,67 @@ export default class HomeView extends Component<Props> {
                     {I18n.t('placeholder.myGroup')}
                   </Text>
                 </View>
-                <View style={styles.listCards}>{this.listMyGroup(groups)}</View>
+                <View style={styles.listCards}>
+                  {this.state.myGroups.length !== 0 ? (
+                    this.listMyGroup(this.state.myGroups)
+                  ) : (
+                    <View>
+                      <TouchableOpacity
+                        style={styles.card}
+                        onPress={this.showNewGroupModal}>
+                        <View style={{flex: 1}}>
+                          <View style={styles.headerCardNewGroup}>
+                            <Icon
+                              reverse
+                              name="add"
+                              type="mat-icon"
+                              color="#00C15E"
+                            />
+                          </View>
+                          <View style={{flex: 0.4}}>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontSize: 20,
+                                color: '#000',
+                                alignSelf: 'center',
+                                padding: 15,
+                              }}>
+                              {I18n.t('placeholder.newGroup')}
+                            </Text>
+                          </View>
+                          <View style={{flex: 0.3}}>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontSize: 13,
+                                color: '#000',
+                                alignSelf: 'center',
+                                justifyContent: 'flex-end',
+                                padding: 10,
+                              }}>
+                              {I18n.t('placeholder.clickNewGroup')}
+                            </Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
               </View>
 
-              <View style={{flex: 1, paddingTop: 40}}>
-                <View style={styles.listPublicCard}>
-                  <Text style={styles.textCardList}>
-                    {I18n.t('placeholder.publicGroup')}
-                  </Text>
+              {this.state.publicGroups.length !== 0 ? (
+                <View style={{flex: 1, paddingTop: 40}}>
+                  <View style={styles.listPublicCard}>
+                    <Text style={styles.textCardList}>
+                      {I18n.t('placeholder.publicGroup')}
+                    </Text>
+                  </View>
+                  <View style={styles.listCards}>
+                    {this.listPublicGroup(this.state.publicGroups)}
+                  </View>
                 </View>
-                <View style={styles.listCards}>
-                  {this.listPublicGroup(groups)}
-                </View>
-              </View>
+              ) : null}
             </View>
           </ScrollView>
         )}
