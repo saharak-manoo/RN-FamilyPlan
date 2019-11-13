@@ -21,20 +21,35 @@ export default class SetUpReminderView extends Component<Props> {
     };
   }
 
-  clickSettingDueDate() {
-    this.loadingSettingDueDate.showLoading(true);
-    setTimeout(() => {
-      if (this.props.modal.current) {
-        this.loadingSettingDueDate.showLoading(false);
-        GFunction.successMessage(
-          I18n.t('message.success'),
-          I18n.t('message.settingDueDateSuccessful'),
-        );
-        this.props.modal.current.close();
-        this.props.group.due_date = GFunction.dateToStr(this.state.dueDate);
-        this.props.onSetNewData(this.props.group);
-      }
-    }, 1000);
+  async clickSettingDueDate() {
+    let user = await GFunction.user();
+    let params = {
+      due_date: this.state.dueDate,
+    };
+
+    let response = await Api.updateGroup(
+      user.authentication_token,
+      this.props.group.id,
+      params,
+    );
+
+    if (response.success) {
+      this.loadingSettingDueDate.showLoading(false);
+      GFunction.successMessage(
+        I18n.t('message.success'),
+        I18n.t('message.settingDueDateSuccessful'),
+      );
+      this.props.modal.current.close();
+      this.props.group.due_date = GFunction.dateToStr(this.state.dueDate);
+      this.props.onSetNewData(this.props.group);
+    } else {
+      this.loadingSettingDueDate.showLoading(false);
+      let errors = [];
+      response.error.map((error, i) => {
+        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+      });
+      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+    }
   }
 
   render() {

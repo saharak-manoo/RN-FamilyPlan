@@ -65,7 +65,8 @@
     "setUpAReminder": "Set up a reminder",
     "dueDate": "Due date",
     "settingServiceCharge": "Setting service charge",
-    "serviceCharge": "Service charge"
+    "serviceCharge": "Service charge",
+    "clickNewGroup": "Click to new group"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -104,6 +105,7 @@
     "inviteMemberSuccessful": "Invite member successful",
     "settingServiceChargeSuccessful": "Setting service charge successful",
     "settingDueDateSuccessful": "Setting due date successful",
-    "removeMemberSuccessful": "Remove member successful"
+    "removeMemberSuccessful": "Remove member successful",
+    "nameHasAlreadyBeenTaken": "Name has already been taken"
   }
 }
