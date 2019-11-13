@@ -86,25 +86,6 @@ export default class ProfileView extends Component<Props> {
     this.signOut();
   }
 
-  // async confirmAction() {
-  //   Alert.alert(
-  //     I18n.t('message.areYouSure'),
-  //     '',
-  //     [
-  //       {
-  //         text: I18n.t('button.cancel'),
-  //         onPress: () => this.loadingSignOut.showLoading(false),
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: I18n.t('button.signOut'),
-  //         onPress: this.signOut()
-  //       },
-  //     ],
-  //     { cancelable: false },
-  //   );
-  // }
-
   async signOut() {
     let response = await Api.signOut(this.state.user.authentication_token);
     if (response.success) {

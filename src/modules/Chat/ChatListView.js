@@ -9,43 +9,46 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 
-const notifications = [
+const members = [
   {
     name: 'Amy Farha',
-    photo_url:
+    avatar_url:
       'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
     subtitle: 'Vice President',
   },
   {
     name: 'Chris Jackson',
-    photo_url:
+    avatar_url:
       'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
     subtitle: 'Vice Chairman',
   },
 ];
 
-export default class NotificationView extends Component<Props> {
+export default class ChatListView extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      search: '',
+      members: members,
+    };
   }
 
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#F93636" barStyle="light-content" />
-        <Appbar.Header style={{backgroundColor: '#F93636'}}>
-          <Appbar.Content title={I18n.t('placeholder.notifications')} />
+        <StatusBar backgroundColor="#09A650" barStyle="light-content" />
+        <Appbar.Header style={{backgroundColor: '#09A650'}}>
+          <Appbar.Content title={I18n.t('placeholder.chat')} />
         </Appbar.Header>
       </View>
     );
   }
 
-  listNotification = notifications => {
+  listMembers = members => {
     return (
       <FlatList
         style={{flex: 1}}
-        data={notifications}
+        data={members}
         renderItem={({item, index}) => {
           return (
             <Swipeout
@@ -66,13 +69,12 @@ export default class NotificationView extends Component<Props> {
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{source: {uri: item.photo_url}}}
+                leftAvatar={{source: {uri: item.avatar_url}}}
                 title={item.name}
                 subtitle={item.subtitle}
+                onPress={() => this.goToChatRoom(item)}
                 bottomDivider
-                containerStyle={{
-                  backgroundColor: index == 0 ? '#D4FDE8' : '#FFF',
-                }}
+                chevron={<Badge value={index + 10} status="error" />}
               />
             </Swipeout>
           );
@@ -82,7 +84,7 @@ export default class NotificationView extends Component<Props> {
     );
   };
 
-  alertRemoveNotification(id, index) {
+  alertRemoveChatMember(id, index) {
     Alert.alert(
       '',
       'Are your sure tou want to delete this chat ?',
@@ -93,7 +95,7 @@ export default class NotificationView extends Component<Props> {
         },
         {
           text: 'Delete',
-          onPress: () => this.removeChatNotification(id, index),
+          onPress: () => this.removeChatMember(id, index),
           style: 'destructive',
         },
       ],
@@ -101,20 +103,33 @@ export default class NotificationView extends Component<Props> {
     );
   }
 
-  async removeChatNotification(id, index) {
-    this.state.notifications.splice(index, 1);
-    await this.setState({group: this.state.notifications});
+  async removeChatMember(id, index) {
+    this.state.members.splice(index, 1);
+    await this.setState({group: this.state.members});
     GFunction.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
     );
   }
 
+  goToChatRoom(member) {
+    this.props.navigation.navigate('ChatRoom', {member: member});
+  }
+
   render() {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
-        <View style={{flex: 1}}>{this.listNotification(notifications)}</View>
+        <View style={{padding: 15}}>
+          <Searchbar
+            placeholder={I18n.t('placeholder.search')}
+            onChangeText={searching => {
+              this.setState({search: searching});
+            }}
+            value={this.state.search}
+          />
+        </View>
+        <View style={{flex: 1, padding: 15}}>{this.listMembers(members)}</View>
       </View>
     );
   }
