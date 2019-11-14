@@ -106,6 +106,8 @@
     "settingServiceChargeSuccessful": "Setting service charge successful",
     "settingDueDateSuccessful": "Setting due date successful",
     "removeMemberSuccessful": "Remove member successful",
-    "nameHasAlreadyBeenTaken": "Name has already been taken"
+    "nameHasAlreadyBeenTaken": "Name has already been taken",
+    "alreadyInTheGroup": "You are already in the group",
+    "leaveGroupSuccessful": "Leave group successful"
   }
 }

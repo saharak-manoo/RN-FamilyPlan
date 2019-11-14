@@ -19,6 +19,7 @@ import {ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
+import * as Api from '../../../util/Api';
 import * as GFunction from '../../../util/GlobalFunction';
 
 // View
@@ -239,6 +240,15 @@ export default class GroupView extends Component<Props> {
                 title={item.full_name}
                 subtitle={item.email}
                 bottomDivider
+                chevron={
+                  item.group_leader ? (
+                    <MatIcon
+                      name="grade"
+                      size={25}
+                      style={{color: '#ECD703'}}
+                    />
+                  ) : null
+                }
               />
             </Swipeout>
           );
@@ -268,12 +278,37 @@ export default class GroupView extends Component<Props> {
   }
 
   async removeMember(id, index) {
-    this.state.group.members.splice(index, 1);
-    await this.setState({group: this.state.group});
-    GFunction.successMessage(
-      I18n.t('message.success'),
-      I18n.t('message.removeMemberSuccessful'),
+    let user = await GFunction.user();
+
+    let response = await Api.leaveGroup(
+      user.authentication_token,
+      this.state.group.id,
+      id,
     );
+
+    if (response.success) {
+      this.state.group.members.splice(index, 1);
+      await this.setState({group: this.state.group});
+      if (id === user.id) {
+        GFunction.successMessage(
+          I18n.t('message.success'),
+          I18n.t('message.leaveGroupSuccessful'),
+        );
+        this.props.navigation.navigate('Home');
+      } else {
+        GFunction.successMessage(
+          I18n.t('message.success'),
+          I18n.t('message.removeMemberSuccessful'),
+        );
+      }
+    } else {
+      this.loadingJoinGroup.showLoading(false);
+      let errors = [];
+      response.error.map((error, i) => {
+        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+      });
+      GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+    }
   }
 
   render() {

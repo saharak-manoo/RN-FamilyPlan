@@ -20,6 +20,7 @@ export default class SettingServiceChargeView extends Component<Props> {
   }
 
   async clickSettingServiceCharge() {
+    this.loadingSettingServiceCharge.showLoading(true);
     let user = await GFunction.user();
     let params = {
       service_charge: this.state.serviceCharge,

@@ -280,7 +280,10 @@ export default class HomeView extends Component<Props> {
         <JoinGroupView
           modal={this.joinGroupModal}
           group={group}
+          myGroups={this.state.myGroups}
+          publicGroups={this.state.publicGroups}
           onGoToModalGroup={this.goToModalGroup}
+          onSetNewData={this.setNewData}
         />
       </Modalize>
     );
@@ -340,7 +343,6 @@ export default class HomeView extends Component<Props> {
   };
 
   listPublicGroup = publicGroup => {
-    console.log(publicGroup);
     return (
       <FlatList
         style={{flex: 1}}
@@ -405,6 +407,10 @@ export default class HomeView extends Component<Props> {
     this.props.navigation.navigate('Group', {
       group: myGroups[0],
     });
+  };
+
+  setNewData = async (myGroups, publicGroups) => {
+    await this.setState({myGroups: myGroups, publicGroups: publicGroups});
   };
 
   render() {

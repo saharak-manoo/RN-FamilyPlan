@@ -101,6 +101,8 @@
     "settingServiceChargeSuccessful": "ตั้งค่า ค่าบริการสำเร็จ",
     "settingDueDateSuccessful": "ตั้งค่าวันที่ครบกำหนดสำเร็จ",
     "removeMemberSuccessful": "ลบสมาชิกที่เลือกสำเร็จ",
-    "nameHasAlreadyBeenTaken": "ชื่อนี้ซ้ำกับที่มีอยู่แล้ว"
+    "nameHasAlreadyBeenTaken": "ชื่อนี้ซ้ำกับที่มีอยู่แล้ว",
+    "alreadyInTheGroup": "คุณได้อยู่ในกลุ่มนี้แล้ว",
+    "leaveGroupSuccessful": "คุณได้ออกจากกลุ่มเรียบร้อยแล้ว"
   }
 }

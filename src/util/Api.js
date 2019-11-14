@@ -4,9 +4,10 @@ const HOSTS = [
   'http://10.251.1.204:3000',
   'http://192.168.1.37:3000',
   'http://172.20.10.12:3000',
+  'http://192.168.1.34:3000',
 ];
 
-const HOST = HOSTS[0];
+const HOST = HOSTS[5];
 const SIGN_UP_PATH = '/api/v1/users';
 const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
 const SIGN_OUT_PATH = '/api/v1/sessions/sign_out';
@@ -16,6 +17,8 @@ const GROUP = '/api/v1/groups';
 const NEW_GROUP = '/api/v1/groups/new';
 const UPDATE_GROUP = '/api/v1/groups/:id';
 const INVITE_GROUP = '/api/v1/groups/:id/invite';
+const JOIN_GROUP = '/api/v1/groups/:id/join';
+const LEAVE_GROUP = '/api/v1/groups/:id/leave';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -225,6 +228,48 @@ export async function inviteGroup(token, id, email) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({email: email}),
+    });
+
+    let response = await resp.json();
+    if (response) {
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function joinGroup(token, id, user_id) {
+  try {
+    const resp = await fetch(joinUrl(HOST, JOIN_GROUP.replace(':id', id)), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({user_id: user_id}),
+    });
+
+    let response = await resp.json();
+    if (response) {
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function leaveGroup(token, id, user_id) {
+  try {
+    const resp = await fetch(joinUrl(HOST, LEAVE_GROUP.replace(':id', id)), {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({user_id: user_id}),
     });
 
     let response = await resp.json();
