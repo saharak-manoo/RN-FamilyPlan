@@ -158,7 +158,7 @@ export default class HomeView extends Component<Props> {
     };
   }
 
-  componentDidMount = async () => {
+  componentWillMount = async () => {
     this.setState({spinner: true});
     let user = await GFunction.user();
     let resp = await Api.getGroup(user.authentication_token);
@@ -399,13 +399,17 @@ export default class HomeView extends Component<Props> {
   };
 
   goToModalGroup = group => {
-    this.props.navigation.navigate('Group', {group: group});
+    this.props.navigation.navigate('Group', {
+      group: group,
+      onLeaveGroup: () => this.refreshGroup(),
+    });
   };
 
   setAndGoToModalGroup = async myGroups => {
     await this.setState({myGroups: myGroups});
     this.props.navigation.navigate('Group', {
       group: myGroups[0],
+      onLeaveGroup: () => this.refreshGroup(),
     });
   };
 

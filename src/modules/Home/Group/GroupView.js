@@ -36,6 +36,7 @@ export default class GroupView extends Component<Props> {
     super(props);
     this.state = {
       group: this.props.navigation.state.params.group,
+      userView: [],
     };
   }
 
@@ -44,7 +45,14 @@ export default class GroupView extends Component<Props> {
   settingServiceChargeModal = React.createRef();
 
   async componentWillMount() {
-    await this.setState({group: this.props.navigation.state.params.group});
+    let user = await GFunction.user();
+    let userView = this.props.navigation.state.params.group.members.filter(
+      m => m.id === user.id,
+    )[0];
+    await this.setState({
+      group: this.props.navigation.state.params.group,
+      userView: userView,
+    });
   }
 
   AppHerder() {
@@ -94,7 +102,7 @@ export default class GroupView extends Component<Props> {
   }
 
   showSetUpReminderModal = () => {
-    if (this.setUpReminderModal.current) {
+    if (this.setUpReminderModal.current && this.state.userView.group_leader) {
       this.setUpReminderModal.current.open();
     }
   };
@@ -128,7 +136,10 @@ export default class GroupView extends Component<Props> {
   }
 
   showSettingServiceChargeModal = () => {
-    if (this.settingServiceChargeModal.current) {
+    if (
+      this.settingServiceChargeModal.current &&
+      this.state.userView.group_leader
+    ) {
       this.settingServiceChargeModal.current.open();
     }
   };
@@ -216,7 +227,8 @@ export default class GroupView extends Component<Props> {
         style={{flex: 1}}
         data={members}
         renderItem={({item, index}) => {
-          return (
+          let yourSelf = this.state.userView.id === item.id;
+          return !yourSelf && this.state.userView.group_leader ? (
             <Swipeout
               autoClose={true}
               right={[
@@ -251,6 +263,24 @@ export default class GroupView extends Component<Props> {
                 }
               />
             </Swipeout>
+          ) : (
+            <ListItem
+              key={index}
+              containerStyle={{borderRadius: 15}}
+              Component={TouchableScale}
+              friction={90}
+              tension={100}
+              activeScale={0.95}
+              leftAvatar={{source: {uri: item.photo}}}
+              title={item.full_name}
+              subtitle={item.email}
+              bottomDivider
+              chevron={
+                item.group_leader ? (
+                  <MatIcon name="grade" size={25} style={{color: '#ECD703'}} />
+                ) : null
+              }
+            />
           );
         }}
         keyExtractor={item => item}
@@ -261,7 +291,26 @@ export default class GroupView extends Component<Props> {
   alertRemoveMember(id, index) {
     Alert.alert(
       '',
-      'Are your sure tou want to delete this member ?',
+      'Are your sure to want to delete this member ?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => this.removeMember(id, index),
+          style: 'destructive',
+        },
+      ],
+      {cancelable: false},
+    );
+  }
+
+  alertLeaveGroup(id, index) {
+    Alert.alert(
+      '',
+      'Are your sure to want to leave this group ?',
       [
         {
           text: 'Cancel',
@@ -294,6 +343,7 @@ export default class GroupView extends Component<Props> {
           I18n.t('message.success'),
           I18n.t('message.leaveGroupSuccessful'),
         );
+        this.props.navigation.state.params.onLeaveGroup();
         this.props.navigation.navigate('Home');
       } else {
         GFunction.successMessage(
@@ -330,20 +380,38 @@ export default class GroupView extends Component<Props> {
         {this.popUpModalInviteMember()}
         {this.popUpModalSettingServiceCharge()}
         {this.popUpModalSetUpReminder()}
-        <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item
-            buttonColor="#03C8A1"
-            title={I18n.t('placeholder.inviteMember')}
-            onPress={this.showInviteMemberModal}>
-            <MatIcon name="group-add" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item
-            buttonColor="#3D71FB"
-            title={I18n.t('placeholder.setUpAReminder')}
-            onPress={this.showSetUpReminderModal}>
-            <MatIcon name="add-alert" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton>
+
+        {this.state.userView.group_leader ? (
+          <ActionButton buttonColor="rgba(231,76,60,1)">
+            <ActionButton.Item
+              buttonColor="#03C8A1"
+              title={I18n.t('placeholder.inviteMember')}
+              onPress={this.showInviteMemberModal}>
+              <MatIcon name="group-add" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="#3D71FB"
+              title={I18n.t('placeholder.setUpAReminder')}
+              onPress={this.showSetUpReminderModal}>
+              <MatIcon name="add-alert" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+          </ActionButton>
+        ) : (
+          <ActionButton
+            icon={
+              <MatIcon name="exit-to-app" style={styles.actionButtonIcon} />
+            }
+            buttonColor="rgba(231,76,60,1)"
+            onPress={() =>
+              this.alertLeaveGroup(
+                this.state.userView.id,
+                this.state.group.members.findIndex(
+                  m => m.id === this.state.userView.id,
+                ),
+              )
+            }
+          />
+        )}
       </View>
     );
   }

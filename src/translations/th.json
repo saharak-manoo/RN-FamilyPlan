@@ -103,6 +103,8 @@
     "removeMemberSuccessful": "ลบสมาชิกที่เลือกสำเร็จ",
     "nameHasAlreadyBeenTaken": "ชื่อนี้ซ้ำกับที่มีอยู่แล้ว",
     "alreadyInTheGroup": "คุณได้อยู่ในกลุ่มนี้แล้ว",
-    "leaveGroupSuccessful": "คุณได้ออกจากกลุ่มเรียบร้อยแล้ว"
+    "leaveGroupSuccessful": "คุณได้ออกจากกลุ่มเรียบร้อยแล้ว",
+    "theGroupIsFull": "กลุ่มเต็มแล้ว",
+    "somethingWentWrong": "มีข้อผิดพลาดเกิดขึ้น"
   }
 }
