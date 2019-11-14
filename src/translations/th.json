@@ -14,7 +14,8 @@
     "resetPassword": "รีเซ็ตรหัสผ่าน",
     "editProfile": "แก้ไขโปรไฟล์",
     "joinGroup": "เข้าร่วมกลุ่ม",
-    "invite": "ส่งคำเชิญ"
+    "invite": "ส่งคำเชิญ",
+    "search": "ค้นหา"
   },
   "text": {
     "mr": "นาย",
@@ -105,6 +106,8 @@
     "alreadyInTheGroup": "คุณได้อยู่ในกลุ่มนี้แล้ว",
     "leaveGroupSuccessful": "คุณได้ออกจากกลุ่มเรียบร้อยแล้ว",
     "theGroupIsFull": "กลุ่มเต็มแล้ว",
-    "somethingWentWrong": "มีข้อผิดพลาดเกิดขึ้น"
+    "somethingWentWrong": "มีข้อผิดพลาดเกิดขึ้น",
+    "notFound": "ไม่พบ",
+    "notFoundUser": "ไม่พบผู้ใช้ที่ค้นหา โปรดลองใหม่อีกครั้ง"
   }
 }

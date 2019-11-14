@@ -27,6 +27,17 @@ export function errorMessage(message, description) {
   });
 }
 
+export function infoMessage(message, description) {
+  showMessage({
+    message: message,
+    description: description,
+    type: 'default',
+    backgroundColor: '#0598E1',
+    color: '#FFF',
+    duration: 3000,
+  });
+}
+
 export function camelize(str) {
   return str
     .replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
