@@ -64,45 +64,6 @@ export default class ChatView extends Component<Props> {
     }));
   }
 
-  listChat = chats => {
-    return (
-      <FlatList
-        style={{flex: 1}}
-        data={chats}
-        renderItem={({item, index}) => {
-          return (
-            <Swipeout
-              autoClose={true}
-              right={[
-                {
-                  text: 'Delete',
-                  type: 'delete',
-                  onPress: () => {
-                    this.alertRemoveChatMember(item.id, index);
-                  },
-                },
-              ]}
-              style={{backgroundColor: '#FFF'}}>
-              <ListItem
-                key={index}
-                Component={TouchableScale}
-                friction={90}
-                tension={100}
-                activeScale={0.95}
-                leftAvatar={{source: {uri: item.avatar_url}}}
-                title={item.name}
-                subtitle={item.subtitle}
-                bottomDivider
-                chevron
-              />
-            </Swipeout>
-          );
-        }}
-        keyExtractor={item => item}
-      />
-    );
-  };
-
   render() {
     return (
       <View style={styles.defaultView}>
