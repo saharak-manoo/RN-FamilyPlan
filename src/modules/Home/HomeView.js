@@ -340,6 +340,7 @@ export default class HomeView extends Component<Props> {
   };
 
   listPublicGroup = publicGroup => {
+    console.log(publicGroup);
     return (
       <FlatList
         style={{flex: 1}}

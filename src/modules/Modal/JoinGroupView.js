@@ -41,7 +41,9 @@ export default class JoinGroupView extends Component<Props> {
             {I18n.t('placeholder.name') + ' : ' + this.props.group.name}
           </Text>
           <Text style={{fontSize: 20}}>
-            {I18n.t('placeholder.service') + ' : ' + this.props.group.service}
+            {I18n.t('placeholder.service') +
+              ' : ' +
+              this.props.group.serviceName}
           </Text>
           <Text style={{fontSize: 20}}>
             {I18n.t('placeholder.members') +
