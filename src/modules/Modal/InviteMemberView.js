@@ -20,6 +20,7 @@ export default class InviteMemberView extends Component<Props> {
   }
 
   async clickInviteMember() {
+    this.loadingInviteMember.showLoading(true);
     let user = await GFunction.user();
     let response = await Api.inviteGroup(
       user.authentication_token,

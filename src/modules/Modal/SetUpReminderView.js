@@ -22,6 +22,7 @@ export default class SetUpReminderView extends Component<Props> {
   }
 
   async clickSettingDueDate() {
+    this.loadingSettingDueDate.showLoading(true);
     let user = await GFunction.user();
     let params = {
       due_date: this.state.dueDate,
