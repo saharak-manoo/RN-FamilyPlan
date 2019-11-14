@@ -14,7 +14,8 @@
     "resetPassword": "Reset password",
     "editProfile": "Edit profile",
     "joinGroup": "Join Group",
-    "invite": "Invite"
+    "invite": "Invite",
+    "search": "Search"
   },
   "text": {
     "mr": "Mr",
@@ -110,6 +111,8 @@
     "alreadyInTheGroup": "You are already in the group",
     "leaveGroupSuccessful": "Leave group successful",
     "theGroupIsFull": "The group is full",
-    "somethingWentWrong": "Something went wrong"
+    "somethingWentWrong": "Something went wrong",
+    "notFound": "Not found",
+    "notFoundUser": "The user searched for was not found. Please try again"
   }
 }

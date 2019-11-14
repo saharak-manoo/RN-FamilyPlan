@@ -19,6 +19,7 @@ const UPDATE_GROUP = '/api/v1/groups/:id';
 const INVITE_GROUP = '/api/v1/groups/:id/invite';
 const JOIN_GROUP = '/api/v1/groups/:id/join';
 const LEAVE_GROUP = '/api/v1/groups/:id/leave';
+const SEARCH_USER = '/api/v1/users/search';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -270,6 +271,26 @@ export async function leaveGroup(token, id, user_id) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({user_id: user_id}),
+    });
+
+    let response = await resp.json();
+    if (response) {
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function searchGroup(token, email) {
+  try {
+    const resp = await fetch(joinUrl(HOST, SEARCH_USER + '?email=' + email), {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     let response = await resp.json();
