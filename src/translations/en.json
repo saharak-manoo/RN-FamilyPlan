@@ -108,6 +108,8 @@
     "removeMemberSuccessful": "Remove member successful",
     "nameHasAlreadyBeenTaken": "Name has already been taken",
     "alreadyInTheGroup": "You are already in the group",
-    "leaveGroupSuccessful": "Leave group successful"
+    "leaveGroupSuccessful": "Leave group successful",
+    "theGroupIsFull": "The group is full",
+    "somethingWentWrong": "Something went wrong"
   }
 }
