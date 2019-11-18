@@ -14,72 +14,67 @@ const IS_IOS = Platform.OS === 'ios';
 const BAR_COLOR = IS_IOS ? '#09A650' : '#000';
 
 export default class ChatView extends Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      messages: [],
-      search: '',
-    };
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			messages: [],
+			search: '',
+		};
+	}
 
-  AppHerder() {
-    return (
-      <View>
-        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
-        <Appbar.Header style={{backgroundColor: '#09A650'}}>
-          <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-          <Appbar.Content title={I18n.t('placeholder.chat')} />
-        </Appbar.Header>
-      </View>
-    );
-  }
+	AppHerder() {
+		return (
+			<View>
+				<StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
+				<Appbar.Header style={{backgroundColor: '#09A650'}}>
+					<Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
+					<Appbar.Content title={I18n.t('placeholder.chat')} />
+				</Appbar.Header>
+			</View>
+		);
+	}
 
-  componentWillMount() {
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-        {
-          _id: 2,
-          text: 'Hello Family Plan',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-      ],
-    });
-  }
+	componentWillMount() {
+		this.setState({
+			messages: [
+				{
+					_id: 1,
+					text: 'Hello developer',
+					createdAt: new Date(),
+					user: {
+						_id: 2,
+						name: 'React Native',
+						avatar: 'https://placeimg.com/140/140/any',
+					},
+				},
+				{
+					_id: 2,
+					text: 'Hello Family Plan',
+					createdAt: new Date(),
+					user: {
+						_id: 2,
+						name: 'React Native',
+						avatar: 'https://placeimg.com/140/140/any',
+					},
+				},
+			],
+		});
+	}
 
-  onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
-  }
+	onSend(messages = []) {
+		this.setState(previousState => ({
+			messages: GiftedChat.append(previousState.messages, messages),
+		}));
+	}
 
-  render() {
-    return (
-      <View style={styles.defaultView}>
-        {this.AppHerder()}
-        <View style={{flex: 1}}>
-          <GiftedChat
-            loadEarlier
-            isLoadingEarlier
-            messages={this.state.messages}
-            onSend={messages => this.onSend(messages)}
-          />
-        </View>
-      </View>
-    );
-  }
+	render() {
+		return (
+			<View style={styles.defaultView}>
+				{this.AppHerder()}
+				<View style={{flex: 1}}>
+					<GiftedChat loadEarlier isLoadingEarlier messages={this.state.messages} onSend={messages => this.onSend(messages)} />
+				</View>
+			</View>
+		);
+	}
 }
