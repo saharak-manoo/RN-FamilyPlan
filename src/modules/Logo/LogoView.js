@@ -1,5 +1,14 @@
 import React, {Component} from 'react';
-import {Alert, View, Platform, Dimensions, TouchableOpacity, Text, Modal, StatusBar} from 'react-native';
+import {
+	Alert,
+	View,
+	Platform,
+	Dimensions,
+	TouchableOpacity,
+	Text,
+	Modal,
+	StatusBar,
+} from 'react-native';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import I18n from '../../components/i18n';
