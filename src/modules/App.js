@@ -7,26 +7,26 @@ import AsyncStorage from '@react-native-community/async-storage';
 import I18n from '../components/i18n';
 
 export default class App extends Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
 
-  async componentWillMount() {
-    await AsyncStorage.getItem('locale').then(language => {
-      if (language == null) {
-        language = 'en';
-      }
-      I18n.locale = language;
-    });
-  }
+	async componentWillMount() {
+		await AsyncStorage.getItem('locale').then(language => {
+			if (language == null) {
+				language = 'en';
+			}
+			I18n.locale = language;
+		});
+	}
 
-  render() {
-    return (
-      <PaperProvider>
-        <NavigatorView />
-        <FlashMessage position="top" />
-      </PaperProvider>
-    );
-  }
+	render() {
+		return (
+			<PaperProvider>
+				<NavigatorView />
+				<FlashMessage position="top" />
+			</PaperProvider>
+		);
+	}
 }
