@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
   Alert,
   View,
+  Platform,
   Dimensions,
   TouchableOpacity,
   Text,
@@ -14,6 +15,8 @@ import I18n from '../../components/i18n';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#2370E6' : '#000';
 
 export default class LogoView extends Component<Props> {
   constructor(props) {
@@ -36,7 +39,7 @@ export default class LogoView extends Component<Props> {
   render() {
     return (
       <View style={{flex: 1, backgroundColor: '#1C83F7'}}>
-        <StatusBar backgroundColor="#1C83F7" barStyle="light-content" />
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <View
           style={{
             flex: 1,

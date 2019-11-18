@@ -30,117 +30,8 @@ import JoinGroupView from '../Modal/JoinGroupView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-
-const members = [
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Chris Jackson',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Chris Jackson',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-];
-
-const groups = [
-  {
-    name: 'G Netflix',
-    service: 'Netflix',
-    color: '#F30635',
-    members: members,
-    max_member: 4,
-    due_date: '05/11/2019',
-    service_charge: 205,
-  },
-  {
-    name: 'G Spotify',
-    service: 'Spotify',
-    color: '#009652',
-    members: members,
-    max_member: 5,
-    due_date: '06/11/2019',
-    service_charge: 105,
-  },
-  {
-    name: 'G Disney Plus',
-    service: 'Disney Plus',
-    color: '#454746',
-    members: members,
-    max_member: 5,
-    due_date: '03/11/2019',
-    service_charge: 35,
-  },
-  {
-    name: 'G Apple Music',
-    service: 'Apple Music',
-    color: '#FF116F',
-    members: members,
-    max_member: 6,
-    due_date: '09/11/2019',
-    service_charge: 46,
-  },
-  {
-    name: 'G Apple Music',
-    service: 'Apple Music',
-    color: '#FF116F',
-    members: members,
-    max_member: 6,
-    due_date: '12/11/2019',
-    service_charge: 79,
-  },
-  {
-    name: 'G Netflix',
-    service: 'Netflix',
-    color: '#F30635',
-    members: members,
-    max_member: 4,
-    due_date: '23/11/2019',
-    service_charge: 80,
-  },
-  {
-    name: 'G Spotify',
-    service: 'Spotify',
-    color: '#009652',
-    members: members,
-    max_member: 5,
-    due_date: '21/11/2019',
-    service_charge: 90,
-  },
-  {
-    name: 'G Disney Plus',
-    service: 'Disney Plus',
-    color: '#454746',
-    members: members,
-    max_member: 5,
-    due_date: '19/11/2019',
-    service_charge: 150,
-  },
-  {
-    name: 'T Apple Music',
-    service: 'Apple Music',
-    color: '#FF116F',
-    members: members,
-    max_member: 6,
-    due_date: '16/11/2019',
-    service_charge: 199,
-  },
-];
+const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#2370E6' : '#000';
 
 export default class HomeView extends Component<Props> {
   constructor(props) {
@@ -179,7 +70,7 @@ export default class HomeView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#2370E6" barStyle="light-content" />
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#2370E6'}}>
           <Appbar.Content title={I18n.t('placeholder.appName')} />
         </Appbar.Header>

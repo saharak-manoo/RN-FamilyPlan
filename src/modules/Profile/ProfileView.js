@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, Image, StatusBar, View} from 'react-native';
+import {Dimensions, Image, Platform, StatusBar, View} from 'react-native';
 import {Appbar, Text, Switch} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../components/i18n';
@@ -13,6 +13,8 @@ import RNRestart from 'react-native-restart';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#6D06F9' : '#000';
 
 export default class ProfileView extends Component<Props> {
   constructor(props) {
@@ -69,7 +71,7 @@ export default class ProfileView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#6D06F9" barStyle="light-content" />
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#6D06F9'}}>
           <Appbar.Content title={I18n.t('placeholder.profile')} />
         </Appbar.Header>

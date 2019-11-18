@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
   Alert,
   View,
+  Platform,
   Dimensions,
   Modal,
   TouchableOpacity,
@@ -15,6 +16,8 @@ import * as GFunction from '../../../util/GlobalFunction';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#0144A4' : '#000';
 
 export default class ForgotPasswordView extends Component<Props> {
   constructor(props) {
@@ -27,7 +30,7 @@ export default class ForgotPasswordView extends Component<Props> {
   appHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#0144A4" barStyle="light-content" />
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#0144A4'}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content title={I18n.t('placeholder.appName')} />

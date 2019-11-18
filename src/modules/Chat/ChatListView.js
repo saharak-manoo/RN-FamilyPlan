@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, FlatList, StatusBar, View} from 'react-native';
+import {Alert, FlatList, Platform, StatusBar, View} from 'react-native';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
@@ -8,6 +8,9 @@ import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
+
+const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#09A650' : '#000';
 
 const members = [
   {
@@ -36,7 +39,7 @@ export default class ChatListView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#09A650" barStyle="light-content" />
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#09A650'}}>
           <Appbar.Content title={I18n.t('placeholder.chat')} />
         </Appbar.Header>

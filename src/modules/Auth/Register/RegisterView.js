@@ -19,6 +19,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#1C83F7' : '#000';
 
 export default class RegisterView extends Component<Props> {
   constructor(props) {
@@ -57,8 +59,8 @@ export default class RegisterView extends Component<Props> {
   appHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#1C83F6" barStyle="light-content" />
-        <Appbar.Header style={{backgroundColor: '#1C83F6'}}>
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
+        <Appbar.Header style={{backgroundColor: '#1C83F7'}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content title={I18n.t('placeholder.appName')} />
         </Appbar.Header>
