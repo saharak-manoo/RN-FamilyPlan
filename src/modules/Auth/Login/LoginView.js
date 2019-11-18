@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
   Alert,
   View,
+  Platform,
   Dimensions,
   TouchableOpacity,
   Modal,
@@ -16,6 +17,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#1C83F7' : '#000';
 
 export default class LoginView extends Component<Props> {
   constructor(props) {
@@ -31,7 +34,7 @@ export default class LoginView extends Component<Props> {
   appHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#1C83F7" barStyle="light-content" />
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#1C83F7'}}>
           <Appbar.Content title={I18n.t('placeholder.appName')} />
         </Appbar.Header>

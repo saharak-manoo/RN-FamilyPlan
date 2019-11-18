@@ -12,60 +12,61 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 export default class JoinGroupView extends Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
 
-  clickJoinGroup() {
-    this.loadingJoinGroup.showLoading(true);
-    setTimeout(() => {
-      if (this.props.modal.current) {
-        this.loadingJoinGroup.showLoading(false);
-        GFunction.successMessage(
-          I18n.t('message.success'),
-          I18n.t('message.joinGroupSuccessful'),
-        );
-        this.props.modal.current.close();
-        this.props.onGoToModalGroup(this.props.group);
-      }
-    }, 1000);
-  }
+	async clickJoinGroup() {
+		this.loadingJoinGroup.showLoading(true);
+		let user = await GFunction.user();
+		let response = await Api.joinGroup(user.authentication_token, this.props.group.id, user.id);
 
-  render() {
-    return (
-      <View style={{flex: 1, padding: 30}}>
-        <Text style={{fontSize: 30}}>{I18n.t('placeholder.joinGroup')}</Text>
-        <View style={{paddingTop: 15, paddingLeft: 15}}>
-          <Text style={{fontSize: 20}}>
-            {I18n.t('placeholder.name') + ' : ' + this.props.group.name}
-          </Text>
-          <Text style={{fontSize: 20}}>
-            {I18n.t('placeholder.service') + ' : ' + this.props.group.service}
-          </Text>
-          <Text style={{fontSize: 20}}>
-            {I18n.t('placeholder.members') +
-              ' : ' +
-              this.props.group.members.length +
-              '/' +
-              this.props.group.max_member}
-          </Text>
-        </View>
+		if (response.success) {
+			let index = this.props.publicGroups.findIndex(p => p.id === this.props.group.id);
+			this.props.publicGroups.splice(index, 1);
+			this.props.myGroups.unshift(response.group);
+			this.loadingJoinGroup.showLoading(false);
+			GFunction.successMessage(I18n.t('message.success'), I18n.t('message.joinGroupSuccessful'));
+			this.props.modal.current.close();
+			this.props.onSetNewData(this.props.myGroups, this.props.publicGroups);
+			this.props.onGoToModalGroup(response.group);
+		} else {
+			this.loadingJoinGroup.showLoading(false);
+			let errors = [];
+			response.error.map((error, i) => {
+				errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+			});
+			GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+		}
+	}
 
-        <View style={{paddingTop: 35}}>
-          <AnimateLoadingButton
-            ref={c => (this.loadingJoinGroup = c)}
-            width={width - 25}
-            height={50}
-            title={I18n.t('button.joinGroup')}
-            titleFontSize={18}
-            titleColor="#FFF"
-            backgroundColor="#03C8A1"
-            borderRadius={25}
-            onPress={this.clickJoinGroup.bind(this)}
-          />
-        </View>
-      </View>
-    );
-  }
+	render() {
+		return (
+			<View style={{flex: 1, padding: 30}}>
+				<Text style={{fontSize: 30}}>{I18n.t('placeholder.joinGroup')}</Text>
+				<View style={{paddingTop: 15, paddingLeft: 15}}>
+					<Text style={{fontSize: 20}}>{I18n.t('placeholder.name') + ' : ' + this.props.group.name}</Text>
+					<Text style={{fontSize: 20}}>{I18n.t('placeholder.service') + ' : ' + this.props.group.serviceName}</Text>
+					<Text style={{fontSize: 20}}>
+						{I18n.t('placeholder.members') + ' : ' + this.props.group.members.length + '/' + this.props.group.max_member}
+					</Text>
+				</View>
+
+				<View style={{paddingTop: 35}}>
+					<AnimateLoadingButton
+						ref={c => (this.loadingJoinGroup = c)}
+						width={width - 25}
+						height={50}
+						title={I18n.t('button.joinGroup')}
+						titleFontSize={18}
+						titleColor="#FFF"
+						backgroundColor="#03C8A1"
+						borderRadius={25}
+						onPress={this.clickJoinGroup.bind(this)}
+					/>
+				</View>
+			</View>
+		);
+	}
 }
