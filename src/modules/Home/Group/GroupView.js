@@ -30,6 +30,7 @@ import SettingServiceChargeView from '../../Modal/SettingServiceChargeView';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#2370E6' : '#000';
 
 export default class GroupView extends Component<Props> {
   constructor(props) {
@@ -58,7 +59,7 @@ export default class GroupView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#2370E6" barStyle="light-content" />
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#2370E6'}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content title={this.state.group.name} />

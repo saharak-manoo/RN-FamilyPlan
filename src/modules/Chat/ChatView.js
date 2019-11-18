@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, FlatList, StatusBar, View} from 'react-native';
+import {Alert, FlatList, Platform, StatusBar, View} from 'react-native';
 import {Appbar, Text, Searchbar, TextInput} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
@@ -9,6 +9,9 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import {GiftedChat} from 'react-native-gifted-chat';
+
+const IS_IOS = Platform.OS === 'ios';
+const BAR_COLOR = IS_IOS ? '#09A650' : '#000';
 
 export default class ChatView extends Component<Props> {
   constructor(props) {
@@ -22,7 +25,7 @@ export default class ChatView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor="#09A650" barStyle="light-content" />
+        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#09A650'}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content title={I18n.t('placeholder.chat')} />
