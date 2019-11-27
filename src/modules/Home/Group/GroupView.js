@@ -49,7 +49,6 @@ export default class GroupView extends Component<Props> {
 	AppHerder() {
 		return (
 			<View>
-				<StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
 				<Appbar.Header style={{backgroundColor: '#2370E6'}}>
 					<Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
 					<Appbar.Content title={this.state.group.name} />
