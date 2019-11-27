@@ -34,7 +34,6 @@ export default class LoginView extends Component<Props> {
   appHerder() {
     return (
       <View>
-        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#1C83F7'}}>
           <Appbar.Content title={I18n.t('placeholder.appName')} />
         </Appbar.Header>
