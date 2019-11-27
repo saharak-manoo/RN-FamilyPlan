@@ -50,7 +50,6 @@ export default class RegisterView extends Component<Props> {
 	appHerder() {
 		return (
 			<View>
-				<StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
 				<Appbar.Header style={{backgroundColor: '#1C83F7'}}>
 					<Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
 					<Appbar.Content title={I18n.t('placeholder.appName')} />

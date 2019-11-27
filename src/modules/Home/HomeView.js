@@ -60,7 +60,6 @@ export default class HomeView extends Component<Props> {
 	AppHerder() {
 		return (
 			<View>
-				<StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
 				<Appbar.Header style={{backgroundColor: '#2370E6'}}>
 					<Appbar.Content title={I18n.t('placeholder.appName')} />
 				</Appbar.Header>
