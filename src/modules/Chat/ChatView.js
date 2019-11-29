@@ -38,12 +38,30 @@ export default class ChatView extends Component<Props> {
       messages: [
         {
           _id: 1,
-          text: 'Hello developer',
+          text:
+            'This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT',
           createdAt: new Date(),
+          quickReplies: {
+            type: 'radio', // or 'checkbox',
+            keepIt: true,
+            values: [
+              {
+                title: '😋 Yes',
+                value: 'yes',
+              },
+              {
+                title: '📷 Yes, let me show you with a picture!',
+                value: 'yes_picture',
+              },
+              {
+                title: '😞 Nope. What?',
+                value: 'no',
+              },
+            ],
+          },
           user: {
             _id: 2,
             name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
           },
         },
         {
@@ -53,7 +71,6 @@ export default class ChatView extends Component<Props> {
           user: {
             _id: 2,
             name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
           },
         },
       ],
@@ -76,6 +93,9 @@ export default class ChatView extends Component<Props> {
             isLoadingEarlier
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
+            user={{
+              _id: 1,
+            }}
           />
         </View>
       </View>
