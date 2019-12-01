@@ -8,31 +8,17 @@ import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#09A650' : '#000';
-
-const members = [
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Chris Jackson',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-];
 
 export default class ChatListView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      spinner: false,
       search: '',
-      members: members,
+      groups: [],
     };
   }
 
@@ -46,11 +32,23 @@ export default class ChatListView extends Component<Props> {
     );
   }
 
-  listMembers = members => {
+  componentWillMount = async () => {
+    this.setState({spinner: true});
+    let user = await GFunction.user();
+    let resp = await Api.getGroup(user.authentication_token);
+    if (resp.success) {
+      this.setState({
+        spinner: false,
+        groups: resp.my_groups,
+      });
+    }
+  };
+
+  listChatRoom = chats => {
     return (
       <FlatList
         style={{flex: 1}}
-        data={members}
+        data={chats}
         renderItem={({item, index}) => {
           return (
             <Swipeout
@@ -71,9 +69,13 @@ export default class ChatListView extends Component<Props> {
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{source: {uri: item.avatar_url}}}
+                leftAvatar={{
+                  source: {
+                    uri:
+                      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                  },
+                }}
                 title={item.name}
-                subtitle={item.subtitle}
                 onPress={() => this.goToChatRoom(item)}
                 bottomDivider
                 chevron={<Badge value={index + 10} status="error" />}
@@ -97,7 +99,7 @@ export default class ChatListView extends Component<Props> {
         },
         {
           text: 'Delete',
-          onPress: () => this.removeChatMember(id, index),
+          onPress: () => this.state(id, index),
           style: 'destructive',
         },
       ],
@@ -105,17 +107,20 @@ export default class ChatListView extends Component<Props> {
     );
   }
 
-  async removeChatMember(id, index) {
-    this.state.members.splice(index, 1);
-    await this.setState({group: this.state.members});
+  async removeChat(id, index) {
+    this.state.groups.splice(index, 1);
+    await this.setState({groups: this.state.groups});
     GFunction.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
     );
   }
 
-  goToChatRoom(member) {
-    this.props.navigation.navigate('ChatRoom', {member: member});
+  goToChatRoom(group) {
+    this.props.navigation.navigate('ChatRoom', {
+      group: group,
+      isRequestJoin: false,
+    });
   }
 
   render() {
@@ -131,7 +136,17 @@ export default class ChatListView extends Component<Props> {
             value={this.state.search}
           />
         </View>
-        <View style={{flex: 1, padding: 15}}>{this.listMembers(members)}</View>
+        {this.state.spinner ? (
+          <Spinner
+            visible={this.state.spinner}
+            textContent={I18n.t('placeholder.loading') + '...'}
+            textStyle={styles.spinnerTextStyle}
+          />
+        ) : (
+          <View style={{flex: 1, padding: 15}}>
+            {this.listChatRoom(this.state.groups)}
+          </View>
+        )}
       </View>
     );
   }
