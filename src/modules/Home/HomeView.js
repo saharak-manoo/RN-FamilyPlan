@@ -172,7 +172,7 @@ export default class HomeView extends Component<Props> {
           group={group}
           myGroups={this.state.myGroups}
           publicGroups={this.state.publicGroups}
-					onGoToRequestJoinGroup={this.goToRequestJoinGroup}
+          onGoToRequestJoinGroup={this.goToRequestJoinGroup}
           onSetNewData={this.setNewData}
         />
       </Modalize>
@@ -204,7 +204,7 @@ export default class HomeView extends Component<Props> {
           return (
             <TouchableOpacity
               style={styles.card}
-              onPress={() => this.goToModalGroup(item)}>
+              onPress={() => this.goToGroup(item)}>
               <View style={{flex: 1}}>
                 <View
                   style={[styles.headerCard, {backgroundColor: item.color}]}>
@@ -289,6 +289,17 @@ export default class HomeView extends Component<Props> {
   };
 
   goToRequestJoinGroup = group => {
+    this.props.navigation.navigate('ChatRoom', {
+      group: group,
+      isRequestJoin: true,
+    });
+    // this.props.navigation.navigate('Group', {
+    //   group: group,
+    //   onLeaveGroup: () => this.refreshGroup(),
+    // });
+  };
+
+  goToGroup = group => {
     this.props.navigation.navigate('Group', {
       group: group,
       onLeaveGroup: () => this.refreshGroup(),
