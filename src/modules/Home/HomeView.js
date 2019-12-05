@@ -170,10 +170,7 @@ export default class HomeView extends Component<Props> {
         <JoinGroupView
           modal={this.joinGroupModal}
           group={group}
-          myGroups={this.state.myGroups}
-          publicGroups={this.state.publicGroups}
           onGoToRequestJoinGroup={this.goToRequestJoinGroup}
-          onSetNewData={this.setNewData}
         />
       </Modalize>
     );
@@ -314,9 +311,9 @@ export default class HomeView extends Component<Props> {
     });
   };
 
-  setNewData = async (myGroups, publicGroups) => {
-    await this.setState({myGroups: myGroups, publicGroups: publicGroups});
-  };
+  // setNewData = async (myGroups, publicGroups) => {
+  //   await this.setState({myGroups: myGroups, publicGroups: publicGroups});
+  // };
 
   render() {
     return (
