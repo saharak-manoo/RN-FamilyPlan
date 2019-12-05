@@ -21,7 +21,6 @@ export default class ChatView extends Component<Props> {
       user: [],
       spinner: true,
       chatRoom: this.props.navigation.state.params.chatRoom,
-      isRequestJoin: this.props.navigation.state.params.isRequestJoin,
       messages: [],
       search: '',
     };
@@ -32,11 +31,11 @@ export default class ChatView extends Component<Props> {
       <View>
         <Appbar.Header
           style={{
-            backgroundColor: this.state.chatRoom.color,
+            backgroundColor: this.state.chatRoom.group.color,
           }}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content title={this.state.chatRoom.name} />
-          {this.state.isRequestJoin ? (
+          {this.state.chatRoom.is_request_join_group_leader ? (
             <Appbar.Action
               icon="plus-one"
               onPress={() => this.dialogAddMemberToGroup()}
@@ -52,68 +51,10 @@ export default class ChatView extends Component<Props> {
     let user = await GFunction.user();
     await this.setState({user: user});
 
-    if (this.state.isRequestJoin) {
-      this.loadChat();
-      this.state.messages.push({
-        _id: 5,
-        text: `สวัสดีครับ ผม ${this.state.user.full_name} ต้องการเข้าร่วมกลุ่ม`,
-        createdAt: new Date(),
-        user: {
-          _id: this.state.user.id,
-          name: this.state.user.full_name,
-        },
-      });
-
-      this.setState({messages: this.state.messages.reverse()});
-    } else {
-      this.loadChatGroup();
-    }
+    this.loadChat();
   }
 
-  loadChat() {
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: `สวัสดีครับ ผมเป็นหัวหน้ากลุ่ม ${this.state.group.name} โดยกลุ่มนี้จะหารบริการของ ${this.state.group.serviceName}`,
-          createdAt: new Date(),
-          user: {
-            _id: 3,
-            name: 'Saharak Manoo',
-          },
-        },
-        {
-          _id: 2,
-          text: `กลุ่มนี้จะหารเดือนล่ะ ${this.state.group.service_charge} บาทครับ`,
-          createdAt: new Date(),
-          user: {
-            _id: 3,
-            name: 'Saharak Manoo',
-          },
-        },
-        {
-          _id: 3,
-          text: `จ่ายทุกวันที่ 1 ของเดือน ที่พร้อมเพย์ 0123456789`,
-          createdAt: new Date(),
-          user: {
-            _id: 3,
-            name: 'Saharak Manoo',
-          },
-        },
-        {
-          _id: 4,
-          text: `สงสัยอะไร สามารถพิมพ์ถามได้เลยน่ะครับ`,
-          createdAt: new Date(),
-          user: {
-            _id: 3,
-            name: 'Saharak Manoo',
-          },
-        },
-      ],
-    });
-  }
-
-  async loadChatGroup() {
+  async loadChat() {
     let resp = await Api.getChatMessage(
       this.state.user.authentication_token,
       this.state.chatRoom.id,
@@ -149,8 +90,8 @@ export default class ChatView extends Component<Props> {
     let user = await GFunction.user();
     let response = await Api.joinGroup(
       user.authentication_token,
-      this.props.group.id,
-      user.id,
+      this.state.chatRoom.group.id,
+      this.state.messages[0].user._id,
     );
 
     if (response.success) {

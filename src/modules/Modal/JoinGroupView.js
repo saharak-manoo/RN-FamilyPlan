@@ -20,10 +20,9 @@ export default class JoinGroupView extends Component<Props> {
   async clickJoinGroup() {
     this.loadingJoinGroup.showLoading(true);
     let user = await GFunction.user();
-    let response = await Api.joinGroup(
+    let response = await Api.createChatRoom(
       user.authentication_token,
       this.props.group.id,
-      user.id,
     );
 
     if (response.success) {
@@ -33,7 +32,7 @@ export default class JoinGroupView extends Component<Props> {
         I18n.t('message.requestGroupSuccessful'),
       );
       this.props.modal.current.close();
-      this.props.onGoToRequestJoinGroup(response.group);
+      this.props.onGoToRequestJoinGroup(response.chat_room);
     } else {
       this.loadingJoinGroup.showLoading(false);
       let errors = [];

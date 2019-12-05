@@ -285,15 +285,8 @@ export default class HomeView extends Component<Props> {
     );
   };
 
-  goToRequestJoinGroup = group => {
-    this.props.navigation.navigate('ChatRoom', {
-      group: group,
-      isRequestJoin: true,
-    });
-    // this.props.navigation.navigate('Group', {
-    //   group: group,
-    //   onLeaveGroup: () => this.refreshGroup(),
-    // });
+  goToRequestJoinGroup = chatRoom => {
+    this.props.navigation.navigate('ChatRoom', {chatRoom: chatRoom});
   };
 
   goToGroup = group => {
