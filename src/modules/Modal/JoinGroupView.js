@@ -27,18 +27,12 @@ export default class JoinGroupView extends Component<Props> {
     );
 
     if (response.success) {
-      let index = this.props.publicGroups.findIndex(
-        p => p.id === this.props.group.id,
-      );
-      this.props.publicGroups.splice(index, 1);
-      this.props.myGroups.unshift(response.group);
       this.loadingJoinGroup.showLoading(false);
       GFunction.successMessage(
         I18n.t('message.success'),
-        I18n.t('message.joinGroupSuccessful'),
+        I18n.t('message.requestGroupSuccessful'),
       );
       this.props.modal.current.close();
-      this.props.onSetNewData(this.props.myGroups, this.props.publicGroups);
       this.props.onGoToRequestJoinGroup(response.group);
     } else {
       this.loadingJoinGroup.showLoading(false);

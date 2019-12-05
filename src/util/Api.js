@@ -22,6 +22,7 @@ const LEAVE_GROUP = '/api/v1/groups/:id/leave';
 const SEARCH_USER = '/api/v1/users/search';
 const CHAT_ROOM = '/api/v1/chat_rooms';
 const CHAT = '/api/v1/chat_rooms/:id';
+const CREATE_MESSAGE = '/api/v1/chat_rooms/:id/message';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -333,6 +334,27 @@ export async function getChatMessage(token, id) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
+    });
+
+    let response = await resp.json();
+    if (response) {
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function createChat(token, id, params) {
+  try {
+    const resp = await fetch(joinUrl(HOST, CREATE_MESSAGE.replace(':id', id)), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({messages: params}),
     });
 
     let response = await resp.json();
