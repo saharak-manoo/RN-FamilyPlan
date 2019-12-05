@@ -71,7 +71,6 @@ export default class NotificationView extends Component<Props> {
                 leftAvatar={{source: {uri: item.photo_url}}}
                 title={item.name}
                 subtitle={item.subtitle}
-                bottomDivider
                 containerStyle={{
                   backgroundColor: index == 0 ? '#D4FDE8' : '#FFF',
                 }}
