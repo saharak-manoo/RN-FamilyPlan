@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {Alert, FlatList, Platform, StatusBar, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  Platform,
+  StatusBar,
+  View,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
@@ -8,31 +16,19 @@ import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#09A650' : '#000';
-
-const members = [
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Chris Jackson',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-];
 
 export default class ChatListView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      user: [],
+      spinner: false,
       search: '',
-      members: members,
+      refreshing: false,
+      chat_rooms: [],
     };
   }
 
@@ -46,11 +42,35 @@ export default class ChatListView extends Component<Props> {
     );
   }
 
-  listMembers = members => {
+  componentWillMount = async () => {
+    this.setState({spinner: true});
+    let user = await GFunction.user();
+    await this.setState({user: user});
+    let resp = await Api.getChatRoom(this.state.user.authentication_token);
+    if (resp.success) {
+      this.setState({
+        spinner: false,
+        chat_rooms: resp.chat_rooms,
+      });
+    }
+  };
+
+  refreshChatRoom = async () => {
+    await this.setState({refreshing: true});
+    let resp = await Api.getChatRoom(this.state.user.authentication_token);
+    if (resp.success) {
+      await this.setState({
+        chat_rooms: resp.chat_rooms,
+        refreshing: false,
+      });
+    }
+  };
+
+  listChatRoom = chats => {
     return (
       <FlatList
         style={{flex: 1}}
-        data={members}
+        data={chats}
         renderItem={({item, index}) => {
           return (
             <Swipeout
@@ -71,11 +91,13 @@ export default class ChatListView extends Component<Props> {
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{source: {uri: item.avatar_url}}}
+                leftAvatar={{
+                  title: item.name[0],
+                  activeOpacity: 0.2,
+                }}
                 title={item.name}
-                subtitle={item.subtitle}
+                subtitle={item.last_messags}
                 onPress={() => this.goToChatRoom(item)}
-                bottomDivider
                 chevron={<Badge value={index + 10} status="error" />}
               />
             </Swipeout>
@@ -97,7 +119,7 @@ export default class ChatListView extends Component<Props> {
         },
         {
           text: 'Delete',
-          onPress: () => this.removeChatMember(id, index),
+          onPress: () => this.state(id, index),
           style: 'destructive',
         },
       ],
@@ -105,22 +127,25 @@ export default class ChatListView extends Component<Props> {
     );
   }
 
-  async removeChatMember(id, index) {
-    this.state.members.splice(index, 1);
-    await this.setState({group: this.state.members});
+  async removeChat(id, index) {
+    this.state.chat_rooms.splice(index, 1);
+    await this.setState({chat_rooms: this.state.chat_rooms});
     GFunction.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
     );
   }
 
-  goToChatRoom(member) {
-    this.props.navigation.navigate('ChatRoom', {member: member});
+  goToChatRoom(chatRoom) {
+    this.props.navigation.navigate('ChatRoom', {
+      chatRoom: chatRoom,
+      isRequestJoin: false,
+    });
   }
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View style={styles.chatView}>
         {this.AppHerder()}
         <View style={{padding: 15}}>
           <Searchbar
@@ -131,7 +156,25 @@ export default class ChatListView extends Component<Props> {
             value={this.state.search}
           />
         </View>
-        <View style={{flex: 1, padding: 15}}>{this.listMembers(members)}</View>
+        {this.state.spinner ? (
+          <Spinner
+            visible={this.state.spinner}
+            textContent={I18n.t('placeholder.loading') + '...'}
+            textStyle={styles.spinnerTextStyle}
+          />
+        ) : (
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.refreshChatRoom}
+              />
+            }>
+            <View style={{flex: 1}}>
+              {this.listChatRoom(this.state.chat_rooms)}
+            </View>
+          </ScrollView>
+        )}
       </View>
     );
   }
