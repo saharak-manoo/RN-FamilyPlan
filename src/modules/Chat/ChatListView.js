@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {Alert, FlatList, Platform, StatusBar, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  Platform,
+  StatusBar,
+  View,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
@@ -16,9 +24,11 @@ export default class ChatListView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      user: [],
       spinner: false,
       search: '',
-      groups: [],
+      refreshing: false,
+      chat_rooms: [],
     };
   }
 
@@ -35,11 +45,23 @@ export default class ChatListView extends Component<Props> {
   componentWillMount = async () => {
     this.setState({spinner: true});
     let user = await GFunction.user();
-    let resp = await Api.getGroup(user.authentication_token);
+    await this.setState({user: user});
+    let resp = await Api.getChatRoom(this.state.user.authentication_token);
     if (resp.success) {
       this.setState({
         spinner: false,
-        groups: resp.my_groups,
+        chat_rooms: resp.chat_rooms,
+      });
+    }
+  };
+
+  refreshChatRoom = async () => {
+    await this.setState({refreshing: true});
+    let resp = await Api.getChatRoom(this.state.user.authentication_token);
+    if (resp.success) {
+      await this.setState({
+        chat_rooms: resp.chat_rooms,
+        refreshing: false,
       });
     }
   };
@@ -70,14 +92,12 @@ export default class ChatListView extends Component<Props> {
                 tension={100}
                 activeScale={0.95}
                 leftAvatar={{
-                  source: {
-                    uri:
-                      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                  },
+                  title: item.name[0],
+                  activeOpacity: 0.2,
                 }}
                 title={item.name}
+                subtitle={item.last_messags}
                 onPress={() => this.goToChatRoom(item)}
-                bottomDivider
                 chevron={<Badge value={index + 10} status="error" />}
               />
             </Swipeout>
@@ -108,24 +128,24 @@ export default class ChatListView extends Component<Props> {
   }
 
   async removeChat(id, index) {
-    this.state.groups.splice(index, 1);
-    await this.setState({groups: this.state.groups});
+    this.state.chat_rooms.splice(index, 1);
+    await this.setState({chat_rooms: this.state.chat_rooms});
     GFunction.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
     );
   }
 
-  goToChatRoom(group) {
+  goToChatRoom(chatRoom) {
     this.props.navigation.navigate('ChatRoom', {
-      group: group,
+      chatRoom: chatRoom,
       isRequestJoin: false,
     });
   }
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View style={styles.chatView}>
         {this.AppHerder()}
         <View style={{padding: 15}}>
           <Searchbar
@@ -143,9 +163,17 @@ export default class ChatListView extends Component<Props> {
             textStyle={styles.spinnerTextStyle}
           />
         ) : (
-          <View style={{flex: 1, padding: 15}}>
-            {this.listChatRoom(this.state.groups)}
-          </View>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.refreshChatRoom}
+              />
+            }>
+            <View style={{flex: 1}}>
+              {this.listChatRoom(this.state.chat_rooms)}
+            </View>
+          </ScrollView>
         )}
       </View>
     );

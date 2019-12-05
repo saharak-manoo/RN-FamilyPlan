@@ -18,7 +18,7 @@ export default class ChatView extends Component<Props> {
     super(props);
     this.state = {
       user: [],
-      group: this.props.navigation.state.params.group,
+      chatRoom: this.props.navigation.state.params.chatRoom,
       isRequestJoin: this.props.navigation.state.params.isRequestJoin,
       messages: [],
       search: '',
@@ -30,10 +30,10 @@ export default class ChatView extends Component<Props> {
       <View>
         <Appbar.Header
           style={{
-            backgroundColor: this.state.group.color,
+            backgroundColor: this.state.chatRoom.color,
           }}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-          <Appbar.Content title={this.state.group.name} />
+          <Appbar.Content title={this.state.chatRoom.name} />
           {this.state.isRequestJoin ? (
             <Appbar.Action
               icon="plus-one"
@@ -111,57 +111,17 @@ export default class ChatView extends Component<Props> {
     });
   }
 
-  loadChatGroup() {
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: 'สวัสดีครับ ไม่ทราบว่าหารต่อเดือน เดือนล่ะเท่าไหร่หรอครับ',
-          createdAt: new Date(),
-          user: {
-            _id: 3,
-            name: 'Saharak Manoo',
-          },
-        },
-        {
-          _id: 2,
-          text: `หารเดือนล่ะ ${this.state.group.service_charge} บาทครับ`,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'Head Group',
-          },
-        },
-        {
-          _id: 3,
-          text: `จ่ายทุกวันที่ 1 ของเดือน ที่พร้อมเพย์ 0123456789`,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'Head Group',
-          },
-        },
-      ],
-    });
-  }
-
-  dialogAddMemberToGroup() {
-    Alert.alert(
-      '',
-      `Are your sure ?`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-          style: 'destructive',
-        },
-        {
-          text: 'Yes',
-          onPress: () => this.addMemberToGroup(),
-        },
-      ],
-      {cancelable: false},
+  async loadChatGroup() {
+    let resp = await Api.getChatMessage(
+      this.state.user.authentication_token,
+      this.state.chatRoom.id,
     );
+    if (resp.success) {
+      await this.setState({
+        messages: resp.messages,
+        refreshing: false,
+      });
+    }
   }
 
   async addMemberToGroup() {
@@ -179,7 +139,7 @@ export default class ChatView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View style={styles.chatView}>
         {this.AppHerder()}
         <View style={{flex: 1}}>
           <GiftedChat
