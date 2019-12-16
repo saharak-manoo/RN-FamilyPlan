@@ -47,7 +47,7 @@ export default class ProfileView extends Component<Props> {
   getProfile = async () => {
     this.setState({spinner: true});
     let user = await GFunction.user();
-    let response = await Api.getProfile(user.authentication_token, user.id);
+    let response = await Api.getProfile(user.authentication_jwt, user.id);
     if (response.success) {
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
       this.setState({
@@ -88,7 +88,7 @@ export default class ProfileView extends Component<Props> {
   }
 
   async signOut() {
-    let response = await Api.signOut(this.state.user.authentication_token);
+    let response = await Api.signOut(this.state.user.authentication_jwt);
     if (response.success) {
       this.loadingSignOut.showLoading(false);
       await AsyncStorage.removeItem('user');

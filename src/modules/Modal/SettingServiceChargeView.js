@@ -26,7 +26,7 @@ export default class SettingServiceChargeView extends Component<Props> {
 			service_charge: this.state.serviceCharge,
 		};
 
-		let response = await Api.updateGroup(user.authentication_token, this.props.group.id, params);
+		let response = await Api.updateGroup(user.authentication_jwt, this.props.group.id, params);
 
 		if (response.success) {
 			this.loadingSettingServiceCharge.showLoading(false);

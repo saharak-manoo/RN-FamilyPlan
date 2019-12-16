@@ -27,7 +27,7 @@ export default class InviteMemberView extends Component<Props> {
 	async clickInviteMember() {
 		this.loadingInviteMember.showLoading(true);
 		let user = await GFunction.user();
-		let response = await Api.searchGroup(user.authentication_token, this.state.newMemberEmail);
+		let response = await Api.searchGroup(user.authentication_jwt, this.state.newMemberEmail);
 
 		if (response.success) {
 			this.loadingInviteMember.showLoading(false);
@@ -49,7 +49,7 @@ export default class InviteMemberView extends Component<Props> {
 	async addToGroup(id) {
 		let user = await GFunction.user();
 
-		let response = await Api.joinGroup(user.authentication_token, this.props.group.id, id);
+		let response = await Api.joinGroup(user.authentication_jwt, this.props.group.id, id);
 
 		if (response.success) {
 			this.props.onSetNewData(response.group);
