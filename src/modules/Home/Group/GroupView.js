@@ -330,7 +330,7 @@ export default class GroupView extends Component<Props> {
     let user = await GFunction.user();
 
     let response = await Api.leaveGroup(
-      user.authentication_token,
+      user.authentication_jwt,
       this.state.group.id,
       id,
     );

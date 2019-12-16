@@ -52,7 +52,7 @@ export default class HomeView extends Component<Props> {
   componentWillMount = async () => {
     this.setState({spinner: true});
     let user = await GFunction.user();
-    let resp = await Api.getGroup(user.authentication_token);
+    let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       this.setState({
         spinner: false,
@@ -179,7 +179,7 @@ export default class HomeView extends Component<Props> {
   refreshGroup = async () => {
     await this.setState({refreshing: true});
     let user = await GFunction.user();
-    let resp = await Api.getGroup(user.authentication_token);
+    let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       await this.setState({
         refreshing: false,

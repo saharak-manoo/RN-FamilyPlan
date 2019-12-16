@@ -28,7 +28,7 @@ export default class SetUpReminderView extends Component<Props> {
 			due_date: this.state.dueDate,
 		};
 
-		let response = await Api.updateGroup(user.authentication_token, this.props.group.id, params);
+		let response = await Api.updateGroup(user.authentication_jwt, this.props.group.id, params);
 
 		if (response.success) {
 			this.loadingSettingDueDate.showLoading(false);
