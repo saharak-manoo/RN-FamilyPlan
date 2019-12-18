@@ -124,8 +124,6 @@ export default class RegisterView extends Component<Props> {
     };
 
     let response = await Api.signUp(params);
-    console.log(response);
-    console.log('response');
 
     if (response.success) {
       this.loadingSignUp.showLoading(false);
@@ -138,7 +136,7 @@ export default class RegisterView extends Component<Props> {
     } else {
       this.loadingSignUp.showLoading(false);
       let errors = [];
-      response.error.map((error, i) => {
+      response.errors.map((error, i) => {
         errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
       });
       GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));

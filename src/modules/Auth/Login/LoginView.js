@@ -186,32 +186,34 @@ export default class LoginView extends Component<Props> {
               onPress={this.clickSignIn.bind(this)}
             />
 
-            <View style={{justifyContent: 'center', paddingTop: 5}}>
-              <TouchableOpacity
-                style={[
-                  styles.buttonLoginWith,
-                  {
-                    marginTop: 20,
-                    backgroundColor: '#000',
-                    flexDirection: 'row',
-                    borderRadius: 28,
-                    height: 50,
-                  },
-                ]}
-                onPress={() => this.signInWithAppleId()}>
-                <View style={{flex: 0.1, paddingLeft: 10}}>
-                  <FontAwesomeIcon
-                    name="apple"
-                    size={26}
-                    color="#FFF"></FontAwesomeIcon>
-                </View>
-                <View style={{flex: 1, alignItems: 'center'}}>
-                  <Text style={{color: '#FFF', fontSize: 19}}>
-                    {`${I18n.t('button.signinWith')} Apple`}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            {appleAuth.isSupported && (
+              <View style={{justifyContent: 'center', paddingTop: 5}}>
+                <TouchableOpacity
+                  style={[
+                    styles.buttonLoginWith,
+                    {
+                      marginTop: 20,
+                      backgroundColor: '#000',
+                      flexDirection: 'row',
+                      borderRadius: 28,
+                      height: 50,
+                    },
+                  ]}
+                  onPress={() => this.signInWithAppleId()}>
+                  <View style={{flex: 0.1, paddingLeft: 10}}>
+                    <FontAwesomeIcon
+                      name="apple"
+                      size={26}
+                      color="#FFF"></FontAwesomeIcon>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <Text style={{color: '#FFF', fontSize: 19}}>
+                      {`${I18n.t('button.signinWith')} Apple`}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
 
             <TouchableOpacity
               style={{
