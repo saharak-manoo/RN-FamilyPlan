@@ -26,6 +26,7 @@ export default class RegisterView extends Component<Props> {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
+    console.log(params);
     this.state = {
       prefixs: [
         {
