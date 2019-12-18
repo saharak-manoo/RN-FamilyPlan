@@ -36,7 +36,6 @@ export default class NotificationView extends Component<Props> {
   AppHerder() {
     return (
       <View>
-        <StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
         <Appbar.Header style={{backgroundColor: '#F93636'}}>
           <Appbar.Content title={I18n.t('placeholder.notifications')} />
         </Appbar.Header>
@@ -72,7 +71,6 @@ export default class NotificationView extends Component<Props> {
                 leftAvatar={{source: {uri: item.photo_url}}}
                 title={item.name}
                 subtitle={item.subtitle}
-                bottomDivider
                 containerStyle={{
                   backgroundColor: index == 0 ? '#D4FDE8' : '#FFF',
                 }}

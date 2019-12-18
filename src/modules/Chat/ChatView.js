@@ -9,72 +9,140 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import {GiftedChat} from 'react-native-gifted-chat';
+import MatIcon from 'react-native-vector-icons/MaterialIcons';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#09A650' : '#000';
 
 export default class ChatView extends Component<Props> {
-	constructor(props) {
-		super(props);
-		this.state = {
-			messages: [],
-			search: '',
-		};
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: [],
+      spinner: true,
+      chatRoom: this.props.navigation.state.params.chatRoom,
+      messages: [],
+      search: '',
+    };
+  }
 
-	AppHerder() {
-		return (
-			<View>
-				<StatusBar backgroundColor={BAR_COLOR} barStyle="light-content" />
-				<Appbar.Header style={{backgroundColor: '#09A650'}}>
-					<Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-					<Appbar.Content title={I18n.t('placeholder.chat')} />
-				</Appbar.Header>
-			</View>
-		);
-	}
+  AppHerder() {
+    return (
+      <View>
+        <Appbar.Header
+          style={{
+            backgroundColor: this.state.chatRoom.group.color,
+          }}>
+          <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
+          <Appbar.Content title={this.state.chatRoom.name} />
+          {this.state.chatRoom.is_request_join_group_leader ? (
+            <Appbar.Action
+              icon="plus-one"
+              onPress={() => this.dialogAddMemberToGroup()}
+            />
+          ) : null}
+        </Appbar.Header>
+      </View>
+    );
+  }
 
-	componentWillMount() {
-		this.setState({
-			messages: [
-				{
-					_id: 1,
-					text: 'Hello developer',
-					createdAt: new Date(),
-					user: {
-						_id: 2,
-						name: 'React Native',
-						avatar: 'https://placeimg.com/140/140/any',
-					},
-				},
-				{
-					_id: 2,
-					text: 'Hello Family Plan',
-					createdAt: new Date(),
-					user: {
-						_id: 2,
-						name: 'React Native',
-						avatar: 'https://placeimg.com/140/140/any',
-					},
-				},
-			],
-		});
-	}
+  async componentWillMount() {
+    // get user
+    let user = await GFunction.user();
+    await this.setState({user: user});
 
-	onSend(messages = []) {
-		this.setState(previousState => ({
-			messages: GiftedChat.append(previousState.messages, messages),
-		}));
-	}
+    this.loadChat();
+  }
 
-	render() {
-		return (
-			<View style={styles.defaultView}>
-				{this.AppHerder()}
-				<View style={{flex: 1}}>
-					<GiftedChat loadEarlier isLoadingEarlier messages={this.state.messages} onSend={messages => this.onSend(messages)} />
-				</View>
-			</View>
-		);
-	}
+  async loadChat() {
+    let resp = await Api.getChatMessage(
+      this.state.user.authentication_jwt,
+      this.state.chatRoom.id,
+    );
+    if (resp.success) {
+      await this.setState({
+        messages: resp.messages,
+        spinner: false,
+      });
+    }
+  }
+
+  dialogAddMemberToGroup() {
+    Alert.alert(
+      '',
+      `Are your sure ?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          style: 'destructive',
+        },
+        {
+          text: 'Yes',
+          onPress: () => this.addMemberToGroup(),
+        },
+      ],
+      {cancelable: false},
+    );
+  }
+
+  async addMemberToGroup() {
+    let user = await GFunction.user();
+    let response = await Api.joinGroup(
+      user.authentication_jwt,
+      this.state.chatRoom.group.id,
+      this.state.messages[0].user._id,
+    );
+
+    if (response.success) {
+      GFunction.successMessage(
+        I18n.t('message.success'),
+        I18n.t('message.joinGroupSuccessful'),
+      );
+    } else {
+      let errors = [];
+      response.error.map((error, i) => {
+        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+      });
+      GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+    }
+  }
+
+  async onSend(messages = []) {
+    let resp = await Api.createChat(
+      this.state.user.authentication_jwt,
+      this.state.chatRoom.id,
+      messages[0],
+    );
+    if (resp.success) {
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, resp.message),
+      }));
+    }
+  }
+
+  render() {
+    return (
+      <View style={styles.chatView}>
+        {this.AppHerder()}
+        <View style={{flex: 1}}>
+          {this.state.spinner ? (
+            <Spinner
+              visible={this.state.spinner}
+              textContent={I18n.t('placeholder.loading') + '...'}
+              textStyle={styles.spinnerTextStyle}
+            />
+          ) : (
+            <GiftedChat
+              messages={this.state.messages}
+              onSend={messages => this.onSend(messages)}
+              user={{
+                _id: this.state.user.id,
+              }}
+            />
+          )}
+        </View>
+      </View>
+    );
+  }
 }

@@ -42,7 +42,7 @@ export default class NewGroupView extends Component<Props> {
 			service_id: this.state.serviceId,
 		};
 
-		let response = await Api.createGroup(user.authentication_token, params);
+		let response = await Api.createGroup(user.authentication_jwt, params);
 
 		if (response.success) {
 			this.props.myGroups.unshift(response.group);
