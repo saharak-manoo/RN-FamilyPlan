@@ -7,10 +7,10 @@ const HOSTS = [
   'http://10.251.1.204:3000',
   'http://192.168.1.37:3000',
   'http://172.20.10.12:3000',
-  'http://192.168.1.34:3000',
+  'http://192.168.2.105:3000',
 ];
 
-const HOST = HOSTS[0];
+const HOST = HOSTS[4];
 const SIGN_UP_PATH = '/api/v1/users';
 const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
 const SIGN_OUT_PATH = '/api/v1/sessions/sign_out';
@@ -28,6 +28,7 @@ const CHAT = '/api/v1/chat_rooms/:id';
 const CREATE_CHAT_ROOM = '/api/v1/chat_rooms';
 const CREATE_MESSAGE = '/api/v1/chat_rooms/:id/message';
 const REFRESH_TOKEN = '/api/v1/sessions/refresh_token';
+const SIGN_IN_WITH_PATH = '/api/v1/sessions/sign_in_with';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -100,13 +101,8 @@ export async function signIn(params) {
       body: JSON.stringify({user: params}),
     });
 
-    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
-    if (status === 'reload') {
-      this.signIn(params);
-    } else if (status === 'ok') {
-      let response = await resp.json();
-      return response;
-    }
+    let response = await resp.json();
+    return response;
   } catch (e) {
     console.warn(e);
   }
@@ -123,13 +119,8 @@ export async function signUp(params) {
       body: JSON.stringify({user: params}),
     });
 
-    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
-    if (status === 'reload') {
-      this.signUp(params);
-    } else if (status === 'ok') {
-      let response = await resp.json();
-      return response;
-    }
+    let response = await resp.json();
+    return response;
   } catch (e) {
     console.warn(e);
   }
@@ -146,13 +137,8 @@ export async function forgotPassword(params) {
       body: JSON.stringify({user: params}),
     });
 
-    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
-    if (status === 'reload') {
-      this.forgotPassword(params);
-    } else if (status === 'ok') {
-      let response = await resp.json();
-      return response;
-    }
+    let response = await resp.json();
+    return response;
   } catch (e) {
     console.warn(e);
   }
@@ -171,7 +157,7 @@ export async function signOut(token) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.signOut(newTokenJwt);
+      return this.signOut(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -197,7 +183,7 @@ export async function getProfile(token, user_id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
     if (status === 'reload') {
-      this.getProfile(newTokenJwt, user_id);
+      return this.getProfile(newTokenJwt, user_id);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -219,10 +205,8 @@ export async function getGroup(token) {
     });
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
-    console.log(status);
-    console.log(newTokenJwt);
     if (status === 'reload') {
-      this.getGroup(newTokenJwt);
+      return this.getGroup(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -245,7 +229,7 @@ export async function newGroup(token) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.newGroup(newTokenJwt);
+      return this.newGroup(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -269,7 +253,7 @@ export async function createGroup(token, params) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.createGroup(newTokenJwt, params);
+      return this.createGroup(newTokenJwt, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -293,7 +277,7 @@ export async function updateGroup(token, id, params) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.updateGroup(newTokenJwt, id, params);
+      return this.updateGroup(newTokenJwt, id, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -317,7 +301,7 @@ export async function inviteGroup(token, id, email) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.inviteGroup(newTokenJwt, id, email);
+      return this.inviteGroup(newTokenJwt, id, email);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -341,7 +325,7 @@ export async function joinGroup(token, id, user_id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.joinGroup(newTokenJwt, id, user_id);
+      return this.joinGroup(newTokenJwt, id, user_id);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -365,7 +349,7 @@ export async function leaveGroup(token, id, user_id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.leaveGroup(newTokenJwt, id, user_id);
+      return this.leaveGroup(newTokenJwt, id, user_id);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -388,7 +372,7 @@ export async function searchGroup(token, email) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.searchGroup(newTokenJwt, email);
+      return this.searchGroup(newTokenJwt, email);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -411,7 +395,7 @@ export async function getChatRoom(token) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.getChatRoom(newTokenJwt);
+      return this.getChatRoom(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -434,7 +418,7 @@ export async function getChatMessage(token, id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.getChatMessage(newTokenJwt, id);
+      return this.getChatMessage(newTokenJwt, id);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -458,7 +442,7 @@ export async function createChatRoom(token, groupId) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.createChatRoom(newTokenJwt, groupId);
+      return this.createChatRoom(newTokenJwt, groupId);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -482,11 +466,29 @@ export async function createChat(token, id, params) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      this.createChat(newTokenJwt, id, params);
+      return this.createChat(newTokenJwt, id, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
     }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function signInWith(user) {
+  try {
+    const resp = await fetch(joinUrl(HOST, SIGN_IN_WITH_PATH), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({user}),
+    });
+
+    let response = await resp.json();
+    return response;
   } catch (e) {
     console.warn(e);
   }
