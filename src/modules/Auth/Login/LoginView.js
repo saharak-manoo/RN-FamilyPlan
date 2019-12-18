@@ -126,8 +126,8 @@ export default class LoginView extends Component<Props> {
           firstName: user.first_name,
           lastName: user.last_name,
           email: user.email,
-          apple_id_uid: user.apple_id_uid,
-          sign_in_with: 'apple_id',
+          appleIdUid: user.apple_id_uid,
+          signInWith: 'apple_id',
         });
       }
     }
