@@ -14,6 +14,15 @@ import I18n from '../../../components/i18n';
 import * as Api from '../../../util/Api';
 import * as GFunction from '../../../util/GlobalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
+import appleAuth, {
+  AppleButton,
+  AppleAuthRequestScope,
+  AppleAuthRequestOperation,
+  AppleAuthCredentialState,
+  AppleAuthError,
+} from '@invertase/react-native-apple-authentication';
+import {styles} from '../../../components/styles';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -78,6 +87,52 @@ export default class LoginView extends Component<Props> {
     }, 500);
   }
 
+  signInWithAppleId = async () => {
+    let resp = await appleAuth.performRequest({
+      requestedOperation: AppleAuthRequestOperation.LOGIN,
+      requestedScopes: [
+        AppleAuthRequestScope.EMAIL,
+        AppleAuthRequestScope.FULL_NAME,
+      ],
+    });
+
+    let user = {
+      email: resp.email,
+      first_name: resp.fullName.givenName,
+      last_name: resp.fullName.familyName,
+      apple_id_uid: resp.user,
+      sign_in_with: 'apple_id',
+    };
+
+    if (user.apple_id_uid == '' || user.apple_id_uid == null) {
+      this.props.navigation.navigate('Register', {
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        appleIdUid: user.apple_id_uid,
+        signInWith: 'apple_id',
+      });
+    } else {
+      let response = await Api.signInWith(user);
+      if (response.success) {
+        await AsyncStorage.setItem('user', JSON.stringify(response.user));
+        GFunction.successMessage(
+          I18n.t('message.success'),
+          I18n.t('message.signInSuccessful'),
+        );
+        this.props.navigation.navigate('Home');
+      } else {
+        this.props.navigation.navigate('Register', {
+          firstName: user.first_name,
+          lastName: user.last_name,
+          email: user.email,
+          apple_id_uid: user.apple_id_uid,
+          sign_in_with: 'apple_id',
+        });
+      }
+    }
+  };
+
   render() {
     return (
       <View style={{flex: 1}}>
@@ -131,10 +186,45 @@ export default class LoginView extends Component<Props> {
               onPress={this.clickSignIn.bind(this)}
             />
 
+            <View style={{justifyContent: 'center', paddingTop: 5}}>
+              <TouchableOpacity
+                style={[
+                  styles.buttonLoginWith,
+                  {
+                    marginTop: 20,
+                    backgroundColor: '#000',
+                    flexDirection: 'row',
+                    borderRadius: 28,
+                    height: 50,
+                  },
+                ]}
+                onPress={() => this.signInWithAppleId()}>
+                <View style={{flex: 0.1, paddingLeft: 10}}>
+                  <FontAwesomeIcon
+                    name="apple"
+                    size={26}
+                    color="#FFF"></FontAwesomeIcon>
+                </View>
+                <View style={{flex: 1, alignItems: 'center'}}>
+                  <Text style={{color: '#FFF', fontSize: 19}}>
+                    {`${I18n.t('button.signinWith')} Apple`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
             <TouchableOpacity
-              style={{padding: 20, paddingTop: 15, alignItems: 'center'}}
+              style={{
+                padding: 20,
+                paddingTop: 15,
+                alignItems: 'center',
+              }}
               onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-              <Text style={{fontSize: 15, textDecorationLine: 'underline'}}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  textDecorationLine: 'underline',
+                }}>
                 {I18n.t('button.forgotPassword')}
               </Text>
             </TouchableOpacity>
