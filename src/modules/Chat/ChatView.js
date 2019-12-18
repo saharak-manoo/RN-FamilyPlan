@@ -56,7 +56,7 @@ export default class ChatView extends Component<Props> {
 
   async loadChat() {
     let resp = await Api.getChatMessage(
-      this.state.user.authentication_token,
+      this.state.user.authentication_jwt,
       this.state.chatRoom.id,
     );
     if (resp.success) {
@@ -89,7 +89,7 @@ export default class ChatView extends Component<Props> {
   async addMemberToGroup() {
     let user = await GFunction.user();
     let response = await Api.joinGroup(
-      user.authentication_token,
+      user.authentication_jwt,
       this.state.chatRoom.group.id,
       this.state.messages[0].user._id,
     );
@@ -110,7 +110,7 @@ export default class ChatView extends Component<Props> {
 
   async onSend(messages = []) {
     let resp = await Api.createChat(
-      this.state.user.authentication_token,
+      this.state.user.authentication_jwt,
       this.state.chatRoom.id,
       messages[0],
     );

@@ -181,4 +181,11 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     borderRadius: 15,
   },
+
+  buttonLoginWith: {
+    alignSelf: 'center',
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 10,
+  },
 });
