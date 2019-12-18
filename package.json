@@ -18,6 +18,7 @@
     "run-android": "react-native run-android"
   },
   "dependencies": {
+    "@invertase/react-native-apple-authentication": "^0.1.1",
     "@react-native-community/async-storage": "^1.6.2",
     "@react-native-community/datetimepicker": "^2.1.0",
     "prop-types": "^15.7.2",

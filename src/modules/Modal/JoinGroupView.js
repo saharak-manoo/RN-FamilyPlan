@@ -21,7 +21,7 @@ export default class JoinGroupView extends Component<Props> {
     this.loadingJoinGroup.showLoading(true);
     let user = await GFunction.user();
     let response = await Api.createChatRoom(
-      user.authentication_token,
+      user.authentication_jwt,
       this.props.group.id,
     );
 

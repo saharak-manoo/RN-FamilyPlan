@@ -46,7 +46,7 @@ export default class ChatListView extends Component<Props> {
     this.setState({spinner: true});
     let user = await GFunction.user();
     await this.setState({user: user});
-    let resp = await Api.getChatRoom(this.state.user.authentication_token);
+    let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
     if (resp.success) {
       this.setState({
         spinner: false,
@@ -57,7 +57,7 @@ export default class ChatListView extends Component<Props> {
 
   refreshChatRoom = async () => {
     await this.setState({refreshing: true});
-    let resp = await Api.getChatRoom(this.state.user.authentication_token);
+    let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
     if (resp.success) {
       await this.setState({
         chat_rooms: resp.chat_rooms,
