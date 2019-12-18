@@ -10,7 +10,7 @@ const HOSTS = [
   'http://192.168.2.105:3000',
 ];
 
-const HOST = HOSTS[0];
+const HOST = HOSTS[4];
 const SIGN_UP_PATH = '/api/v1/users';
 const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
 const SIGN_OUT_PATH = '/api/v1/sessions/sign_out';
