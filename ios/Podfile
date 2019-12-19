@@ -72,6 +72,8 @@ target 'FamilyPlan' do
 
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
 
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

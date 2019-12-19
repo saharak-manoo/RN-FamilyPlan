@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
+  Image,
   StatusBar,
 } from 'react-native';
 import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
@@ -27,7 +28,6 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#1C83F7' : '#000';
 
 export default class LoginView extends Component<Props> {
   constructor(props) {
@@ -187,7 +187,7 @@ export default class LoginView extends Component<Props> {
             />
 
             {appleAuth.isSupported && (
-              <View style={{justifyContent: 'center', paddingTop: 5}}>
+              <View style={{justifyContent: 'center', paddingTop: 2}}>
                 <TouchableOpacity
                   style={[
                     styles.buttonLoginWith,
@@ -214,6 +214,87 @@ export default class LoginView extends Component<Props> {
                 </TouchableOpacity>
               </View>
             )}
+
+            <View style={{justifyContent: 'center', paddingTop: 2}}>
+              <TouchableOpacity
+                style={[
+                  styles.buttonLoginWith,
+                  {
+                    marginTop: 20,
+                    backgroundColor: '#4267be',
+                    flexDirection: 'row',
+                    borderRadius: 28,
+                    height: 50,
+                  },
+                ]}
+                onPress={() => this.signInWithAppleId()}>
+                <View style={{flex: 0.1, paddingLeft: 10}}>
+                  <FontAwesomeIcon
+                    name="facebook-square"
+                    size={26}
+                    color="#FFF"></FontAwesomeIcon>
+                </View>
+                <View style={{flex: 1, alignItems: 'center'}}>
+                  <Text style={{color: '#FFF', fontSize: 19}}>
+                    {`${I18n.t('button.signinWith')} Facebook`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{justifyContent: 'center', paddingTop: 2}}>
+              <TouchableOpacity
+                style={[
+                  styles.buttonLoginWith,
+                  {
+                    marginTop: 20,
+                    backgroundColor: '#18C464',
+                    flexDirection: 'row',
+                    borderRadius: 28,
+                    height: 50,
+                  },
+                ]}
+                onPress={() => this.signInWithAppleId()}>
+                <View style={{flex: 0.1, paddingLeft: 10}}>
+                  <Image
+                    source={require('../../../img/line.png')}
+                    style={{width: 26, height: 26, marginRight: 20}}
+                  />
+                </View>
+                <View style={{flex: 1, alignItems: 'center'}}>
+                  <Text style={{color: '#FFF', fontSize: 19}}>
+                    {`${I18n.t('button.signinWith')} LINE`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{justifyContent: 'center', paddingTop: 2}}>
+              <TouchableOpacity
+                style={[
+                  styles.buttonLoginWith,
+                  {
+                    marginTop: 20,
+                    backgroundColor: '#0079C2',
+                    flexDirection: 'row',
+                    borderRadius: 28,
+                    height: 50,
+                  },
+                ]}
+                onPress={() => this.signInWithAppleId()}>
+                <View style={{flex: 0.1, paddingLeft: 10}}>
+                  <FontAwesomeIcon
+                    name="google"
+                    size={26}
+                    color="#FFF"></FontAwesomeIcon>
+                </View>
+                <View style={{flex: 1, alignItems: 'center'}}>
+                  <Text style={{color: '#FFF', fontSize: 19}}>
+                    {`${I18n.t('button.signinWith')} Google`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               style={{
