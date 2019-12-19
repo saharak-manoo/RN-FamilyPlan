@@ -18,6 +18,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* FamilyPlanTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FamilyPlanTests.m */; };
 		4EE75CF031354ECEA3E5A3EE /* libPods-FamilyPlan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6ABF1AECB9E664974965E4 /* libPods-FamilyPlan.a */; };
+		9D97686D23AB24B2007E73E7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D97686C23AB24B2007E73E7 /* GoogleService-Info.plist */; };
 		E652DF10B61C0FF0003D021F /* libPods-FamilyPlanTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EE49971066F876ABE7BD23 /* libPods-FamilyPlanTests.a */; };
 		F069AB9798C0FA18C82F17F4 /* libPods-FamilyPlan-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82F38F06BF9CC72C150185A4 /* libPods-FamilyPlan-tvOS.a */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,7 @@
 		82C65744FB064869BAF0BC9D /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		82F38F06BF9CC72C150185A4 /* libPods-FamilyPlan-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FamilyPlan-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9174D2FB95114AB48448E272 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		9D97686C23AB24B2007E73E7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Desktop/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9DE53C5323AA79B50019054A /* FamilyPlan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FamilyPlan.entitlements; path = FamilyPlan/FamilyPlan.entitlements; sourceTree = "<group>"; };
 		A07556DAC2114EC49825A6F0 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		B230966A116F4AAAADBAE60F /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 		13B07FAE1A68108700A75B9A /* FamilyPlan */ = {
 			isa = PBXGroup;
 			children = (
+				9D97686C23AB24B2007E73E7 /* GoogleService-Info.plist */,
 				9DE53C5323AA79B50019054A /* FamilyPlan.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -388,6 +391,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				9D97686D23AB24B2007E73E7 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
