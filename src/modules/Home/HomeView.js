@@ -22,6 +22,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import PTRView from 'react-native-pull-to-refresh';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
+import firebase, {RemoteMessage, Notification} from 'react-native-firebase';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -50,6 +51,7 @@ export default class HomeView extends Component<Props> {
   }
 
   componentWillMount = async () => {
+    this.fcmCheckPermissions();
     this.setState({spinner: true});
     let user = await GFunction.user();
     let resp = await Api.getGroup(user.authentication_jwt);
@@ -62,6 +64,41 @@ export default class HomeView extends Component<Props> {
       });
     }
   };
+
+  componentDidMount() {
+    this.removeNotificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
+    this.removeNotificationListener = firebase
+      .notifications()
+      .onNotification(notification => {});
+  }
+
+  componentWillUnmount() {
+    this.removeNotificationDisplayedListener();
+    this.removeNotificationListener();
+  }
+
+  fcmCheckPermissions() {
+    firebase
+      .messaging()
+      .hasPermission()
+      .then(enabled => {
+        if (enabled) {
+          // user has permissions
+        } else {
+          firebase
+            .messaging()
+            .requestPermission()
+            .then(() => {
+              // User has authorised
+            })
+            .catch(error => {
+              // User has rejected permissions
+            });
+        }
+      });
+  }
 
   newGroupModal = React.createRef();
   scanQrCodeModal = React.createRef();
@@ -286,7 +323,9 @@ export default class HomeView extends Component<Props> {
   };
 
   goToRequestJoinGroup = chatRoom => {
-    this.props.navigation.navigate('ChatRoom', {chatRoom: chatRoom});
+    this.props.navigation.navigate('ChatRoom', {
+      chatRoom: chatRoom,
+    });
   };
 
   goToGroup = group => {
