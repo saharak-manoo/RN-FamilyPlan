@@ -3,14 +3,14 @@ import * as GFunction from './GlobalFunction';
 
 const HOSTS = [
   'https://family-plan.herokuapp.com',
-  'http://192.168.2.102:3000',
+  'http://172.20.10.12:3000',
   'http://10.251.1.204:3000',
   'http://192.168.1.37:3000',
   'http://172.20.10.12:3000',
   'http://192.168.2.105:3000',
 ];
 
-const HOST = HOSTS[0];
+const HOST = HOSTS[1];
 const SIGN_UP_PATH = '/api/v1/users';
 const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
 const SIGN_OUT_PATH = '/api/v1/sessions/sign_out';

@@ -23,6 +23,7 @@ import PTRView from 'react-native-pull-to-refresh';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
 import firebase, {RemoteMessage, Notification} from 'react-native-firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -98,16 +99,15 @@ export default class HomeView extends Component<Props> {
             });
         }
       });
-
+    
+    // get FCM Token
     firebase
       .messaging()
       .getToken()
-      .then(fcmToken => {
-        console.log('fcmToken => ' + fcmToken);
+      .then(async fcmToken => {
         if (fcmToken) {
-          // user has a device token
-        } else {
-          // user doesn't have a device token yet
+          console.log('fcmToken => : ', fcmToken);
+          await AsyncStorage.setItem('fcmToken', fcmToken);
         }
       });
   }

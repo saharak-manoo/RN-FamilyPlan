@@ -28,7 +28,7 @@ export default class ChatListView extends Component<Props> {
       spinner: false,
       search: '',
       refreshing: false,
-      chat_rooms: [],
+      chatRooms: [],
     };
   }
 
@@ -51,9 +51,10 @@ export default class ChatListView extends Component<Props> {
     await this.setState({user: user});
     let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
     if (resp.success) {
+      console.log('resp.chat_rooms', resp.chat_rooms);
       this.setState({
         spinner: false,
-        chat_rooms: resp.chat_rooms,
+        chatRooms: resp.chat_rooms,
       });
     }
   };
@@ -63,7 +64,7 @@ export default class ChatListView extends Component<Props> {
     let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
     if (resp.success) {
       await this.setState({
-        chat_rooms: resp.chat_rooms,
+        chatRooms: resp.chat_rooms,
         refreshing: false,
       });
     }
@@ -133,8 +134,8 @@ export default class ChatListView extends Component<Props> {
   }
 
   async removeChat(id, index) {
-    this.state.chat_rooms.splice(index, 1);
-    await this.setState({chat_rooms: this.state.chat_rooms});
+    this.state.chatRooms.splice(index, 1);
+    await this.setState({chatRooms: this.state.chat_rooms});
     GFunction.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
@@ -186,7 +187,7 @@ export default class ChatListView extends Component<Props> {
               />
             }>
             <View style={{flex: 1}}>
-              {this.listChatRoom(this.state.chat_rooms)}
+              {this.listChatRoom(this.state.chatRooms)}
             </View>
           </ScrollView>
         )}
