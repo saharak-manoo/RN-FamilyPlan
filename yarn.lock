@@ -5600,6 +5600,11 @@ react-native-permissions@^2.0.3:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.0.3.tgz#b6da83e5e313e41ba5f70ff2c4567291766b0140"
   integrity sha512-8pd+UhyphAiFGzBil5d5pDxRf/rH+20SzDNu9cFnCtoD2MbYTVH7GjXsxaZ2lPsmwrqYYbF8FBfwmncKf/G1+Q==
 
+react-native-picker-module@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-picker-module/-/react-native-picker-module-1.2.3.tgz#1ad2de7f946ce178b7cbda7583af220313141c06"
+  integrity sha512-qGcXjKOq+NitvcBUO7eQNbrzfmjL/ZlaxsnAVs3czW2JuxgaBjutiTjIcwHQNrH0RWjcZVzMrrbDHFHfF/lWCg==
+
 react-native-pull-to-refresh@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/react-native-pull-to-refresh/-/react-native-pull-to-refresh-2.1.3.tgz#66a02c024dc471372a80511f1f180c0bb2646819"

@@ -22,7 +22,8 @@
     "mrs": "นาง",
     "miss": "นางสาว",
     "info": "ข้อมูล",
-    "members": "สมาชิก"
+    "members": "สมาชิก",
+    "notiGroupPayment": "วันที่ %{day} ของทุกเดือน"
   },
   "placeholder": {
     "prefix": "คำนำหน้า",

@@ -21,16 +21,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../../util/Api';
 import * as GFunction from '../../../util/GlobalFunction';
+import ReactNativePickerModule from 'react-native-picker-module';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
-import SetUpReminderView from '../../Modal/SetUpReminderView';
 import SettingServiceChargeView from '../../Modal/SettingServiceChargeView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#2370E6' : '#000';
 
 export default class GroupView extends Component<Props> {
   constructor(props) {
@@ -38,11 +37,13 @@ export default class GroupView extends Component<Props> {
     this.state = {
       group: this.props.navigation.state.params.group,
       userView: [],
+      selectedDay: null,
+      day: '30',
+      days: Array.from({length: 31}, (v, k) => k + 1).map(String),
     };
   }
 
   inviteMemberModal = React.createRef();
-  setUpReminderModal = React.createRef();
   settingServiceChargeModal = React.createRef();
 
   async componentWillMount() {
@@ -101,37 +102,20 @@ export default class GroupView extends Component<Props> {
     );
   }
 
-  showSetUpReminderModal = () => {
-    if (this.setUpReminderModal.current && this.state.userView.group_leader) {
-      this.setUpReminderModal.current.open();
-    }
-  };
-
   popUpModalSetUpReminder() {
     return (
-      <Modalize
-        ref={this.setUpReminderModal}
-        modalStyle={styles.popUpModal}
-        overlayStyle={styles.overlayModal}
-        handleStyle={styles.handleModal}
-        modalHeight={height / 1.08}
-        handlePosition="inside"
-        openAnimationConfig={{
-          timing: {duration: 400},
-          spring: {speed: 10, bounciness: 10},
+      <ReactNativePickerModule
+        pickerRef={e => (this.pickerRef = e)}
+        selectedValue={this.state.selectedDay}
+        title={I18n.t('placeholder.setUpAReminder')}
+        items={this.state.days}
+        onValueChange={(day, index) => {
+          this.setState({
+            day: day,
+            selectedDay: index,
+          });
         }}
-        closeAnimationConfig={{
-          timing: {duration: 400},
-          spring: {speed: 10, bounciness: 10},
-        }}
-        withReactModal
-        adjustToContentHeight>
-        <SetUpReminderView
-          modal={this.setUpReminderModal}
-          group={this.state.group}
-          onSetNewData={this.setNewData}
-        />
-      </Modalize>
+      />
     );
   }
 
@@ -186,7 +170,9 @@ export default class GroupView extends Component<Props> {
             name="add-alert"
             type="mat-icon"
             color={this.state.group.color}
-            onPress={this.showSetUpReminderModal}
+            onPress={() => {
+              this.pickerRef.show();
+            }}
           />
           <Text
             style={{
@@ -195,7 +181,9 @@ export default class GroupView extends Component<Props> {
               fontSize: 28,
               justifyContent: 'center',
             }}>
-            {this.state.group.due_date}
+            {I18n.t('text.notiGroupPayment', {
+              day: this.state.day,
+            })}
           </Text>
         </View>
         <View
@@ -392,7 +380,9 @@ export default class GroupView extends Component<Props> {
             <ActionButton.Item
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.setUpAReminder')}
-              onPress={this.showSetUpReminderModal}>
+              onPress={() => {
+                this.pickerRef.show();
+              }}>
               <MatIcon name="add-alert" style={styles.actionButtonIcon} />
             </ActionButton.Item>
           </ActionButton>
