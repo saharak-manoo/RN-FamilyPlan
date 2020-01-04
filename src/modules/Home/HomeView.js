@@ -98,6 +98,18 @@ export default class HomeView extends Component<Props> {
             });
         }
       });
+
+    firebase
+      .messaging()
+      .getToken()
+      .then(fcmToken => {
+        console.log('fcmToken => ' + fcmToken);
+        if (fcmToken) {
+          // user has a device token
+        } else {
+          // user doesn't have a device token yet
+        }
+      });
   }
 
   newGroupModal = React.createRef();
