@@ -47,6 +47,7 @@
     "react-native-modalize": "^1.2.3",
     "react-native-paper": "^3.0.0",
     "react-native-permissions": "^2.0.3",
+    "react-native-picker-module": "^1.2.3",
     "react-native-pull-to-refresh": "^2.1.3",
     "react-native-qrcode": "^0.2.7",
     "react-native-restart": "^0.0.13",
@@ -73,5 +74,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
   }
 }

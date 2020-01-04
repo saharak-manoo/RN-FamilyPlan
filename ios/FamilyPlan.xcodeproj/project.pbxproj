@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* FamilyPlanTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FamilyPlanTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -21,6 +20,8 @@
 		9D5B86C023AB350F0098F15D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D5B86BF23AB350F0098F15D /* GoogleService-Info.plist */; };
 		E652DF10B61C0FF0003D021F /* libPods-FamilyPlanTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EE49971066F876ABE7BD23 /* libPods-FamilyPlanTests.a */; };
 		F069AB9798C0FA18C82F17F4 /* libPods-FamilyPlan-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82F38F06BF9CC72C150185A4 /* libPods-FamilyPlan-tvOS.a */; };
+		BB709A8820D04175ACA2DE8D /* assets_fonts_Kanit-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F68044C8FC8646CF95303D28 /* assets_fonts_Kanit-ExtraLight.ttf */; };
+		E33135C6F1214310AB76B60C /* assets_fonts_Kanit-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0290F4E688FD4C179063AE30 /* assets_fonts_Kanit-Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,8 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F53744FA6E9A4994BDC50DFB /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		F68B1B2E8FAC317DB7C97E71 /* libPods-FamilyPlan-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FamilyPlan-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F68044C8FC8646CF95303D28 /* assets_fonts_Kanit-ExtraLight.ttf */ = {isa = PBXFileReference; name = "assets_fonts_Kanit-ExtraLight.ttf"; path = "../assets/fonts/assets_fonts_Kanit-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0290F4E688FD4C179063AE30 /* assets_fonts_Kanit-Light.ttf */ = {isa = PBXFileReference; name = "assets_fonts_Kanit-Light.ttf"; path = "../assets/fonts/assets_fonts_Kanit-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +241,8 @@
 				779F446F6F2B482C97D340F1 /* Octicons.ttf */,
 				F53744FA6E9A4994BDC50DFB /* SimpleLineIcons.ttf */,
 				A07556DAC2114EC49825A6F0 /* Zocial.ttf */,
+				F68044C8FC8646CF95303D28 /* assets_fonts_Kanit-ExtraLight.ttf */,
+				0290F4E688FD4C179063AE30 /* assets_fonts_Kanit-Light.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -392,6 +397,8 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				9D5B86C023AB350F0098F15D /* GoogleService-Info.plist in Resources */,
+				BB709A8820D04175ACA2DE8D /* assets_fonts_Kanit-ExtraLight.ttf in Resources */,
+				E33135C6F1214310AB76B60C /* assets_fonts_Kanit-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
