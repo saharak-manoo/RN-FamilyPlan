@@ -56,7 +56,7 @@ export default class SetUpReminderView extends Component<Props> {
   render() {
     return (
       <View style={{flex: 1, padding: 30}}>
-        <Text style={{fontSize: 30}}>
+        <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.setUpAReminder')}
         </Text>
         <View style={{flex: 1, paddingTop: 15}}>
@@ -72,6 +72,7 @@ export default class SetUpReminderView extends Component<Props> {
             ref={c => (this.loadingSettingDueDate = c)}
             width={width - 25}
             height={50}
+            titleFontFamily={'Kanit-Light'}
             title={I18n.t('button.submit')}
             titleFontSize={18}
             titleColor="#FFF"

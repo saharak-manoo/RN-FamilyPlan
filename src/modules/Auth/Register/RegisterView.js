@@ -66,7 +66,10 @@ export default class RegisterView extends Component<Props> {
       <View>
         <Appbar.Header style={{backgroundColor: '#1C83F7'}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-          <Appbar.Content title={I18n.t('placeholder.appName')} />
+          <Appbar.Content
+            title={I18n.t('placeholder.appName')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -157,19 +160,25 @@ export default class RegisterView extends Component<Props> {
         {this.appHerder()}
         <ScrollView style={{flex: 1}}>
           <View style={{padding: 25, alignSelf: 'center'}}>
-            <Text style={{alignSelf: 'center', fontSize: 38}}>
+            <Text
+              style={{
+                alignSelf: 'center',
+                fontSize: 38,
+                fontFamily: 'Kanit-Light',
+              }}>
               {I18n.t('button.signUp')}
             </Text>
           </View>
           <View style={{padding: 15}}>
             <Dropdown
               label={
-                <Text style={{color: '#6d6b6b'}}>
+                <Text style={{color: '#6d6b6b', fontFamily: 'Kanit-Light'}}>
                   {I18n.t('placeholder.prefix')}
                 </Text>
               }
               labelFontSize={Platform.isPad ? 22 : 12}
               fontSize={Platform.isPad ? 25 : 16}
+              fontFamily={'Kanit-Light'}
               data={this.state.prefixs}
               baseColor="#2d2c2c"
               selectedItemColor="#222"
@@ -186,6 +195,7 @@ export default class RegisterView extends Component<Props> {
               onChangeText={firstName => this.setState({firstName: firstName})}
             />
             <HelperText
+              style={{fontFamily: 'Kanit-Light'}}
               type="error"
               visible={GFunction.validateBlank(this.state.firstName)}>
               {I18n.t('message.firstNameCannotBeBlank')}
@@ -199,6 +209,7 @@ export default class RegisterView extends Component<Props> {
               onChangeText={lastName => this.setState({lastName: lastName})}
             />
             <HelperText
+              style={{fontFamily: 'Kanit-Light'}}
               type="error"
               visible={GFunction.validateBlank(this.state.lastName)}>
               {I18n.t('message.lastNameCannotBeBlank')}
@@ -212,6 +223,7 @@ export default class RegisterView extends Component<Props> {
               onChangeText={email => this.setState({email: email})}
             />
             <HelperText
+              style={{fontFamily: 'Kanit-Light'}}
               type="error"
               visible={GFunction.validateEmail(this.state.email)}>
               {I18n.t('message.emailIsInvalid')}
@@ -229,6 +241,7 @@ export default class RegisterView extends Component<Props> {
               }
             />
             <HelperText
+              style={{fontFamily: 'Kanit-Light'}}
               type="error"
               visible={GFunction.validatePhoneNumber(this.state.phoneNumber)}>
               {I18n.t('message.telephoneMustBeTen')}
@@ -244,6 +257,7 @@ export default class RegisterView extends Component<Props> {
               onChangeText={password => this.setState({password: password})}
             />
             <HelperText
+              style={{fontFamily: 'Kanit-Light'}}
               type="error"
               visible={GFunction.validatePasswordLessThanSix(
                 this.state.password,
@@ -263,6 +277,7 @@ export default class RegisterView extends Component<Props> {
               }
             />
             <HelperText
+              style={{fontFamily: 'Kanit-Light'}}
               type="error"
               visible={GFunction.validatePasswordMatch(
                 this.state.password,
@@ -274,6 +289,7 @@ export default class RegisterView extends Component<Props> {
             <View style={{justifyContent: 'center', paddingTop: 10}}>
               <AnimateLoadingButton
                 ref={load => (this.loadingSignUp = load)}
+                titleFontFamily={'Kanit-Light'}
                 width={width - 25}
                 height={50}
                 title={I18n.t('button.signUp')}
@@ -289,13 +305,19 @@ export default class RegisterView extends Component<Props> {
                 onPress={() =>
                   this.props.navigation.navigate('ForgotPassword')
                 }>
-                <Text style={{fontSize: 15, textDecorationLine: 'underline'}}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    textDecorationLine: 'underline',
+                    fontFamily: 'Kanit-Light',
+                  }}>
                   {I18n.t('button.forgotPassword')}
                 </Text>
               </TouchableOpacity>
 
               <AnimateLoadingButton
                 ref={c => (this.loadingGoToSignIn = c)}
+                titleFontFamily={'Kanit-Light'}
                 width={width - 25}
                 height={50}
                 title={I18n.t('button.signIn')}

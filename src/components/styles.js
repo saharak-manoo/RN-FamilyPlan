@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
   defaultView: {
     fontFamily: 'Kanit-Light',
     flex: 1,
-    backgroundColor: '#D1D1D1',
+    backgroundColor: '#EEEEEE',
   },
 
   chatView: {

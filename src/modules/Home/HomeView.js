@@ -108,7 +108,10 @@ export default class HomeView extends Component<Props> {
     return (
       <View>
         <Appbar.Header style={{backgroundColor: '#2370E6'}}>
-          <Appbar.Content title={I18n.t('placeholder.appName')} />
+          <Appbar.Content
+            title={I18n.t('placeholder.appName')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -295,6 +298,7 @@ export default class HomeView extends Component<Props> {
                       color: '#000',
                       alignSelf: 'center',
                       padding: 15,
+                      fontFamily: 'Kanit-Light',
                     }}>
                     {item.name}
                   </Text>
@@ -308,6 +312,7 @@ export default class HomeView extends Component<Props> {
                       alignSelf: 'center',
                       justifyContent: 'flex-end',
                       padding: 10,
+                      fontFamily: 'Kanit-Light',
                     }}>
                     {I18n.t('placeholder.members')} : {item.members.length}/
                     {item.max_member}
@@ -353,6 +358,7 @@ export default class HomeView extends Component<Props> {
         {this.AppHerder()}
         <View style={{padding: 10}}>
           <Searchbar
+            inputStyle={{fontFamily: 'Kanit-Light'}}
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
               this.setState({search: searching});
@@ -364,7 +370,7 @@ export default class HomeView extends Component<Props> {
         {this.state.spinner ? (
           <Spinner
             visible={this.state.spinner}
-            textContent={I18n.t('placeholder.loading') + '...'}
+            textContent={`${I18n.t('placeholder.loading')}...`}
             textStyle={styles.spinnerTextStyle}
           />
         ) : (
@@ -407,6 +413,7 @@ export default class HomeView extends Component<Props> {
                                 color: '#000',
                                 alignSelf: 'center',
                                 padding: 15,
+                                fontFamily: 'Kanit-Light',
                               }}>
                               {I18n.t('placeholder.newGroup')}
                             </Text>
@@ -420,6 +427,7 @@ export default class HomeView extends Component<Props> {
                                 alignSelf: 'center',
                                 justifyContent: 'flex-end',
                                 padding: 10,
+                                fontFamily: 'Kanit-Light',
                               }}>
                               {I18n.t('placeholder.clickNewGroup')}
                             </Text>
@@ -454,12 +462,14 @@ export default class HomeView extends Component<Props> {
           <ActionButton.Item
             buttonColor="#03C8A1"
             title={I18n.t('placeholder.newGroup')}
+            textStyle={{fontFamily: 'Kanit-Light'}}
             onPress={this.showNewGroupModal}>
             <MatIcon name="group-add" style={styles.actionButtonIcon} />
           </ActionButton.Item>
           <ActionButton.Item
             buttonColor="#3D71FB"
             title={I18n.t('placeholder.qrCode')}
+            textStyle={{fontFamily: 'Kanit-Light'}}
             onPress={this.showScanQrCodeModal}>
             <FAIcon name="qrcode" style={styles.actionButtonIcon} />
           </ActionButton.Item>
