@@ -7,17 +7,19 @@ import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 
 export default class QrCodeView extends Component<Props> {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-	render() {
-		return (
-			<View style={{padding: 30}}>
-				<Text style={{fontSize: 30}}>{I18n.t('placeholder.qrCode')}</Text>
-				<View style={{paddingTop: 15}}></View>
-			</View>
-		);
-	}
+  render() {
+    return (
+      <View style={{padding: 30}}>
+        <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
+          {I18n.t('placeholder.qrCode')}
+        </Text>
+        <View style={{paddingTop: 15}}></View>
+      </View>
+    );
+  }
 }

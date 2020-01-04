@@ -62,7 +62,10 @@ export default class GroupView extends Component<Props> {
       <View>
         <Appbar.Header style={{backgroundColor: '#2370E6'}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-          <Appbar.Content title={this.state.group.name} />
+          <Appbar.Content
+            title={this.state.group.name}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -109,6 +112,8 @@ export default class GroupView extends Component<Props> {
         selectedValue={this.state.selectedDay}
         title={I18n.t('placeholder.setUpAReminder')}
         items={this.state.days}
+        confirmButton={I18n.t('button.save')}
+        cancelButton={I18n.t('button.cancel')}
         onValueChange={(day, index) => {
           this.setState({
             day: day,
@@ -164,7 +169,12 @@ export default class GroupView extends Component<Props> {
     return (
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View
-          style={{flex: 1, flexDirection: 'row', padding: IS_IOS ? 15 : 10}}>
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            padding: IS_IOS ? 13 : 10,
+            fontFamily: 'Kanit-Light',
+          }}>
           <Icon
             raised
             name="add-alert"
@@ -176,10 +186,11 @@ export default class GroupView extends Component<Props> {
           />
           <Text
             style={{
-              padding: IS_IOS ? 15 : 5,
+              padding: IS_IOS ? 13 : 5,
               paddingLeft: 35,
-              fontSize: 28,
+              fontSize: 25,
               justifyContent: 'center',
+              fontFamily: 'Kanit-Light',
             }}>
             {I18n.t('text.notiGroupPayment', {
               day: this.state.day,
@@ -199,8 +210,9 @@ export default class GroupView extends Component<Props> {
             style={{
               padding: IS_IOS ? 14 : 4,
               paddingLeft: 35,
-              fontSize: 28,
+              fontSize: 25,
               justifyContent: 'center',
+              fontFamily: 'Kanit-Light',
             }}>
             {this.state.group.service_charge}
           </Text>
@@ -228,7 +240,11 @@ export default class GroupView extends Component<Props> {
                   },
                 },
               ]}
-              style={{backgroundColor: '#FFF', borderRadius: 15}}>
+              style={{
+                backgroundColor: '#FFF',
+                borderRadius: 15,
+                fontFamily: 'Kanit-Light',
+              }}>
               <ListItem
                 key={index}
                 containerStyle={{borderRadius: 15}}
@@ -238,7 +254,9 @@ export default class GroupView extends Component<Props> {
                 activeScale={0.95}
                 leftAvatar={{source: {uri: item.photo}}}
                 title={item.full_name}
+                titleStyle={{fontFamily: 'Kanit-Light'}}
                 subtitle={item.email}
+                subtitleStyle={{fontFamily: 'Kanit-Light'}}
                 bottomDivider
                 chevron={
                   item.group_leader ? (
@@ -261,7 +279,9 @@ export default class GroupView extends Component<Props> {
               activeScale={0.95}
               leftAvatar={{source: {uri: item.photo}}}
               title={item.full_name}
+              titleStyle={{fontFamily: 'Kanit-Light'}}
               subtitle={item.email}
+              subtitleStyle={{fontFamily: 'Kanit-Light'}}
               bottomDivider
               chevron={
                 item.group_leader ? (
@@ -354,12 +374,16 @@ export default class GroupView extends Component<Props> {
       <View style={styles.defaultView}>
         {this.AppHerder()}
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
-          <Text style={{fontSize: 38}}>{I18n.t('text.info')}</Text>
+          <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
+            {I18n.t('text.info')}
+          </Text>
         </View>
         <View style={styles.cardListInfo}>{this.listInfo()}</View>
 
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
-          <Text style={{fontSize: 38}}>{I18n.t('text.members')}</Text>
+          <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
+            {I18n.t('text.members')}
+          </Text>
         </View>
         <View style={styles.cardListMember}>
           {this.listMembers(this.state.group.members)}
@@ -374,12 +398,14 @@ export default class GroupView extends Component<Props> {
             <ActionButton.Item
               buttonColor="#03C8A1"
               title={I18n.t('placeholder.inviteMember')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
               onPress={this.showInviteMemberModal}>
               <MatIcon name="group-add" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.setUpAReminder')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
               onPress={() => {
                 this.pickerRef.show();
               }}>

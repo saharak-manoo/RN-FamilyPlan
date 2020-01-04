@@ -34,7 +34,10 @@ export default class ChatView extends Component<Props> {
             backgroundColor: this.state.chatRoom.group.color,
           }}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-          <Appbar.Content title={this.state.chatRoom.name} />
+          <Appbar.Content
+            title={this.state.chatRoom.name}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
           {this.state.chatRoom.is_request_join_group_leader ? (
             <Appbar.Action
               icon="plus-one"
@@ -129,11 +132,12 @@ export default class ChatView extends Component<Props> {
           {this.state.spinner ? (
             <Spinner
               visible={this.state.spinner}
-              textContent={I18n.t('placeholder.loading') + '...'}
+              textContent={`${I18n.t('placeholder.loading')}...`}
               textStyle={styles.spinnerTextStyle}
             />
           ) : (
             <GiftedChat
+              textInputStyle={{fontFamily: 'Kanit-Light'}}
               messages={this.state.messages}
               onSend={messages => this.onSend(messages)}
               user={{
