@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.taluttasgiran.pickermodule.ReactNativePickerModulePackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.henninghall.date_picker.DatePickerPackage;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 import com.BV.LinearGradient.LinearGradientPackage;

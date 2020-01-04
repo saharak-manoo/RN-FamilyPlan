@@ -6,7 +6,9 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
+  Image,
   StatusBar,
+  ScrollView,
 } from 'react-native';
 import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
@@ -27,7 +29,6 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#1C83F7' : '#000';
 
 export default class LoginView extends Component<Props> {
   constructor(props) {
@@ -44,7 +45,10 @@ export default class LoginView extends Component<Props> {
     return (
       <View>
         <Appbar.Header style={{backgroundColor: '#1C83F7'}}>
-          <Appbar.Content title={I18n.t('placeholder.appName')} />
+          <Appbar.Content
+            title={I18n.t('placeholder.appName')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -137,111 +141,228 @@ export default class LoginView extends Component<Props> {
     return (
       <View style={{flex: 1}}>
         {this.appHerder()}
-        <View style={{padding: 45, alignSelf: 'center'}}>
-          <Text style={{alignSelf: 'center', fontSize: 38}}>
-            {I18n.t('button.signIn')}
-          </Text>
-        </View>
-        <View style={{padding: 15}}>
-          <TextInput
-            style={{paddingBottom: 6}}
-            label={I18n.t('placeholder.email')}
-            mode="outlined"
-            value={this.state.email}
-            onChangeText={email => this.setState({email: email})}
-          />
-          <HelperText
-            type="error"
-            visible={GFunction.validateEmail(this.state.email)}>
-            {I18n.t('message.emailIsInvalid')}
-          </HelperText>
-
-          <TextInput
-            secureTextEntry
-            autoCorrect={false}
-            style={{paddingBottom: 6}}
-            label={I18n.t('placeholder.password')}
-            mode="outlined"
-            value={this.state.password}
-            onChangeText={password => this.setState({password: password})}
-          />
-          <HelperText
-            type="error"
-            visible={GFunction.validatePasswordLessThanSix(
-              this.state.password,
-            )}>
-            {I18n.t('message.passwordLessThanSix')}
-          </HelperText>
-
-          <View style={{justifyContent: 'center', paddingTop: 10}}>
-            <AnimateLoadingButton
-              ref={load => (this.loadingLogin = load)}
-              width={width - 25}
-              height={50}
-              title={I18n.t('button.signIn')}
-              titleFontSize={18}
-              titleColor="#FFF"
-              backgroundColor="#1C83F7"
-              borderRadius={25}
-              onPress={this.clickSignIn.bind(this)}
-            />
-
-            <View style={{justifyContent: 'center', paddingTop: 5}}>
-              <TouchableOpacity
-                style={[
-                  styles.buttonLoginWith,
-                  {
-                    marginTop: 20,
-                    backgroundColor: '#000',
-                    flexDirection: 'row',
-                    borderRadius: 28,
-                    height: 50,
-                  },
-                ]}
-                onPress={() => this.signInWithAppleId()}>
-                <View style={{flex: 0.1, paddingLeft: 10}}>
-                  <FontAwesomeIcon
-                    name="apple"
-                    size={26}
-                    color="#FFF"></FontAwesomeIcon>
-                </View>
-                <View style={{flex: 1, alignItems: 'center'}}>
-                  <Text style={{color: '#FFF', fontSize: 19}}>
-                    {`${I18n.t('button.signinWith')} Apple`}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
+        <ScrollView>
+          <View style={{padding: 45, alignSelf: 'center'}}>
+            <Text
               style={{
-                padding: 20,
-                paddingTop: 15,
-                alignItems: 'center',
-              }}
-              onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-              <Text
-                style={{
-                  fontSize: 15,
-                  textDecorationLine: 'underline',
-                }}>
-                {I18n.t('button.forgotPassword')}
-              </Text>
-            </TouchableOpacity>
-
-            <AnimateLoadingButton
-              ref={c => (this.loadingGoToSignUp = c)}
-              width={width - 25}
-              height={50}
-              title={I18n.t('button.signUp')}
-              titleFontSize={18}
-              titleColor="#FFF"
-              backgroundColor="#F71C58"
-              borderRadius={25}
-              onPress={this.goToSignUp.bind(this)}
-            />
+                alignSelf: 'center',
+                fontSize: 38,
+                fontFamily: 'Kanit-Light',
+              }}>
+              {I18n.t('button.signIn')}
+            </Text>
           </View>
-        </View>
+          <View style={{padding: 15}}>
+            <TextInput
+              style={{paddingBottom: 6, fontFamily: 'Kanit-Light'}}
+              label={I18n.t('placeholder.email')}
+              mode="outlined"
+              value={this.state.email}
+              onChangeText={email => this.setState({email: email})}
+            />
+            <HelperText
+              style={{fontFamily: 'Kanit-Light'}}
+              type="error"
+              visible={GFunction.validateEmail(this.state.email)}>
+              {I18n.t('message.emailIsInvalid')}
+            </HelperText>
+
+            <TextInput
+              secureTextEntry
+              autoCorrect={false}
+              style={{paddingBottom: 6, fontFamily: 'Kanit-Light'}}
+              label={I18n.t('placeholder.password')}
+              mode="outlined"
+              value={this.state.password}
+              onChangeText={password => this.setState({password: password})}
+            />
+            <HelperText
+              style={{fontFamily: 'Kanit-Light'}}
+              type="error"
+              visible={GFunction.validatePasswordLessThanSix(
+                this.state.password,
+              )}>
+              {I18n.t('message.passwordLessThanSix')}
+            </HelperText>
+
+            <View style={{justifyContent: 'center', paddingTop: 10}}>
+              <AnimateLoadingButton
+                ref={load => (this.loadingLogin = load)}
+                width={width - 25}
+                height={50}
+                title={I18n.t('button.signIn')}
+                titleFontSize={18}
+                titleFontFamily={'Kanit-Light'}
+                titleColor="#FFF"
+                backgroundColor="#1C83F7"
+                borderRadius={25}
+                onPress={this.clickSignIn.bind(this)}
+              />
+
+              {appleAuth.isSupported && (
+                <View style={{justifyContent: 'center', paddingTop: 2}}>
+                  <TouchableOpacity
+                    style={[
+                      styles.buttonLoginWith,
+                      {
+                        marginTop: 20,
+                        backgroundColor: '#000',
+                        flexDirection: 'row',
+                        borderRadius: 28,
+                        height: 50,
+                      },
+                    ]}
+                    onPress={() => this.signInWithAppleId()}>
+                    <View style={{flex: 0.1, paddingLeft: 10}}>
+                      <FontAwesomeIcon
+                        name="apple"
+                        size={26}
+                        color="#FFF"></FontAwesomeIcon>
+                    </View>
+                    <View style={{flex: 1, alignItems: 'center'}}>
+                      <Text
+                        style={{
+                          color: '#FFF',
+                          fontSize: 19,
+                          fontFamily: 'Kanit-Light',
+                        }}>
+                        {`${I18n.t('button.signinWith')} Apple`}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              <View style={{justifyContent: 'center', paddingTop: 2}}>
+                <TouchableOpacity
+                  style={[
+                    styles.buttonLoginWith,
+                    {
+                      marginTop: 20,
+                      backgroundColor: '#4267be',
+                      flexDirection: 'row',
+                      borderRadius: 28,
+                      height: 50,
+                    },
+                  ]}
+                  onPress={() => this.signInWithAppleId()}>
+                  <View style={{flex: 0.1, paddingLeft: 10}}>
+                    <FontAwesomeIcon
+                      name="facebook-square"
+                      size={26}
+                      color="#FFF"></FontAwesomeIcon>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#FFF',
+                        fontSize: 19,
+                        fontFamily: 'Kanit-Light',
+                      }}>
+                      {`${I18n.t('button.signinWith')} Facebook`}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{justifyContent: 'center', paddingTop: 2}}>
+                <TouchableOpacity
+                  style={[
+                    styles.buttonLoginWith,
+                    {
+                      marginTop: 20,
+                      backgroundColor: '#18C464',
+                      flexDirection: 'row',
+                      borderRadius: 28,
+                      height: 50,
+                    },
+                  ]}
+                  onPress={() => this.signInWithAppleId()}>
+                  <View style={{flex: 0.1, paddingLeft: 10}}>
+                    <Image
+                      source={require('../../../img/line.png')}
+                      style={{width: 26, height: 26, marginRight: 20}}
+                    />
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#FFF',
+                        fontSize: 19,
+                        fontFamily: 'Kanit-Light',
+                      }}>
+                      {`${I18n.t('button.signinWith')} LINE`}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{justifyContent: 'center', paddingTop: 2}}>
+                <TouchableOpacity
+                  style={[
+                    styles.buttonLoginWith,
+                    {
+                      marginTop: 20,
+                      backgroundColor: '#0079C2',
+                      flexDirection: 'row',
+                      borderRadius: 28,
+                      height: 50,
+                    },
+                  ]}
+                  onPress={() => this.signInWithAppleId()}>
+                  <View style={{flex: 0.1, paddingLeft: 10}}>
+                    <FontAwesomeIcon
+                      name="google"
+                      size={26}
+                      color="#FFF"></FontAwesomeIcon>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#FFF',
+                        fontSize: 19,
+                        fontFamily: 'Kanit-Light',
+                      }}>
+                      {`${I18n.t('button.signinWith')} Google`}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={{
+                  padding: 20,
+                  paddingTop: 15,
+                  alignItems: 'center',
+                }}
+                onPress={() =>
+                  this.props.navigation.navigate('ForgotPassword')
+                }>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    textDecorationLine: 'underline',
+                    fontFamily: 'Kanit-Light',
+                  }}>
+                  {I18n.t('button.forgotPassword')}
+                </Text>
+              </TouchableOpacity>
+
+              <AnimateLoadingButton
+                ref={c => (this.loadingGoToSignUp = c)}
+                width={width - 25}
+                height={50}
+                title={I18n.t('button.signUp')}
+                titleFontFamily={'Kanit-Light'}
+                titleFontSize={18}
+                titleColor="#FFF"
+                backgroundColor="#F71C58"
+                borderRadius={25}
+                onPress={this.goToSignUp.bind(this)}
+              />
+            </View>
+          </View>
+        </ScrollView>
       </View>
     );
   }

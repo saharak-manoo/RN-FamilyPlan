@@ -1,4 +1,8 @@
 rootProject.name = 'FamilyPlan'
+include ':react-native-picker-module'
+project(':react-native-picker-module').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-picker-module/android')
+include ':react-native-fbsdk'
+project(':react-native-fbsdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fbsdk/android')
 include ':react-native-date-picker'
 project(':react-native-date-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-date-picker/android')
 include ':@react-native-community_datetimepicker'

@@ -72,7 +72,10 @@ export default class ProfileView extends Component<Props> {
     return (
       <View>
         <Appbar.Header style={{backgroundColor: '#6D06F9'}}>
-          <Appbar.Content title={I18n.t('placeholder.profile')} />
+          <Appbar.Content
+            title={I18n.t('placeholder.profile')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -115,7 +118,7 @@ export default class ProfileView extends Component<Props> {
         {this.state.spinner ? (
           <Spinner
             visible={this.state.spinner}
-            textContent={I18n.t('placeholder.loading') + '...'}
+            textContent={`${I18n.t('placeholder.loading')}...`}
             textStyle={styles.spinnerTextStyle}
           />
         ) : (
@@ -142,6 +145,7 @@ export default class ProfileView extends Component<Props> {
                   titleFontSize={18}
                   titleColor="#FFF"
                   backgroundColor="#2AAEF9"
+                  titleFontFamily={'Kanit-Light'}
                   borderRadius={25}
                   onPress={this.clickEditProfile.bind(this)}
                 />
@@ -152,6 +156,7 @@ export default class ProfileView extends Component<Props> {
               <ListItem
                 containerStyle={{borderRadius: 10}}
                 title={I18n.t('placeholder.th')}
+                titleStyle={{fontFamily: 'Kanit-Light'}}
                 chevron={
                   <Switch
                     value={this.state.isLanguageTH}
@@ -164,6 +169,7 @@ export default class ProfileView extends Component<Props> {
               <ListItem
                 containerStyle={{borderRadius: 10}}
                 title={I18n.t('placeholder.appVersion')}
+                titleStyle={{fontFamily: 'Kanit-Light'}}
                 chevron={<Text>0.0.1</Text>}
               />
             </View>
@@ -172,6 +178,7 @@ export default class ProfileView extends Component<Props> {
               <AnimateLoadingButton
                 ref={load => (this.loadingSignOut = load)}
                 width={width - 25}
+                titleFontFamily={'Kanit-Light'}
                 height={50}
                 title={I18n.t('button.signOut')}
                 titleFontSize={18}

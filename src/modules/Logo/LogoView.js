@@ -8,6 +8,7 @@ import {
   Text,
   Modal,
   StatusBar,
+  Image,
 } from 'react-native';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -38,7 +39,7 @@ export default class LogoView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#1C83F7'}}>
+      <View style={{flex: 1, backgroundColor: '#FFF'}}>
         <View
           style={{
             flex: 1,
@@ -46,7 +47,10 @@ export default class LogoView extends Component<Props> {
             alignItems: 'stretch',
             alignSelf: 'center',
           }}>
-          <MatIcon size={160} name="group" color="#FFF" />
+          <Image
+            style={{width: 135, height: 135}}
+            source={require('../../img/app-logo.png')}
+          />
         </View>
       </View>
     );
