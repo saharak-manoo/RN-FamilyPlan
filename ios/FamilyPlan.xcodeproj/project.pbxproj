@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* FamilyPlanTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FamilyPlanTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -17,7 +18,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* FamilyPlanTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FamilyPlanTests.m */; };
 		4EE75CF031354ECEA3E5A3EE /* libPods-FamilyPlan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6ABF1AECB9E664974965E4 /* libPods-FamilyPlan.a */; };
-		9DA6E0CF23C08A8B0027086A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DA6E0CE23C08A8B0027086A /* GoogleService-Info.plist */; };
+		9D4FF8E123C0DC6A004BE3FF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D4FF8E023C0DC69004BE3FF /* GoogleService-Info.plist */; };
 		BB709A8820D04175ACA2DE8D /* assets_fonts_Kanit-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F68044C8FC8646CF95303D28 /* assets_fonts_Kanit-ExtraLight.ttf */; };
 		E33135C6F1214310AB76B60C /* assets_fonts_Kanit-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0290F4E688FD4C179063AE30 /* assets_fonts_Kanit-Light.ttf */; };
 		E652DF10B61C0FF0003D021F /* libPods-FamilyPlanTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EE49971066F876ABE7BD23 /* libPods-FamilyPlanTests.a */; };
@@ -73,7 +74,7 @@
 		82C65744FB064869BAF0BC9D /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		82F38F06BF9CC72C150185A4 /* libPods-FamilyPlan-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FamilyPlan-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9174D2FB95114AB48448E272 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-		9DA6E0CE23C08A8B0027086A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Desktop/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9D4FF8E023C0DC69004BE3FF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "FamilyPlan/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9DA6E0D023C08A910027086A /* FamilyPlanDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FamilyPlanDebug.entitlements; path = FamilyPlan/FamilyPlanDebug.entitlements; sourceTree = "<group>"; };
 		9DE53C5323AA79B50019054A /* FamilyPlan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FamilyPlan.entitlements; path = FamilyPlan/FamilyPlan.entitlements; sourceTree = "<group>"; };
 		A07556DAC2114EC49825A6F0 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -148,8 +149,8 @@
 		13B07FAE1A68108700A75B9A /* FamilyPlan */ = {
 			isa = PBXGroup;
 			children = (
+				9D4FF8E023C0DC69004BE3FF /* GoogleService-Info.plist */,
 				9DA6E0D023C08A910027086A /* FamilyPlanDebug.entitlements */,
-				9DA6E0CE23C08A8B0027086A /* GoogleService-Info.plist */,
 				9DE53C5323AA79B50019054A /* FamilyPlan.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -398,7 +399,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				9DA6E0CF23C08A8B0027086A /* GoogleService-Info.plist in Resources */,
+				9D4FF8E123C0DC6A004BE3FF /* GoogleService-Info.plist in Resources */,
 				BB709A8820D04175ACA2DE8D /* assets_fonts_Kanit-ExtraLight.ttf in Resources */,
 				E33135C6F1214310AB76B60C /* assets_fonts_Kanit-Light.ttf in Resources */,
 			);
@@ -479,7 +480,6 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-FamilyPlan/Pods-FamilyPlan-resources.sh",
-				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -499,7 +499,6 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
