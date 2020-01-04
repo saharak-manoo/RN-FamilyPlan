@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1096043543785",
+    "firebase_url": "https://familyplan-36c24.firebaseio.com",
+    "project_id": "familyplan-36c24",
+    "storage_bucket": "familyplan-36c24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096043543785:android:3e601bef2dc08d0ed4c478",
+        "android_client_info": {
+          "package_name": "com.familyplan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096043543785-m3lljr6es1l76jg7gnaeqs4kbvg8dgf7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTPgHJo60ZePKWiEFPKyYdFeWUX45p8HU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096043543785-m3lljr6es1l76jg7gnaeqs4kbvg8dgf7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1096043543785-e3nqq2227vk9mgoqh6tbdvas2ng5lq0a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.CatCoding.FamilyPlan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
