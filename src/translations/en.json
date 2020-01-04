@@ -26,7 +26,8 @@
     "appleMusic": "Apple music",
     "disneyPlus": "Disney plus",
     "netflix": "Netflix",
-    "spotify": "Spotify"
+    "spotify": "Spotify",
+    "notiGroupPayment": "%{day} of every month"
   },
   "placeholder": {
     "prefix": "Prefix",

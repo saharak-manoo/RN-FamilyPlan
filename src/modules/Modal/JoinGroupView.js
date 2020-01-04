@@ -70,6 +70,7 @@ export default class JoinGroupView extends Component<Props> {
             ref={c => (this.loadingJoinGroup = c)}
             width={width - 25}
             height={50}
+            titleFontFamily={'Kanit-Light'}
             title={I18n.t('button.joinGroup')}
             titleFontSize={18}
             titleColor="#FFF"

@@ -37,7 +37,10 @@ export default class NotificationView extends Component<Props> {
     return (
       <View>
         <Appbar.Header style={{backgroundColor: '#F93636'}}>
-          <Appbar.Content title={I18n.t('placeholder.notifications')} />
+          <Appbar.Content
+            title={I18n.t('placeholder.notifications')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -51,6 +54,7 @@ export default class NotificationView extends Component<Props> {
         renderItem={({item, index}) => {
           return (
             <Swipeout
+              style={{fontFamily: 'Kanit-Light'}}
               autoClose={true}
               right={[
                 {
@@ -70,7 +74,9 @@ export default class NotificationView extends Component<Props> {
                 activeScale={0.95}
                 leftAvatar={{source: {uri: item.photo_url}}}
                 title={item.name}
+                titleStyle={{fontFamily: 'Kanit-Light'}}
                 subtitle={item.subtitle}
+                subtitleStyle={{fontFamily: 'Kanit-Light'}}
                 containerStyle={{
                   backgroundColor: index == 0 ? '#D4FDE8' : '#FFF',
                 }}

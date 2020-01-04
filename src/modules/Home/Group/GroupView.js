@@ -21,16 +21,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../../util/Api';
 import * as GFunction from '../../../util/GlobalFunction';
+import ReactNativePickerModule from 'react-native-picker-module';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
-import SetUpReminderView from '../../Modal/SetUpReminderView';
 import SettingServiceChargeView from '../../Modal/SettingServiceChargeView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#2370E6' : '#000';
 
 export default class GroupView extends Component<Props> {
   constructor(props) {
@@ -38,11 +37,13 @@ export default class GroupView extends Component<Props> {
     this.state = {
       group: this.props.navigation.state.params.group,
       userView: [],
+      selectedDay: null,
+      day: '30',
+      days: Array.from({length: 31}, (v, k) => k + 1).map(String),
     };
   }
 
   inviteMemberModal = React.createRef();
-  setUpReminderModal = React.createRef();
   settingServiceChargeModal = React.createRef();
 
   async componentWillMount() {
@@ -61,7 +62,10 @@ export default class GroupView extends Component<Props> {
       <View>
         <Appbar.Header style={{backgroundColor: '#2370E6'}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
-          <Appbar.Content title={this.state.group.name} />
+          <Appbar.Content
+            title={this.state.group.name}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -101,37 +105,22 @@ export default class GroupView extends Component<Props> {
     );
   }
 
-  showSetUpReminderModal = () => {
-    if (this.setUpReminderModal.current && this.state.userView.group_leader) {
-      this.setUpReminderModal.current.open();
-    }
-  };
-
   popUpModalSetUpReminder() {
     return (
-      <Modalize
-        ref={this.setUpReminderModal}
-        modalStyle={styles.popUpModal}
-        overlayStyle={styles.overlayModal}
-        handleStyle={styles.handleModal}
-        modalHeight={height / 1.08}
-        handlePosition="inside"
-        openAnimationConfig={{
-          timing: {duration: 400},
-          spring: {speed: 10, bounciness: 10},
+      <ReactNativePickerModule
+        pickerRef={e => (this.pickerRef = e)}
+        selectedValue={this.state.selectedDay}
+        title={I18n.t('placeholder.setUpAReminder')}
+        items={this.state.days}
+        confirmButton={I18n.t('button.save')}
+        cancelButton={I18n.t('button.cancel')}
+        onValueChange={(day, index) => {
+          this.setState({
+            day: day,
+            selectedDay: index,
+          });
         }}
-        closeAnimationConfig={{
-          timing: {duration: 400},
-          spring: {speed: 10, bounciness: 10},
-        }}
-        withReactModal
-        adjustToContentHeight>
-        <SetUpReminderView
-          modal={this.setUpReminderModal}
-          group={this.state.group}
-          onSetNewData={this.setNewData}
-        />
-      </Modalize>
+      />
     );
   }
 
@@ -180,22 +169,32 @@ export default class GroupView extends Component<Props> {
     return (
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View
-          style={{flex: 1, flexDirection: 'row', padding: IS_IOS ? 15 : 10}}>
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            padding: IS_IOS ? 13 : 10,
+            fontFamily: 'Kanit-Light',
+          }}>
           <Icon
             raised
             name="add-alert"
             type="mat-icon"
             color={this.state.group.color}
-            onPress={this.showSetUpReminderModal}
+            onPress={() => {
+              this.pickerRef.show();
+            }}
           />
           <Text
             style={{
-              padding: IS_IOS ? 15 : 5,
+              padding: IS_IOS ? 13 : 5,
               paddingLeft: 35,
-              fontSize: 28,
+              fontSize: 25,
               justifyContent: 'center',
+              fontFamily: 'Kanit-Light',
             }}>
-            {this.state.group.due_date}
+            {I18n.t('text.notiGroupPayment', {
+              day: this.state.day,
+            })}
           </Text>
         </View>
         <View
@@ -211,8 +210,9 @@ export default class GroupView extends Component<Props> {
             style={{
               padding: IS_IOS ? 14 : 4,
               paddingLeft: 35,
-              fontSize: 28,
+              fontSize: 25,
               justifyContent: 'center',
+              fontFamily: 'Kanit-Light',
             }}>
             {this.state.group.service_charge}
           </Text>
@@ -240,7 +240,11 @@ export default class GroupView extends Component<Props> {
                   },
                 },
               ]}
-              style={{backgroundColor: '#FFF', borderRadius: 15}}>
+              style={{
+                backgroundColor: '#FFF',
+                borderRadius: 15,
+                fontFamily: 'Kanit-Light',
+              }}>
               <ListItem
                 key={index}
                 containerStyle={{borderRadius: 15}}
@@ -250,7 +254,9 @@ export default class GroupView extends Component<Props> {
                 activeScale={0.95}
                 leftAvatar={{source: {uri: item.photo}}}
                 title={item.full_name}
+                titleStyle={{fontFamily: 'Kanit-Light'}}
                 subtitle={item.email}
+                subtitleStyle={{fontFamily: 'Kanit-Light'}}
                 bottomDivider
                 chevron={
                   item.group_leader ? (
@@ -273,7 +279,9 @@ export default class GroupView extends Component<Props> {
               activeScale={0.95}
               leftAvatar={{source: {uri: item.photo}}}
               title={item.full_name}
+              titleStyle={{fontFamily: 'Kanit-Light'}}
               subtitle={item.email}
+              subtitleStyle={{fontFamily: 'Kanit-Light'}}
               bottomDivider
               chevron={
                 item.group_leader ? (
@@ -366,12 +374,16 @@ export default class GroupView extends Component<Props> {
       <View style={styles.defaultView}>
         {this.AppHerder()}
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
-          <Text style={{fontSize: 38}}>{I18n.t('text.info')}</Text>
+          <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
+            {I18n.t('text.info')}
+          </Text>
         </View>
         <View style={styles.cardListInfo}>{this.listInfo()}</View>
 
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
-          <Text style={{fontSize: 38}}>{I18n.t('text.members')}</Text>
+          <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
+            {I18n.t('text.members')}
+          </Text>
         </View>
         <View style={styles.cardListMember}>
           {this.listMembers(this.state.group.members)}
@@ -386,13 +398,17 @@ export default class GroupView extends Component<Props> {
             <ActionButton.Item
               buttonColor="#03C8A1"
               title={I18n.t('placeholder.inviteMember')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
               onPress={this.showInviteMemberModal}>
               <MatIcon name="group-add" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.setUpAReminder')}
-              onPress={this.showSetUpReminderModal}>
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={() => {
+                this.pickerRef.show();
+              }}>
               <MatIcon name="add-alert" style={styles.actionButtonIcon} />
             </ActionButton.Item>
           </ActionButton>

@@ -22,6 +22,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import PTRView from 'react-native-pull-to-refresh';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
+import firebase, {RemoteMessage, Notification} from 'react-native-firebase';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -50,6 +51,7 @@ export default class HomeView extends Component<Props> {
   }
 
   componentWillMount = async () => {
+    this.fcmCheckPermissions();
     this.setState({spinner: true});
     let user = await GFunction.user();
     let resp = await Api.getGroup(user.authentication_jwt);
@@ -63,6 +65,41 @@ export default class HomeView extends Component<Props> {
     }
   };
 
+  componentDidMount() {
+    this.removeNotificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
+    this.removeNotificationListener = firebase
+      .notifications()
+      .onNotification(notification => {});
+  }
+
+  componentWillUnmount() {
+    this.removeNotificationDisplayedListener();
+    this.removeNotificationListener();
+  }
+
+  fcmCheckPermissions() {
+    firebase
+      .messaging()
+      .hasPermission()
+      .then(enabled => {
+        if (enabled) {
+          // user has permissions
+        } else {
+          firebase
+            .messaging()
+            .requestPermission()
+            .then(() => {
+              // User has authorised
+            })
+            .catch(error => {
+              // User has rejected permissions
+            });
+        }
+      });
+  }
+
   newGroupModal = React.createRef();
   scanQrCodeModal = React.createRef();
   joinGroupModal = React.createRef();
@@ -71,7 +108,10 @@ export default class HomeView extends Component<Props> {
     return (
       <View>
         <Appbar.Header style={{backgroundColor: '#2370E6'}}>
-          <Appbar.Content title={I18n.t('placeholder.appName')} />
+          <Appbar.Content
+            title={I18n.t('placeholder.appName')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -258,6 +298,7 @@ export default class HomeView extends Component<Props> {
                       color: '#000',
                       alignSelf: 'center',
                       padding: 15,
+                      fontFamily: 'Kanit-Light',
                     }}>
                     {item.name}
                   </Text>
@@ -271,6 +312,7 @@ export default class HomeView extends Component<Props> {
                       alignSelf: 'center',
                       justifyContent: 'flex-end',
                       padding: 10,
+                      fontFamily: 'Kanit-Light',
                     }}>
                     {I18n.t('placeholder.members')} : {item.members.length}/
                     {item.max_member}
@@ -286,7 +328,9 @@ export default class HomeView extends Component<Props> {
   };
 
   goToRequestJoinGroup = chatRoom => {
-    this.props.navigation.navigate('ChatRoom', {chatRoom: chatRoom});
+    this.props.navigation.navigate('ChatRoom', {
+      chatRoom: chatRoom,
+    });
   };
 
   goToGroup = group => {
@@ -314,6 +358,7 @@ export default class HomeView extends Component<Props> {
         {this.AppHerder()}
         <View style={{padding: 10}}>
           <Searchbar
+            inputStyle={{fontFamily: 'Kanit-Light'}}
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
               this.setState({search: searching});
@@ -325,7 +370,7 @@ export default class HomeView extends Component<Props> {
         {this.state.spinner ? (
           <Spinner
             visible={this.state.spinner}
-            textContent={I18n.t('placeholder.loading') + '...'}
+            textContent={`${I18n.t('placeholder.loading')}...`}
             textStyle={styles.spinnerTextStyle}
           />
         ) : (
@@ -368,6 +413,7 @@ export default class HomeView extends Component<Props> {
                                 color: '#000',
                                 alignSelf: 'center',
                                 padding: 15,
+                                fontFamily: 'Kanit-Light',
                               }}>
                               {I18n.t('placeholder.newGroup')}
                             </Text>
@@ -381,6 +427,7 @@ export default class HomeView extends Component<Props> {
                                 alignSelf: 'center',
                                 justifyContent: 'flex-end',
                                 padding: 10,
+                                fontFamily: 'Kanit-Light',
                               }}>
                               {I18n.t('placeholder.clickNewGroup')}
                             </Text>
@@ -415,12 +462,14 @@ export default class HomeView extends Component<Props> {
           <ActionButton.Item
             buttonColor="#03C8A1"
             title={I18n.t('placeholder.newGroup')}
+            textStyle={{fontFamily: 'Kanit-Light'}}
             onPress={this.showNewGroupModal}>
             <MatIcon name="group-add" style={styles.actionButtonIcon} />
           </ActionButton.Item>
           <ActionButton.Item
             buttonColor="#3D71FB"
             title={I18n.t('placeholder.qrCode')}
+            textStyle={{fontFamily: 'Kanit-Light'}}
             onPress={this.showScanQrCodeModal}>
             <FAIcon name="qrcode" style={styles.actionButtonIcon} />
           </ActionButton.Item>

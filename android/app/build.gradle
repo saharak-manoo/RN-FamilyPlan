@@ -189,6 +189,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-picker-module')
+    implementation project(':react-native-fbsdk')
     compile 'com.android.support:multidex:1.0.0'
     implementation project(':react-native-date-picker')
     implementation project(':@react-native-community_datetimepicker')

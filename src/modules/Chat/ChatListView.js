@@ -36,7 +36,10 @@ export default class ChatListView extends Component<Props> {
     return (
       <View>
         <Appbar.Header style={{backgroundColor: '#09A650'}}>
-          <Appbar.Content title={I18n.t('placeholder.chat')} />
+          <Appbar.Content
+            title={I18n.t('placeholder.chat')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
         </Appbar.Header>
       </View>
     );
@@ -84,7 +87,7 @@ export default class ChatListView extends Component<Props> {
                   },
                 },
               ]}
-              style={{backgroundColor: '#FFF'}}>
+              style={{backgroundColor: '#FFF', fontFamily: 'Kanit-Light'}}>
               <ListItem
                 key={index}
                 Component={TouchableScale}
@@ -96,7 +99,9 @@ export default class ChatListView extends Component<Props> {
                   activeOpacity: 0.2,
                 }}
                 title={item.name}
+                titleStyle={{fontFamily: 'Kanit-Light'}}
                 subtitle={item.last_messags}
+                subtitleStyle={{fontFamily: 'Kanit-Light'}}
                 onPress={() => this.goToChatRoom(item)}
                 chevron={<Badge value={index + 10} status="error" />}
               />
@@ -149,6 +154,16 @@ export default class ChatListView extends Component<Props> {
         {this.AppHerder()}
         <View style={{padding: 15}}>
           <Searchbar
+            theme={{
+              colors: {
+                placeholder: '#6D6D6D',
+                text: '#000',
+                primary: '#000',
+                underlineColor: '#6D6D6D',
+              },
+              fonts: {regular: 'Kanit-Light'},
+            }}
+            inputStyle={{fontFamily: 'Kanit-Light'}}
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
               this.setState({search: searching});
@@ -159,7 +174,7 @@ export default class ChatListView extends Component<Props> {
         {this.state.spinner ? (
           <Spinner
             visible={this.state.spinner}
-            textContent={I18n.t('placeholder.loading') + '...'}
+            textContent={`${I18n.t('placeholder.loading')}...`}
             textStyle={styles.spinnerTextStyle}
           />
         ) : (
