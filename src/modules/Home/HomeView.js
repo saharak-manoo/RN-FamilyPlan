@@ -99,15 +99,22 @@ export default class HomeView extends Component<Props> {
             });
         }
       });
-    
+
     // get FCM Token
     firebase
       .messaging()
       .getToken()
       .then(async fcmToken => {
         if (fcmToken) {
-          console.log('fcmToken => : ', fcmToken);
-          await AsyncStorage.setItem('fcmToken', fcmToken);
+          let user = await GFunction.user();
+          let resp = await Api.createFcmToken(
+            user.authentication_jwt,
+            user.id,
+            fcmToken,
+          );
+          if (resp.success) {
+            console.log('created fcmToken => : ', fcmToken);
+          }
         }
       });
   }
