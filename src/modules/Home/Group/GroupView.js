@@ -22,6 +22,7 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../../util/Api';
 import * as GFunction from '../../../util/GlobalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
+import firebase from 'react-native-firebase';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
@@ -34,11 +35,12 @@ const IS_IOS = Platform.OS === 'ios';
 export default class GroupView extends Component<Props> {
   constructor(props) {
     super(props);
+    let group = this.props.navigation.state.params.group;
     this.state = {
-      group: this.props.navigation.state.params.group,
+      group: group,
       userView: [],
       selectedDay: null,
-      day: '30',
+      notiPayment: group.noti_payment,
       days: Array.from({length: 31}, (v, k) => k + 1).map(String),
     };
   }
@@ -57,10 +59,37 @@ export default class GroupView extends Component<Props> {
     });
   }
 
+  realTimeData(data) {
+    if (data.noti_type === 'group') {
+      let group = JSON.parse(data.group);
+      if (this.state.group.id === group.id) {
+        this.setState({
+          group: group,
+        });
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
+
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: '#2370E6'}}>
+        <Appbar.Header style={{backgroundColor: this.state.group.color}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
             title={this.state.group.name}
@@ -116,12 +145,39 @@ export default class GroupView extends Component<Props> {
         cancelButton={I18n.t('button.cancel')}
         onValueChange={(day, index) => {
           this.setState({
-            day: day,
+            notiPayment: day,
             selectedDay: index,
           });
+          this.updateNotiPayment();
         }}
       />
     );
+  }
+
+  async updateNotiPayment() {
+    let user = await GFunction.user();
+    let params = {
+      noti_payment: parseInt(this.state.notiPayment),
+    };
+
+    let response = await Api.updateGroup(
+      user.authentication_jwt,
+      this.state.group.id,
+      params,
+    );
+
+    if (response.success) {
+      GFunction.successMessage(
+        I18n.t('message.success'),
+        I18n.t('message.settingDueDateSuccessful'),
+      );
+    } else {
+      let errors = [];
+      response.error.map((error, i) => {
+        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+      });
+      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+    }
   }
 
   showSettingServiceChargeModal = () => {
@@ -193,12 +249,16 @@ export default class GroupView extends Component<Props> {
               fontFamily: 'Kanit-Light',
             }}>
             {I18n.t('text.notiGroupPayment', {
-              day: this.state.day,
+              day: this.state.group.noti_payment,
             })}
           </Text>
         </View>
         <View
-          style={{flex: 1, flexDirection: 'row', padding: IS_IOS ? 14 : 10}}>
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            padding: IS_IOS ? 14 : 10,
+          }}>
           <Icon
             raised
             name="dollar"
@@ -369,6 +429,13 @@ export default class GroupView extends Component<Props> {
     }
   }
 
+  goToChatRoom(chatRoom) {
+    this.props.navigation.navigate('ChatRoom', {
+      chatRoom: chatRoom,
+      isRequestJoin: false,
+    });
+  }
+
   render() {
     return (
       <View style={styles.defaultView}>
@@ -395,6 +462,13 @@ export default class GroupView extends Component<Props> {
 
         {this.state.userView.group_leader ? (
           <ActionButton buttonColor="rgba(231,76,60,1)">
+            <ActionButton.Item
+              buttonColor="#6D06F9"
+              title={I18n.t('placeholder.chat')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={() => this.goToChatRoom(this.state.group.chat_room)}>
+              <MatIcon name="chat" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
             <ActionButton.Item
               buttonColor="#03C8A1"
               title={I18n.t('placeholder.inviteMember')}

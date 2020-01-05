@@ -3,7 +3,7 @@ import * as GFunction from './GlobalFunction';
 
 const HOSTS = [
   'https://family-plan.herokuapp.com',
-  'http://192.168.2.102:3000',
+  'http://172.20.10.12:3000',
   'http://10.251.1.204:3000',
   'http://192.168.1.37:3000',
   'http://172.20.10.12:3000',
@@ -29,6 +29,9 @@ const CREATE_CHAT_ROOM = '/api/v1/chat_rooms';
 const CREATE_MESSAGE = '/api/v1/chat_rooms/:id/message';
 const REFRESH_TOKEN = '/api/v1/sessions/refresh_token';
 const SIGN_IN_WITH_PATH = '/api/v1/sessions/sign_in_with';
+const FCM_TOKEN_PATH = '/api/v1/users/:user_id/fcm_token';
+const NOTIFICATION = '/api/v1/notifications';
+const SHOW_NOTIFICATION = '/api/v1/notifications/:id';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -73,20 +76,13 @@ export async function checkTokenExpire(resp) {
     };
 
     return data;
-  } else if (resp.status === 200) {
+  } else {
     data = {
       newTokenJwt: null,
       status: 'ok',
     };
 
     return data;
-  } else {
-    data = {
-      newTokenJwt: null,
-      status: 'error',
-    };
-
-    return 'data';
   }
 }
 
@@ -489,6 +485,88 @@ export async function signInWith(user) {
 
     let response = await resp.json();
     return response;
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function createFcmToken(token, user_id, fcmToken) {
+  try {
+    const resp = await fetch(
+      joinUrl(HOST, FCM_TOKEN_PATH.replace(':user_id', user_id)),
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({fcm_token: fcmToken}),
+      },
+    );
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
+    if (status === 'reload') {
+      return this.getProfile(newTokenJwt, user_id);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function getNotification(token, params) {
+  try {
+    const resp = await fetch(
+      joinUrl(
+        HOST,
+        `${NOTIFICATION}?${new URLSearchParams(params).toString()}`,
+      ),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
+    if (status === 'reload') {
+      return this.getChatRoom(newTokenJwt);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function getNotificationById(token, notification_id) {
+  try {
+    const resp = await fetch(
+      joinUrl(HOST, SHOW_NOTIFICATION.replace(':id', notification_id)),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
+    if (status === 'reload') {
+      return this.getChatRoom(newTokenJwt);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
   } catch (e) {
     console.warn(e);
   }

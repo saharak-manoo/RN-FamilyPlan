@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {Alert, FlatList, Platform, StatusBar, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  Platform,
+  StatusBar,
+  RefreshControl,
+  ScrollView,
+  View,
+} from 'react-native';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
@@ -8,29 +16,22 @@ import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
+import Spinner from 'react-native-loading-spinner-overlay';
+import firebase from 'react-native-firebase';
 
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#F93636' : '#000';
-
-const notifications = [
-  {
-    name: 'Amy Farha',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Chris Jackson',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-];
 
 export default class NotificationView extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      spinner: false,
+      refreshing: false,
+      page: 1,
+      limit: 12,
+      offset: 0,
+      notifications: [],
+    };
   }
 
   AppHerder() {
@@ -45,6 +46,78 @@ export default class NotificationView extends Component<Props> {
       </View>
     );
   }
+
+  componentWillMount = async () => {
+    this.setState({spinner: true});
+    let user = await GFunction.user();
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.offset,
+    };
+    let resp = await Api.getNotification(user.authentication_jwt, params);
+    if (resp.success) {
+      this.setState({
+        spinner: false,
+        notifications: resp.notifications,
+      });
+    }
+  };
+
+  async realTimeData(data) {
+    if (
+      data.noti_type === 'group' ||
+      data.noti_type.includes('request_join-')
+    ) {
+      let group_noti_id = JSON.parse(data.group_noti_id);
+      let user = await GFunction.user();
+      let resp = await Api.getNotificationById(
+        user.authentication_jwt,
+        group_noti_id,
+      );
+      if (resp.success) {
+        this.setState({
+          notifications: resp.notification.concat(this.state.notifications),
+        });
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
+
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
+  componentWillUnmount() {
+    this.notificationDisplayedListener();
+    this.notificationListener();
+  }
+
+  goTo = notification => {
+    if (
+      notification.noti_type === 'chat' ||
+      notification.noti_type.includes('request_join-')
+    ) {
+      this.props.navigation.navigate('ChatRoom', {
+        chatRoom: notification.data,
+        isRequestJoin: false,
+      });
+    } else if (notification.noti_type === 'group') {
+      this.props.navigation.navigate('Group', {
+        group: notification.data,
+      });
+    }
+  };
 
   listNotification = notifications => {
     return (
@@ -72,14 +145,20 @@ export default class NotificationView extends Component<Props> {
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{source: {uri: item.photo_url}}}
+                leftAvatar={{
+                  title: item.name[0],
+                  activeOpacity: 0.2,
+                }}
                 title={item.name}
                 titleStyle={{fontFamily: 'Kanit-Light'}}
-                subtitle={item.subtitle}
+                subtitle={item.message}
                 subtitleStyle={{fontFamily: 'Kanit-Light'}}
                 containerStyle={{
                   backgroundColor: index == 0 ? '#D4FDE8' : '#FFF',
                 }}
+                rightSubtitle={item.time}
+                rightSubtitleStyle={{fontFamily: 'Kanit-Light'}}
+                onPress={() => this.goTo(item)}
               />
             </Swipeout>
           );
@@ -117,11 +196,67 @@ export default class NotificationView extends Component<Props> {
     );
   }
 
+  refreshNotification = async () => {
+    await this.setState({refreshing: true});
+    let user = await GFunction.user();
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.offset,
+    };
+    let resp = await Api.getNotification(user.authentication_jwt, params);
+    if (resp.success) {
+      await this.setState({
+        refreshing: false,
+        notifications: resp.notifications,
+      });
+    }
+  };
+
+  // loadMoreNotifications = async () => {
+  //   let user = await GFunction.user();
+  //   let params = {
+  //     limit: this.state.limit,
+  //     offset: this.state.offset,
+  //   };
+  //   let resp = await Api.getNotification(user.authentication_jwt, params);
+  //   console.log(resp.notifications);
+  //   if (resp.success) {
+  //     await this.setState({
+  //       notifications: this.state.notifications.push(resp.notifications),
+  //     });
+  //   }
+  // };
+
+  isToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 250;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
   render() {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
-        <View style={{flex: 1}}>{this.listNotification(notifications)}</View>
+        {this.state.spinner ? (
+          <Spinner
+            visible={this.state.spinner}
+            textContent={`${I18n.t('placeholder.loading')}...`}
+            textStyle={styles.spinnerTextStyle}
+          />
+        ) : (
+          <ScrollView
+            style={{flex: 1}}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.refreshNotification}
+              />
+            }>
+            {this.listNotification(this.state.notifications)}
+          </ScrollView>
+        )}
       </View>
     );
   }
