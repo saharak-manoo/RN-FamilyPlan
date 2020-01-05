@@ -516,16 +516,22 @@ export async function createFcmToken(token, user_id, fcmToken) {
   }
 }
 
-export async function getNotification(token) {
+export async function getNotification(token, params) {
   try {
-    const resp = await fetch(joinUrl(HOST, NOTIFICATION), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const resp = await fetch(
+      joinUrl(
+        HOST,
+        `${NOTIFICATION}?${new URLSearchParams(params).toString()}`,
+      ),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {

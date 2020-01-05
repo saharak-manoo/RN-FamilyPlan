@@ -17,23 +17,9 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
+import firebase from 'react-native-firebase';
 
 const IS_IOS = Platform.OS === 'ios';
-
-const notifications = [
-  {
-    name: 'Amy Farha',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Chris Jackson',
-    photo_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-];
 
 export default class NotificationView extends Component<Props> {
   constructor(props) {
@@ -41,6 +27,9 @@ export default class NotificationView extends Component<Props> {
     this.state = {
       spinner: false,
       refreshing: false,
+      page: 1,
+      limit: 50,
+      offset: 0,
       notifications: [],
     };
   }
@@ -61,7 +50,11 @@ export default class NotificationView extends Component<Props> {
   componentWillMount = async () => {
     this.setState({spinner: true});
     let user = await GFunction.user();
-    let resp = await Api.getNotification(user.authentication_jwt);
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.offset,
+    };
+    let resp = await Api.getNotification(user.authentication_jwt, params);
     if (resp.success) {
       this.setState({
         spinner: false,
@@ -69,6 +62,37 @@ export default class NotificationView extends Component<Props> {
       });
     }
   };
+
+  realTimeData(data) {
+    if (data.noti_type === 'group') {
+      let group_noti_id = JSON.parse(data.group_noti_id);
+      alert(group_noti_id);
+      let index = this.state.notifications.findIndex(
+        n => n.id === group_noti_id,
+      );
+    }
+  }
+
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
+
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
+  componentWillUnmount() {
+    this.notificationDisplayedListener();
+    this.notificationListener();
+  }
 
   goTo = notification => {
     if (
@@ -123,6 +147,8 @@ export default class NotificationView extends Component<Props> {
                 containerStyle={{
                   backgroundColor: index == 0 ? '#D4FDE8' : '#FFF',
                 }}
+                rightSubtitle={item.time}
+                rightSubtitleStyle={{fontFamily: 'Kanit-Light'}}
                 onPress={() => this.goTo(item)}
               />
             </Swipeout>
@@ -164,13 +190,40 @@ export default class NotificationView extends Component<Props> {
   refreshNotification = async () => {
     await this.setState({refreshing: true});
     let user = await GFunction.user();
-    let resp = await Api.getNotification(user.authentication_jwt);
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.offset,
+    };
+    let resp = await Api.getNotification(user.authentication_jwt, params);
     if (resp.success) {
       await this.setState({
         refreshing: false,
         notifications: resp.notifications,
       });
     }
+  };
+
+  // loadMoreNotifications = async () => {
+  //   let user = await GFunction.user();
+  //   let params = {
+  //     limit: this.state.limit,
+  //     offset: this.state.offset,
+  //   };
+  //   let resp = await Api.getNotification(user.authentication_jwt, params);
+  //   console.log(resp.notifications);
+  //   if (resp.success) {
+  //     await this.setState({
+  //       notifications: this.state.notifications.push(resp.notifications),
+  //     });
+  //   }
+  // };
+
+  isToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 250;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
   };
 
   render() {
