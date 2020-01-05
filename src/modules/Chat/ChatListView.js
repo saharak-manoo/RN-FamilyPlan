@@ -17,6 +17,7 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
+import firebase from 'react-native-firebase';
 
 const IS_IOS = Platform.OS === 'ios';
 
@@ -51,13 +52,43 @@ export default class ChatListView extends Component<Props> {
     await this.setState({user: user});
     let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
     if (resp.success) {
-      console.log('resp.chat_rooms', resp.chat_rooms);
       this.setState({
         spinner: false,
         chatRooms: resp.chat_rooms,
       });
     }
   };
+
+  realTimeData(data) {
+    if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
+      let chatRoom = JSON.parse(data.chat_room);
+      let chatRoomIndex = this.state.chatRooms.findIndex(
+        c => c.id === chatRoom.id,
+      );
+
+      this.state.chatRooms[chatRoomIndex] = chatRoom;
+      this.setState({
+        chatRooms: this.state.chatRooms,
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
+  componentWillUnmount() {
+    this.notificationDisplayedListener();
+    this.notificationListener();
+  }
 
   refreshChatRoom = async () => {
     await this.setState({refreshing: true});
@@ -88,7 +119,10 @@ export default class ChatListView extends Component<Props> {
                   },
                 },
               ]}
-              style={{backgroundColor: '#FFF', fontFamily: 'Kanit-Light'}}>
+              style={{
+                backgroundColor: '#FFF',
+                fontFamily: 'Kanit-Light',
+              }}>
               <ListItem
                 key={index}
                 Component={TouchableScale}

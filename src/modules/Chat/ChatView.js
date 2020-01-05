@@ -11,6 +11,7 @@ import * as GFunction from '../../util/GlobalFunction';
 import {GiftedChat} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
+import firebase from 'react-native-firebase';
 
 const IS_IOS = Platform.OS === 'ios';
 
@@ -47,6 +48,38 @@ export default class ChatView extends Component<Props> {
         </Appbar.Header>
       </View>
     );
+  }
+
+  realTimeData(data) {
+    if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
+      let message = JSON.parse(data.message);
+      if (this.state.user.id !== message.user._id) {
+        this.setState(previousState => ({
+          messages: GiftedChat.append(previousState.messages, message),
+        }));
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
+
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
+  componentWillUnmount() {
+    this.notificationDisplayedListener();
+    this.notificationListener();
   }
 
   async componentWillMount() {

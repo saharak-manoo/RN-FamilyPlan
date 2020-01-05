@@ -22,8 +22,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import PTRView from 'react-native-pull-to-refresh';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
-import firebase, {RemoteMessage, Notification} from 'react-native-firebase';
-import AsyncStorage from '@react-native-community/async-storage';
+import firebase from 'react-native-firebase';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -78,8 +77,6 @@ export default class HomeView extends Component<Props> {
     this.notificationListener = firebase
       .notifications()
       .onNotification(notification => {
-        alert(this.props.navigation.state.routeName);
-        alert(notification._data.noti_type);
         console.log('notification fcm => ', notification);
       });
   }
