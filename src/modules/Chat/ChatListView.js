@@ -66,10 +66,16 @@ export default class ChatListView extends Component<Props> {
         c => c.id === chatRoom.id,
       );
 
-      this.state.chatRooms[chatRoomIndex] = chatRoom;
-      this.setState({
-        chatRooms: this.state.chatRooms,
-      });
+      if (chatRoomIndex === -1) {
+        this.setState({
+          chatRooms: [chatRoom].concat(this.state.chatRooms),
+        });
+      } else {
+        this.state.chatRooms[chatRoomIndex] = chatRoom;
+        this.setState({
+          chatRooms: this.state.chatRooms,
+        });
+      }
     }
   }
 
@@ -77,6 +83,10 @@ export default class ChatListView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
+
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
 
     this.notificationListener = firebase
       .notifications()
