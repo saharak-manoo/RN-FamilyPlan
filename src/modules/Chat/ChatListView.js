@@ -17,6 +17,7 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
+import firebase from 'react-native-firebase';
 
 const IS_IOS = Platform.OS === 'ios';
 
@@ -28,7 +29,7 @@ export default class ChatListView extends Component<Props> {
       spinner: false,
       search: '',
       refreshing: false,
-      chat_rooms: [],
+      chatRooms: [],
     };
   }
 
@@ -53,17 +54,58 @@ export default class ChatListView extends Component<Props> {
     if (resp.success) {
       this.setState({
         spinner: false,
-        chat_rooms: resp.chat_rooms,
+        chatRooms: resp.chat_rooms,
       });
     }
   };
+
+  realTimeData(data) {
+    if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
+      let chatRoom = JSON.parse(data.chat_room);
+      let chatRoomIndex = this.state.chatRooms.findIndex(
+        c => c.id === chatRoom.id,
+      );
+
+      if (chatRoomIndex === -1) {
+        this.setState({
+          chatRooms: [chatRoom].concat(this.state.chatRooms),
+        });
+      } else {
+        this.state.chatRooms[chatRoomIndex] = chatRoom;
+        this.setState({
+          chatRooms: this.state.chatRooms,
+        });
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
+
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
+  componentWillUnmount() {
+    this.notificationDisplayedListener();
+    this.notificationListener();
+  }
 
   refreshChatRoom = async () => {
     await this.setState({refreshing: true});
     let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
     if (resp.success) {
       await this.setState({
-        chat_rooms: resp.chat_rooms,
+        chatRooms: resp.chat_rooms,
         refreshing: false,
       });
     }
@@ -87,7 +129,10 @@ export default class ChatListView extends Component<Props> {
                   },
                 },
               ]}
-              style={{backgroundColor: '#FFF', fontFamily: 'Kanit-Light'}}>
+              style={{
+                backgroundColor: '#FFF',
+                fontFamily: 'Kanit-Light',
+              }}>
               <ListItem
                 key={index}
                 Component={TouchableScale}
@@ -133,8 +178,8 @@ export default class ChatListView extends Component<Props> {
   }
 
   async removeChat(id, index) {
-    this.state.chat_rooms.splice(index, 1);
-    await this.setState({chat_rooms: this.state.chat_rooms});
+    this.state.chatRooms.splice(index, 1);
+    await this.setState({chatRooms: this.state.chat_rooms});
     GFunction.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
@@ -186,7 +231,7 @@ export default class ChatListView extends Component<Props> {
               />
             }>
             <View style={{flex: 1}}>
-              {this.listChatRoom(this.state.chat_rooms)}
+              {this.listChatRoom(this.state.chatRooms)}
             </View>
           </ScrollView>
         )}

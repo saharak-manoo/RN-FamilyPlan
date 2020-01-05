@@ -45,6 +45,7 @@ export default class NewGroupView extends Component<Props> {
     };
 
     let response = await Api.createGroup(user.authentication_jwt, params);
+    console.log(response);
 
     if (response.success) {
       this.props.myGroups.unshift(response.group);

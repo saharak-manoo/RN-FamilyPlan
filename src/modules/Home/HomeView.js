@@ -22,7 +22,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import PTRView from 'react-native-pull-to-refresh';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
-import firebase, {RemoteMessage, Notification} from 'react-native-firebase';
+import firebase from 'react-native-firebase';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -65,18 +65,32 @@ export default class HomeView extends Component<Props> {
     }
   };
 
+  realTimeData(data) {
+    if (data.noti_type === 'group') {
+      console.log(JSON.parse(data.group));
+      this.refreshGroup(false);
+    }
+  }
+
   componentDidMount() {
-    this.removeNotificationDisplayedListener = firebase
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationDisplayedListener = firebase
       .notifications()
       .onNotificationDisplayed(notification => {});
-    this.removeNotificationListener = firebase
+
+    this.notificationListener = firebase
       .notifications()
-      .onNotification(notification => {});
+      .onNotification(notification => {
+        this.realTimeData(notification._data);
+      });
   }
 
   componentWillUnmount() {
-    this.removeNotificationDisplayedListener();
-    this.removeNotificationListener();
+    this.notificationDisplayedListener();
+    this.notificationListener();
   }
 
   fcmCheckPermissions() {
@@ -99,15 +113,21 @@ export default class HomeView extends Component<Props> {
         }
       });
 
+    // get FCM Token
     firebase
       .messaging()
       .getToken()
-      .then(fcmToken => {
-        console.log('fcmToken => ' + fcmToken);
+      .then(async fcmToken => {
         if (fcmToken) {
-          // user has a device token
-        } else {
-          // user doesn't have a device token yet
+          let user = await GFunction.user();
+          let resp = await Api.createFcmToken(
+            user.authentication_jwt,
+            user.id,
+            fcmToken,
+          );
+          if (resp.success) {
+            console.log('created fcmToken => : ', fcmToken);
+          }
         }
       });
   }
@@ -228,8 +248,8 @@ export default class HomeView extends Component<Props> {
     );
   }
 
-  refreshGroup = async () => {
-    await this.setState({refreshing: true});
+  refreshGroup = async (reload = true) => {
+    await this.setState({refreshing: reload});
     let user = await GFunction.user();
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
