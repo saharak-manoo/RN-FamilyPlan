@@ -54,9 +54,15 @@ export default class ChatView extends Component<Props> {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
       let message = JSON.parse(data.message);
       if (this.state.user.id !== message.user._id) {
-        this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, message),
-        }));
+        let messageIndex = this.state.messages.findIndex(
+          m => m.id === message.id,
+        );
+
+        if (messageIndex !== -1) {
+          this.setState(previousState => ({
+            messages: GiftedChat.append(previousState.messages, message),
+          }));
+        }
       }
     }
   }

@@ -64,7 +64,10 @@ export default class NotificationView extends Component<Props> {
   };
 
   async realTimeData(data) {
-    if (data.noti_type === 'group') {
+    if (
+      data.noti_type === 'group' ||
+      data.noti_type.includes('request_join-')
+    ) {
       let group_noti_id = JSON.parse(data.group_noti_id);
       let user = await GFunction.user();
       let resp = await Api.getNotificationById(
