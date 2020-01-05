@@ -67,17 +67,26 @@ export default class HomeView extends Component<Props> {
   };
 
   componentDidMount() {
-    this.removeNotificationDisplayedListener = firebase
+    this.messageListener = firebase.messaging().onMessage(message => {
+      console.log('message fcm => ', message);
+    });
+
+    this.notificationDisplayedListener = firebase
       .notifications()
       .onNotificationDisplayed(notification => {});
-    this.removeNotificationListener = firebase
+
+    this.notificationListener = firebase
       .notifications()
-      .onNotification(notification => {});
+      .onNotification(notification => {
+        alert(this.props.navigation.state.routeName);
+        alert(notification._data.noti_type);
+        console.log('notification fcm => ', notification);
+      });
   }
 
   componentWillUnmount() {
-    this.removeNotificationDisplayedListener();
-    this.removeNotificationListener();
+    this.notificationDisplayedListener();
+    this.notificationListener();
   }
 
   fcmCheckPermissions() {
