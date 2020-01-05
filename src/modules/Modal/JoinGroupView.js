@@ -46,17 +46,19 @@ export default class JoinGroupView extends Component<Props> {
   render() {
     return (
       <View style={{flex: 1, padding: 30}}>
-        <Text style={{fontSize: 30}}>{I18n.t('placeholder.joinGroup')}</Text>
+        <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
+          {I18n.t('placeholder.joinGroup')}
+        </Text>
         <View style={{paddingTop: 15, paddingLeft: 15}}>
-          <Text style={{fontSize: 20}}>
+          <Text style={{fontSize: 20, fontFamily: 'Kanit-Light'}}>
             {I18n.t('placeholder.name') + ' : ' + this.props.group.name}
           </Text>
-          <Text style={{fontSize: 20}}>
+          <Text style={{fontSize: 20, fontFamily: 'Kanit-Light'}}>
             {I18n.t('placeholder.service') +
               ' : ' +
               this.props.group.serviceName}
           </Text>
-          <Text style={{fontSize: 20}}>
+          <Text style={{fontSize: 20, fontFamily: 'Kanit-Light'}}>
             {I18n.t('placeholder.members') +
               ' : ' +
               this.props.group.members.length +

@@ -65,9 +65,16 @@ export default class HomeView extends Component<Props> {
     }
   };
 
+  realTimeData(data) {
+    if (data.noti_type === 'group') {
+      console.log(JSON.parse(data.group));
+      this.refreshGroup(false);
+    }
+  }
+
   componentDidMount() {
     this.messageListener = firebase.messaging().onMessage(message => {
-      console.log('message fcm => ', message);
+      this.realTimeData(message._data);
     });
 
     this.notificationDisplayedListener = firebase
@@ -77,7 +84,7 @@ export default class HomeView extends Component<Props> {
     this.notificationListener = firebase
       .notifications()
       .onNotification(notification => {
-        console.log('notification fcm => ', notification);
+        this.realTimeData(notification._data);
       });
   }
 
@@ -241,8 +248,8 @@ export default class HomeView extends Component<Props> {
     );
   }
 
-  refreshGroup = async () => {
-    await this.setState({refreshing: true});
+  refreshGroup = async (reload = true) => {
+    await this.setState({refreshing: reload});
     let user = await GFunction.user();
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
