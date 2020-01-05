@@ -28,7 +28,7 @@ export default class NotificationView extends Component<Props> {
       spinner: false,
       refreshing: false,
       page: 1,
-      limit: 50,
+      limit: 12,
       offset: 0,
       notifications: [],
     };
@@ -63,13 +63,19 @@ export default class NotificationView extends Component<Props> {
     }
   };
 
-  realTimeData(data) {
+  async realTimeData(data) {
     if (data.noti_type === 'group') {
       let group_noti_id = JSON.parse(data.group_noti_id);
-      alert(group_noti_id);
-      let index = this.state.notifications.findIndex(
-        n => n.id === group_noti_id,
+      let user = await GFunction.user();
+      let resp = await Api.getNotificationById(
+        user.authentication_jwt,
+        group_noti_id,
       );
+      if (resp.success) {
+        this.setState({
+          notifications: resp.notification.concat(this.state.notifications),
+        });
+      }
     }
   }
 
