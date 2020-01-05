@@ -31,6 +31,7 @@ const REFRESH_TOKEN = '/api/v1/sessions/refresh_token';
 const SIGN_IN_WITH_PATH = '/api/v1/sessions/sign_in_with';
 const FCM_TOKEN_PATH = '/api/v1/users/:user_id/fcm_token';
 const NOTIFICATION = '/api/v1/notifications';
+const SHOW_NOTIFICATION = '/api/v1/notifications/:id';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -523,6 +524,32 @@ export async function getNotification(token, params) {
         HOST,
         `${NOTIFICATION}?${new URLSearchParams(params).toString()}`,
       ),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
+    if (status === 'reload') {
+      return this.getChatRoom(newTokenJwt);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function getNotificationById(token, notification_id) {
+  try {
+    const resp = await fetch(
+      joinUrl(HOST, SHOW_NOTIFICATION.replace(':id', notification_id)),
       {
         method: 'GET',
         headers: {
