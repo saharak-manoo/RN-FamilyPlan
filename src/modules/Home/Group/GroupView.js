@@ -22,6 +22,7 @@ import Swipeout from 'react-native-swipeout';
 import * as Api from '../../../util/Api';
 import * as GFunction from '../../../util/GlobalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
+import firebase from 'react-native-firebase';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
@@ -42,8 +43,6 @@ export default class GroupView extends Component<Props> {
       notiPayment: group.noti_payment,
       days: Array.from({length: 31}, (v, k) => k + 1).map(String),
     };
-
-    console.log(group);
   }
 
   inviteMemberModal = React.createRef();
@@ -58,6 +57,33 @@ export default class GroupView extends Component<Props> {
       group: this.props.navigation.state.params.group,
       userView: userView,
     });
+  }
+
+  realTimeData(data) {
+    if (data.noti_type === 'group') {
+      let group = JSON.parse(data.group);
+      if (this.state.group.id === group.id) {
+        this.setState({
+          group: group,
+        });
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {});
+
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        this.realTimeData(notification._data);
+      });
   }
 
   AppHerder() {
@@ -223,7 +249,7 @@ export default class GroupView extends Component<Props> {
               fontFamily: 'Kanit-Light',
             }}>
             {I18n.t('text.notiGroupPayment', {
-              day: this.state.notiPayment,
+              day: this.state.group.noti_payment,
             })}
           </Text>
         </View>
