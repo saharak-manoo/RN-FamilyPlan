@@ -59,7 +59,9 @@ export default class HomeView extends Component<Props> {
       this.setState({
         spinner: false,
         myGroups: resp.my_groups,
+        tempMyGroups: resp.my_groups,
         publicGroups: resp.public_groups,
+        tempPublicGroups: resp.public_groups,
         services: resp.services,
       });
     }
@@ -256,7 +258,9 @@ export default class HomeView extends Component<Props> {
       await this.setState({
         refreshing: false,
         myGroups: resp.my_groups,
+        tempMyGroups: resp.my_groups,
         publicGroups: resp.public_groups,
+        tempPublicGroups: resp.public_groups,
         services: resp.services,
       });
     }
@@ -384,6 +388,37 @@ export default class HomeView extends Component<Props> {
   //   await this.setState({myGroups: myGroups, publicGroups: publicGroups});
   // };
 
+  async searchGroup(search) {
+    await this.setState({
+      search: search,
+      myGroups: this.state.tempMyGroups,
+      publicGroups: this.state.tempPublicGroups,
+    });
+    if (search !== '') {
+      search = search.toLowerCase();
+      let myGroups = this.state.myGroups;
+      let publicGroups = this.state.publicGroups;
+      if (myGroups !== undefined) {
+        myGroups = myGroups.filter(
+          group =>
+            group.name.toLowerCase().includes(search) ||
+            group.serviceName.toLowerCase().includes(search),
+        );
+
+        await this.setState({myGroups: myGroups});
+      }
+      if (publicGroups !== undefined) {
+        publicGroups = publicGroups.filter(
+          group =>
+            group.name.toLowerCase().includes(search) ||
+            group.serviceName.toLowerCase().includes(search),
+        );
+
+        await this.setState({publicGroups: publicGroups});
+      }
+    }
+  }
+
   render() {
     return (
       <View style={styles.defaultView}>
@@ -393,7 +428,7 @@ export default class HomeView extends Component<Props> {
             inputStyle={{fontFamily: 'Kanit-Light'}}
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
-              this.setState({search: searching});
+              this.searchGroup(searching);
             }}
             value={this.state.search}
           />

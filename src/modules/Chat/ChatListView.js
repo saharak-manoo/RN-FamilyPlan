@@ -55,6 +55,7 @@ export default class ChatListView extends Component<Props> {
       this.setState({
         spinner: false,
         chatRooms: resp.chat_rooms,
+        tempChatRooms: resp.chat_rooms,
       });
     }
   };
@@ -69,11 +70,13 @@ export default class ChatListView extends Component<Props> {
       if (chatRoomIndex === -1) {
         this.setState({
           chatRooms: [chatRoom].concat(this.state.chatRooms),
+          tempChatRooms: [chatRoom].concat(this.state.chatRooms),
         });
       } else {
         this.state.chatRooms[chatRoomIndex] = chatRoom;
         this.setState({
           chatRooms: this.state.chatRooms,
+          tempChatRooms: this.state.chatRooms,
         });
       }
     }
@@ -106,6 +109,7 @@ export default class ChatListView extends Component<Props> {
     if (resp.success) {
       await this.setState({
         chatRooms: resp.chat_rooms,
+        tempChatRooms: resp.chat_rooms,
         refreshing: false,
       });
     }
@@ -193,6 +197,24 @@ export default class ChatListView extends Component<Props> {
     });
   }
 
+  async searchChatRoom(search) {
+    await this.setState({search: search, chatRooms: this.state.tempChatRooms});
+    if (search !== '') {
+      search = search.toLowerCase();
+      let chatRooms = this.state.chatRooms;
+      if (chatRooms !== undefined) {
+        chatRooms = chatRooms.filter(
+          chatRoom =>
+            chatRoom.name.toLowerCase().includes(search) ||
+            chatRoom.last_messags.toLowerCase().includes(search) ||
+            chatRoom.last_messags.toLowerCase().includes(search),
+        );
+
+        await this.setState({chatRooms: chatRooms});
+      }
+    }
+  }
+
   render() {
     return (
       <View style={styles.chatView}>
@@ -211,7 +233,7 @@ export default class ChatListView extends Component<Props> {
             inputStyle={{fontFamily: 'Kanit-Light'}}
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
-              this.setState({search: searching});
+              this.searchChatRoom(searching);
             }}
             value={this.state.search}
           />
