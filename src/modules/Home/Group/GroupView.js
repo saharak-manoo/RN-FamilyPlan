@@ -134,6 +134,12 @@ export default class GroupView extends Component<Props> {
     );
   }
 
+  showModalSetUpReminder = () => {
+    if (this.state.userView.group_leader) {
+      this.pickerRef.show();
+    }
+  };
+
   popUpModalSetUpReminder() {
     return (
       <ReactNativePickerModule
@@ -236,9 +242,7 @@ export default class GroupView extends Component<Props> {
             name="add-alert"
             type="mat-icon"
             color={this.state.group.color}
-            onPress={() => {
-              this.pickerRef.show();
-            }}
+            onPress={this.showModalSetUpReminder}
           />
           <Text
             style={{
@@ -480,9 +484,7 @@ export default class GroupView extends Component<Props> {
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.setUpAReminder')}
               textStyle={{fontFamily: 'Kanit-Light'}}
-              onPress={() => {
-                this.pickerRef.show();
-              }}>
+              onPress={this.showModalSetUpReminder}>
               <MatIcon name="add-alert" style={styles.actionButtonIcon} />
             </ActionButton.Item>
           </ActionButton>
