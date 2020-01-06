@@ -401,16 +401,22 @@ export async function getChatRoom(token) {
   }
 }
 
-export async function getChatMessage(token, id) {
+export async function getChatMessage(token, id, params) {
   try {
-    const resp = await fetch(joinUrl(HOST, CHAT.replace(':id', id)), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const resp = await fetch(
+      joinUrl(
+        HOST,
+        `${CHAT.replace(':id', id)}?${new URLSearchParams(params).toString()}`,
+      ),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {

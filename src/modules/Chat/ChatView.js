@@ -1,18 +1,26 @@
 import React, {Component} from 'react';
-import {Alert, FlatList, Platform, StatusBar, View} from 'react-native';
-import {Appbar, Text, Searchbar, TextInput} from 'react-native-paper';
+import {
+  Alert,
+  ActivityIndicator,
+  FlatList,
+  Platform,
+  StatusBar,
+  TouchableOpacity,
+  View,
+  TextInput,
+} from 'react-native';
+import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
-import {ListItem, Icon} from 'react-native-elements';
+import {ListItem, Icon, SearchBar} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
-import {GiftedChat} from 'react-native-gifted-chat';
+import {GiftedChat, Composer} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
-import {Composer} from 'react-native-gifted-chat';
 
 const IS_IOS = Platform.OS === 'ios';
 export default class ChatView extends Component<Props> {
@@ -20,11 +28,15 @@ export default class ChatView extends Component<Props> {
     super(props);
     this.state = {
       user: [],
-      spinner: false,
+      spinner: true,
       chatRoom: this.props.navigation.state.params.chatRoom,
       messages: [],
       search: '',
       text: '',
+      isReadySend: false,
+      isLoading: false,
+      limit: 15,
+      offset: 0,
     };
   }
 
@@ -92,25 +104,11 @@ export default class ChatView extends Component<Props> {
   async componentWillMount() {
     // get user
     let user = await GFunction.user();
-    await this.setState({user: user});
-
-    this.loadChat();
-  }
-
-  async loadChat() {
     await this.setState({
+      user: user,
+      spinner: false,
       messages: this.state.chatRoom.messages,
     });
-    // let resp = await Api.getChatMessage(
-    //   this.state.user.authentication_jwt,
-    //   this.state.chatRoom.id,
-    // );
-    // if (resp.success) {
-    //   await this.setState({
-    //     messages: resp.messages,
-    //     spinner: false,
-    //   });
-    // }
   }
 
   dialogAddMemberToGroup() {
@@ -154,9 +152,72 @@ export default class ChatView extends Component<Props> {
     }
   }
 
+  loadEarlier() {
+    return (
+      <View style={{padding: 20}}>
+        <ActivityIndicator size="small"></ActivityIndicator>
+      </View>
+    );
+  }
+
+  renderComposer = props => {
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <View style={{flex: 1, padding: 3}}>
+          <TextInput
+            placeholder={props.placeholder}
+            placeholderTextColor={props.placeholderTextColor}
+            onChangeText={text => {
+              this.setState({
+                text: text,
+                isReadySend: text !== '' || text !== null,
+              });
+            }}
+            style={[
+              {
+                borderRadius: 22,
+                padding: 10,
+                backgroundColor: '#EAEAEA',
+              },
+              props.textInputStyle,
+              {
+                height: 40,
+              },
+            ]}
+            value={this.state.text}
+          />
+        </View>
+        <View
+          style={{
+            flex: 0.1,
+            padding: 3,
+            justifyContent: 'center',
+            alignSelf: 'center',
+          }}>
+          <TouchableOpacity
+            disabled={!this.state.isReadySend}
+            onPress={() => {
+              props.onSend({text: this.state.text.trim()}, true);
+              this.setState({text: '', isReadySend: false});
+            }}>
+            <MatIcon
+              name="send"
+              style={{
+                fontSize: 25,
+                color: this.state.isReadySend
+                  ? this.state.chatRoom.group.color
+                  : '#D1D1D1',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
   async onSend(messages = []) {
     this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, resp.message),
+      messages: GiftedChat.append(previousState.messages, messages[0]),
     }));
     let resp = await Api.createChat(
       this.state.user.authentication_jwt,
@@ -170,27 +231,35 @@ export default class ChatView extends Component<Props> {
     }
   }
 
-  renderComposer = props => {
-    console.log(props);
-    return (
-      <View style={{flexDirection: 'row'}}>
-        <TextInput
-          style={{paddingBottom: 6, fontFamily: 'Kanit-Light'}}
-          label={I18n.t('placeholder.email')}
-          mode="outlined"
-        />
-      </View>
-    );
-  };
+  isCloseToTop({layoutMeasurement, contentOffset, contentSize}) {
+    let paddingToTop = 80;
+    let isLoading =
+      contentSize.height - layoutMeasurement.height - paddingToTop <=
+      contentOffset.y;
 
-  renderSend = props => {
-    if (!props.text.trim()) {
-      // text box empty
-      return <Text>text box empty</Text>;
+    this.setState({isLoading: isLoading});
+    if (isLoading) {
+      this.loadMoreMessage();
     }
+  }
 
-    return <Text>SEND</Text>;
-  };
+  async loadMoreMessage() {
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.messages.length,
+    };
+    let resp = await Api.getChatMessage(
+      this.state.user.authentication_jwt,
+      this.state.chatRoom.id,
+      params,
+    );
+    if (resp.success) {
+      await this.setState({
+        messages: this.state.messages.concat(resp.messages),
+        isLoading: false,
+      });
+    }
+  }
 
   render() {
     return (
@@ -205,24 +274,21 @@ export default class ChatView extends Component<Props> {
             />
           ) : (
             <GiftedChat
-              text={this.state.text}
-              alwaysShowSend={true}
+              listViewProps={{
+                scrollEventThrottle: 400,
+                onScroll: ({nativeEvent}) => {
+                  this.isCloseToTop(nativeEvent);
+                },
+              }}
               isAnimated
-              loadEarlier
-              onLoadEarlier={console.log('onLoadEarlier')}
-              isLoadingEarlier={true}
-              isTyping={true}
+              loadEarlier={this.state.isLoading}
+              text={this.state.text}
+              renderLoadEarlier={this.loadEarlier}
+              renderUsernameOnMessage
+              renderComposer={this.renderComposer}
               textInputStyle={{fontFamily: 'Kanit-Light'}}
               messages={this.state.messages}
               onSend={messages => this.onSend(messages)}
-              renderUsernameOnMessage
-              renderActions={() => (
-                <View>
-                  <Text>dove</Text>
-                </View>
-              )}
-              renderComposer={this.renderComposer}
-              renderSend={this.renderSend}
               user={{
                 _id: this.state.user.id,
               }}
