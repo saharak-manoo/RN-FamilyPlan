@@ -12,18 +12,19 @@ import {GiftedChat} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
+import {Composer} from 'react-native-gifted-chat';
 
 const IS_IOS = Platform.OS === 'ios';
-
 export default class ChatView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
       user: [],
-      spinner: true,
+      spinner: false,
       chatRoom: this.props.navigation.state.params.chatRoom,
       messages: [],
       search: '',
+      text: '',
     };
   }
 
@@ -97,16 +98,19 @@ export default class ChatView extends Component<Props> {
   }
 
   async loadChat() {
-    let resp = await Api.getChatMessage(
-      this.state.user.authentication_jwt,
-      this.state.chatRoom.id,
-    );
-    if (resp.success) {
-      await this.setState({
-        messages: resp.messages,
-        spinner: false,
-      });
-    }
+    await this.setState({
+      messages: this.state.chatRoom.messages,
+    });
+    // let resp = await Api.getChatMessage(
+    //   this.state.user.authentication_jwt,
+    //   this.state.chatRoom.id,
+    // );
+    // if (resp.success) {
+    //   await this.setState({
+    //     messages: resp.messages,
+    //     spinner: false,
+    //   });
+    // }
   }
 
   dialogAddMemberToGroup() {
@@ -151,17 +155,42 @@ export default class ChatView extends Component<Props> {
   }
 
   async onSend(messages = []) {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, resp.message),
+    }));
     let resp = await Api.createChat(
       this.state.user.authentication_jwt,
       this.state.chatRoom.id,
       messages[0],
     );
     if (resp.success) {
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, resp.message),
-      }));
+      // this.setState(previousState => ({
+      //   messages: GiftedChat.append(previousState.messages, resp.message),
+      // }));
     }
   }
+
+  renderComposer = props => {
+    console.log(props);
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <TextInput
+          style={{paddingBottom: 6, fontFamily: 'Kanit-Light'}}
+          label={I18n.t('placeholder.email')}
+          mode="outlined"
+        />
+      </View>
+    );
+  };
+
+  renderSend = props => {
+    if (!props.text.trim()) {
+      // text box empty
+      return <Text>text box empty</Text>;
+    }
+
+    return <Text>SEND</Text>;
+  };
 
   render() {
     return (
@@ -176,9 +205,24 @@ export default class ChatView extends Component<Props> {
             />
           ) : (
             <GiftedChat
+              text={this.state.text}
+              alwaysShowSend={true}
+              isAnimated
+              loadEarlier
+              onLoadEarlier={console.log('onLoadEarlier')}
+              isLoadingEarlier={true}
+              isTyping={true}
               textInputStyle={{fontFamily: 'Kanit-Light'}}
               messages={this.state.messages}
               onSend={messages => this.onSend(messages)}
+              renderUsernameOnMessage
+              renderActions={() => (
+                <View>
+                  <Text>dove</Text>
+                </View>
+              )}
+              renderComposer={this.renderComposer}
+              renderSend={this.renderSend}
               user={{
                 _id: this.state.user.id,
               }}
