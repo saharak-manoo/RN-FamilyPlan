@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
   Alert,
+  ActivityIndicator,
   FlatList,
   Platform,
   StatusBar,
@@ -15,7 +16,7 @@ import {Badge, ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
@@ -31,6 +32,9 @@ export default class ChatListView extends Component<Props> {
       search: '',
       refreshing: false,
       chatRooms: [],
+      isLoading: false,
+      limit: 15,
+      offset: 0,
     };
   }
 
@@ -49,14 +53,21 @@ export default class ChatListView extends Component<Props> {
 
   componentWillMount = async () => {
     this.setState({spinner: true});
-    let user = await GFunction.user();
+    let user = await GFun.user();
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.offset,
+    };
     await this.setState({user: user});
-    let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
+    let resp = await Api.getChatRoom(
+      this.state.user.authentication_jwt,
+      params,
+    );
     if (resp.success) {
       this.setState({
         spinner: false,
-        chatRooms: resp.chat_rooms,
-        tempChatRooms: resp.chat_rooms,
+        chatRooms: GFun.sortByDate(resp.chat_rooms),
+        tempChatRooms: GFun.sortByDate(resp.chat_rooms),
       });
     }
   };
@@ -70,14 +81,16 @@ export default class ChatListView extends Component<Props> {
 
       if (chatRoomIndex === -1) {
         this.setState({
-          chatRooms: [chatRoom].concat(this.state.chatRooms),
-          tempChatRooms: [chatRoom].concat(this.state.chatRooms),
+          chatRooms: GFun.sortByDate([chatRoom].concat(this.state.chatRooms)),
+          tempChatRooms: GFun.sortByDate(
+            [chatRoom].concat(this.state.chatRooms),
+          ),
         });
       } else {
         this.state.chatRooms[chatRoomIndex] = chatRoom;
         this.setState({
-          chatRooms: this.state.chatRooms,
-          tempChatRooms: this.state.chatRooms,
+          chatRooms: GFun.sortByDate(this.state.chatRooms),
+          tempChatRooms: GFun.sortByDate(this.state.chatRooms),
         });
       }
     }
@@ -168,7 +181,7 @@ export default class ChatListView extends Component<Props> {
   async removeChat(id, index) {
     this.state.chatRooms.splice(index, 1);
     await this.setState({chatRooms: this.state.chat_rooms});
-    GFunction.successMessage(
+    GFun.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
     );
@@ -182,7 +195,10 @@ export default class ChatListView extends Component<Props> {
   }
 
   async searchChatRoom(search) {
-    await this.setState({search: search, chatRooms: this.state.tempChatRooms});
+    await this.setState({
+      search: search,
+      chatRooms: this.state.tempChatRooms,
+    });
     if (search !== '') {
       search = search.toLowerCase();
       let chatRooms = this.state.chatRooms;
@@ -198,6 +214,44 @@ export default class ChatListView extends Component<Props> {
       }
     }
   }
+
+  isToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    let paddingToBottom = 80;
+    let isLoading =
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+
+    if (isLoading) {
+      this.setState({isLoading: isLoading});
+      this.loadMoreChatRooms();
+    }
+  };
+
+  loadEarlier() {
+    return (
+      <View style={{padding: 20}}>
+        <ActivityIndicator size="small"></ActivityIndicator>
+      </View>
+    );
+  }
+
+  loadMoreChatRooms = async () => {
+    let user = await GFun.user();
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.chatRooms.length,
+    };
+
+    let resp = await Api.getChatRoom(user.authentication_jwt, params);
+    if (resp.success) {
+      await this.setState({
+        chatRooms: GFun.sortByDate(
+          this.state.chatRooms.concat(resp.chat_rooms),
+        ),
+        isLoading: false,
+      });
+    }
+  };
 
   render() {
     return (
@@ -230,6 +284,9 @@ export default class ChatListView extends Component<Props> {
           />
         ) : (
           <ScrollView
+            onScroll={({nativeEvent}) => {
+              this.isToBottom(nativeEvent);
+            }}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -238,6 +295,7 @@ export default class ChatListView extends Component<Props> {
             }>
             <View style={{flex: 1}}>
               {this.listChatRoom(this.state.chatRooms)}
+              {this.state.isLoading && this.loadEarlier()}
             </View>
           </ScrollView>
         )}

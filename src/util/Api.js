@@ -378,16 +378,19 @@ export async function searchGroup(token, email) {
   }
 }
 
-export async function getChatRoom(token) {
+export async function getChatRoom(token, params) {
   try {
-    const resp = await fetch(joinUrl(HOST, CHAT_ROOM), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const resp = await fetch(
+      joinUrl(HOST, `${CHAT_ROOM}?${new URLSearchParams(params).toString()}`),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {

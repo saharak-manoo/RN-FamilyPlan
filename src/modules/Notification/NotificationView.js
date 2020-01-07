@@ -16,7 +16,7 @@ import {Badge, ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
@@ -30,7 +30,7 @@ export default class NotificationView extends Component<Props> {
       spinner: false,
       refreshing: false,
       isLoading: false,
-      limit: 12,
+      limit: 15,
       offset: 0,
       notifications: [],
     };
@@ -51,7 +51,7 @@ export default class NotificationView extends Component<Props> {
 
   componentWillMount = async () => {
     this.setState({spinner: true});
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       limit: this.state.limit,
       offset: this.state.offset,
@@ -60,7 +60,7 @@ export default class NotificationView extends Component<Props> {
     if (resp.success) {
       this.setState({
         spinner: false,
-        notifications: resp.notifications,
+        notifications: GFun.sortByDate(resp.notifications),
       });
     }
   };
@@ -71,14 +71,16 @@ export default class NotificationView extends Component<Props> {
       data.noti_type.includes('request_join-')
     ) {
       let group_noti_id = JSON.parse(data.group_noti_id);
-      let user = await GFunction.user();
+      let user = await GFun.user();
       let resp = await Api.getNotificationById(
         user.authentication_jwt,
         group_noti_id,
       );
       if (resp.success) {
         this.setState({
-          notifications: resp.notification.concat(this.state.notifications),
+          notifications: GFun.sortByDate(
+            GFun.uniq(resp.notification.concat(this.state.notifications)),
+          ),
         });
       }
     }
@@ -174,7 +176,7 @@ export default class NotificationView extends Component<Props> {
   async removeChatNotification(id, index) {
     this.state.notifications.splice(index, 1);
     await this.setState({group: this.state.notifications});
-    GFunction.successMessage(
+    GFun.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
     );
@@ -182,7 +184,7 @@ export default class NotificationView extends Component<Props> {
 
   refreshNotification = async () => {
     await this.setState({refreshing: true});
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       limit: this.state.limit,
       offset: this.state.offset,
@@ -191,7 +193,7 @@ export default class NotificationView extends Component<Props> {
     if (resp.success) {
       await this.setState({
         refreshing: false,
-        notifications: resp.notifications,
+        notifications: GFun.sortByDate(resp.notifications),
       });
     }
   };
@@ -217,7 +219,7 @@ export default class NotificationView extends Component<Props> {
   }
 
   loadMoreNotifications = async () => {
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       limit: this.state.limit,
       offset: this.state.notifications.length,
@@ -226,7 +228,9 @@ export default class NotificationView extends Component<Props> {
     let resp = await Api.getNotification(user.authentication_jwt, params);
     if (resp.success) {
       await this.setState({
-        notifications: resp.notifications.concat(this.state.notifications),
+        notifications: GFun.sortByDate(
+          this.state.notifications.concat(resp.notifications),
+        ),
         isLoading: false,
       });
     }
