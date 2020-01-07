@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'Kanit-Light',
     flex: 1,
     margin: 10,
-    marginTop: 90,
     backgroundColor: '#FFF',
     borderRadius: 10,
   },
@@ -34,7 +33,6 @@ export const styles = StyleSheet.create({
   },
 
   profilePhoto: {
-    fontFamily: 'Kanit-Light',
     alignSelf: 'center',
     marginTop: -85,
     width: 150,
