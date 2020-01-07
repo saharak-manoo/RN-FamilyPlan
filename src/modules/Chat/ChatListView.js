@@ -221,7 +221,7 @@ export default class ChatListView extends Component<Props> {
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom;
 
-    if (isLoading) {
+    if (isLoading && !this.state.refreshing) {
       this.setState({isLoading: isLoading});
       this.loadMoreChatRooms();
     }
@@ -295,7 +295,9 @@ export default class ChatListView extends Component<Props> {
             }>
             <View style={{flex: 1}}>
               {this.listChatRoom(this.state.chatRooms)}
-              {this.state.isLoading && this.loadEarlier()}
+              {this.state.isLoading && !this.state.refreshing
+                ? this.loadEarlier()
+                : null}
             </View>
           </ScrollView>
         )}

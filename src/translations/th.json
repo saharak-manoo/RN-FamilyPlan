@@ -64,7 +64,8 @@
     "dueDate": "วันที่ครบกำหนด",
     "settingServiceCharge": "ตั้งค่าบริการ",
     "serviceCharge": "ค่าบริการ",
-    "clickNewGroup": "คลิกเพื่อสร้างกลุ่ม"
+    "clickNewGroup": "คลิกเพื่อสร้างกลุ่ม",
+    "leaveGroup": "ออกจากกลุ่ม"
   },
   "message": {
     "success": "สำเร็จ",

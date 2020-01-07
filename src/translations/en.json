@@ -68,7 +68,8 @@
     "dueDate": "Due date",
     "settingServiceCharge": "Setting service charge",
     "serviceCharge": "Service charge",
-    "clickNewGroup": "Click to new group"
+    "clickNewGroup": "Click to new group",
+    "leaveGroup": "Leave group"
   },
   "message": {
     "forgotPassword": "Forgot password",
