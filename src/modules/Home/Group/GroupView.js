@@ -483,19 +483,30 @@ export default class GroupView extends Component<Props> {
           </ActionButton>
         ) : (
           <ActionButton
-            icon={
+            buttonColor="#03C8A1"
+            icon={<MatIcon name="menu" style={styles.actionButtonIcon} />}>
+            <ActionButton.Item
+              buttonColor="#3D71FB"
+              title={I18n.t('placeholder.chat')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={() => this.goToChatRoom(this.state.group.chat_room)}>
+              <MatIcon name="chat" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="rgba(231,76,60,1)"
+              title={I18n.t('placeholder.leaveGroup')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={() =>
+                this.alertLeaveGroup(
+                  this.state.userView.id,
+                  this.state.group.members.findIndex(
+                    m => m.id === this.state.userView.id,
+                  ),
+                )
+              }>
               <MatIcon name="exit-to-app" style={styles.actionButtonIcon} />
-            }
-            buttonColor="rgba(231,76,60,1)"
-            onPress={() =>
-              this.alertLeaveGroup(
-                this.state.userView.id,
-                this.state.group.members.findIndex(
-                  m => m.id === this.state.userView.id,
-                ),
-              )
-            }
-          />
+            </ActionButton.Item>
+          </ActionButton>
         )}
       </View>
     );

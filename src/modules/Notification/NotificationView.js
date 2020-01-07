@@ -30,7 +30,7 @@ export default class NotificationView extends Component<Props> {
       spinner: false,
       refreshing: false,
       isLoading: false,
-      limit: 15,
+      limit: 150,
       offset: 0,
       notifications: [],
     };
@@ -199,15 +199,14 @@ export default class NotificationView extends Component<Props> {
   };
 
   isToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    let paddingToBottom = 80;
-    let isLoading =
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
-
-    if (isLoading) {
-      this.setState({isLoading: isLoading});
-      this.loadMoreNotifications();
-    }
+    // let paddingToBottom = 80;
+    // let isLoading =
+    //   layoutMeasurement.height + contentOffset.y >=
+    //   contentSize.height - paddingToBottom;
+    // if (isLoading && !this.state.refreshing) {
+    //   this.setState({isLoading: isLoading});
+    //   this.loadMoreNotifications();
+    // }
   };
 
   loadEarlier() {
@@ -259,7 +258,9 @@ export default class NotificationView extends Component<Props> {
               />
             }>
             {this.listNotification(this.state.notifications)}
-            {this.state.isLoading && this.loadEarlier()}
+            {this.state.isLoading && !this.state.refreshing
+              ? this.loadEarlier()
+              : null}
           </ScrollView>
         )}
       </View>
