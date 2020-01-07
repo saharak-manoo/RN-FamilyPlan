@@ -16,7 +16,7 @@ import {ListItem, Icon, SearchBar} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -88,7 +88,7 @@ export default class ChatView extends Component<Props> {
 
   async componentWillMount() {
     // get user
-    let user = await GFunction.user();
+    let user = await GFun.user();
     await this.setState({
       user: user,
       spinner: false,
@@ -116,7 +116,7 @@ export default class ChatView extends Component<Props> {
   }
 
   async addMemberToGroup() {
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let response = await Api.joinGroup(
       user.authentication_jwt,
       this.state.chatRoom.group.id,
@@ -124,16 +124,16 @@ export default class ChatView extends Component<Props> {
     );
 
     if (response.success) {
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.joinGroupSuccessful'),
       );
     } else {
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.error'), errors.join('\n'));
     }
   }
 
@@ -236,7 +236,7 @@ export default class ChatView extends Component<Props> {
     );
     if (resp.success) {
       await this.setState({
-        messages: this.state.messages.concat(resp.messages),
+        messages: GFun.unique(this.state.messages.concat(resp.messages), '_id'),
         isLoading: false,
       });
     }
