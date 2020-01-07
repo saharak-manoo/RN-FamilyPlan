@@ -78,21 +78,6 @@ export default class HomeView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {});
-
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        this.realTimeData(notification._data);
-      });
-  }
-
-  componentWillUnmount() {
-    this.notificationDisplayedListener();
-    this.notificationListener();
   }
 
   fcmCheckPermissions() {

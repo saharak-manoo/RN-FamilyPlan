@@ -18,6 +18,7 @@ import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
+import UserAvatar from 'react-native-user-avatar';
 
 const IS_IOS = Platform.OS === 'ios';
 
@@ -86,21 +87,6 @@ export default class ChatListView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {});
-
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        this.realTimeData(notification._data);
-      });
-  }
-
-  componentWillUnmount() {
-    this.notificationDisplayedListener();
-    this.notificationListener();
   }
 
   refreshChatRoom = async () => {
@@ -143,16 +129,14 @@ export default class ChatListView extends Component<Props> {
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{
-                  title: item.name[0],
-                  activeOpacity: 0.2,
-                }}
+                leftAvatar={() => <UserAvatar size="40" name={item.name} />}
                 title={item.name}
                 titleStyle={{fontFamily: 'Kanit-Light'}}
                 subtitle={item.last_messags}
                 subtitleStyle={{fontFamily: 'Kanit-Light'}}
                 onPress={() => this.goToChatRoom(item)}
-                chevron={<Badge value={index + 10} status="error" />}
+                rightSubtitle={item.last_messags_time}
+                rightSubtitleStyle={{fontFamily: 'Kanit-Light'}}
               />
             </Swipeout>
           );

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
   Alert,
+  ActivityIndicator,
   FlatList,
   Platform,
   StatusBar,
@@ -18,6 +19,7 @@ import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
+import UserAvatar from 'react-native-user-avatar';
 
 const IS_IOS = Platform.OS === 'ios';
 
@@ -27,7 +29,7 @@ export default class NotificationView extends Component<Props> {
     this.state = {
       spinner: false,
       refreshing: false,
-      page: 1,
+      isLoading: false,
       limit: 12,
       offset: 0,
       notifications: [],
@@ -86,21 +88,6 @@ export default class NotificationView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {});
-
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        this.realTimeData(notification._data);
-      });
-  }
-
-  componentWillUnmount() {
-    this.notificationDisplayedListener();
-    this.notificationListener();
   }
 
   goTo = notification => {
@@ -145,10 +132,7 @@ export default class NotificationView extends Component<Props> {
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{
-                  title: item.name[0],
-                  activeOpacity: 0.2,
-                }}
+                leftAvatar={() => <UserAvatar size="40" name={item.name} />}
                 title={item.name}
                 titleStyle={{fontFamily: 'Kanit-Light'}}
                 subtitle={item.message}
@@ -212,27 +196,40 @@ export default class NotificationView extends Component<Props> {
     }
   };
 
-  // loadMoreNotifications = async () => {
-  //   let user = await GFunction.user();
-  //   let params = {
-  //     limit: this.state.limit,
-  //     offset: this.state.offset,
-  //   };
-  //   let resp = await Api.getNotification(user.authentication_jwt, params);
-  //   console.log(resp.notifications);
-  //   if (resp.success) {
-  //     await this.setState({
-  //       notifications: this.state.notifications.push(resp.notifications),
-  //     });
-  //   }
-  // };
-
   isToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 250;
-    return (
+    let paddingToBottom = 80;
+    let isLoading =
       layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom
+      contentSize.height - paddingToBottom;
+
+    if (isLoading) {
+      this.setState({isLoading: isLoading});
+      this.loadMoreNotifications();
+    }
+  };
+
+  loadEarlier() {
+    return (
+      <View style={{padding: 20}}>
+        <ActivityIndicator size="small"></ActivityIndicator>
+      </View>
     );
+  }
+
+  loadMoreNotifications = async () => {
+    let user = await GFunction.user();
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.notifications.length,
+    };
+
+    let resp = await Api.getNotification(user.authentication_jwt, params);
+    if (resp.success) {
+      await this.setState({
+        notifications: resp.notifications.concat(this.state.notifications),
+        isLoading: false,
+      });
+    }
   };
 
   render() {
@@ -247,6 +244,9 @@ export default class NotificationView extends Component<Props> {
           />
         ) : (
           <ScrollView
+            onScroll={({nativeEvent}) => {
+              this.isToBottom(nativeEvent);
+            }}
             style={{flex: 1}}
             refreshControl={
               <RefreshControl
@@ -255,6 +255,7 @@ export default class NotificationView extends Component<Props> {
               />
             }>
             {this.listNotification(this.state.notifications)}
+            {this.state.isLoading && this.loadEarlier()}
           </ScrollView>
         )}
       </View>

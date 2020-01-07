@@ -17,7 +17,7 @@ import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
-import {GiftedChat, Composer} from 'react-native-gifted-chat';
+import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
@@ -84,21 +84,6 @@ export default class ChatView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {});
-
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        this.realTimeData(notification._data);
-      });
-  }
-
-  componentWillUnmount() {
-    this.notificationDisplayedListener();
-    this.notificationListener();
   }
 
   async componentWillMount() {
@@ -166,24 +151,20 @@ export default class ChatView extends Component<Props> {
         <View style={{flex: 1, padding: 3}}>
           <TextInput
             placeholder={props.placeholder}
-            placeholderTextColor={props.placeholderTextColor}
+            placeholderTextColor={'#A4A4A4'}
             onChangeText={text => {
               this.setState({
                 text: text,
-                isReadySend: text !== '' || text !== null,
+                isReadySend: text !== '',
               });
             }}
-            style={[
-              {
-                borderRadius: 22,
-                padding: 10,
-                backgroundColor: '#EAEAEA',
-              },
-              props.textInputStyle,
-              {
-                height: 40,
-              },
-            ]}
+            style={{
+              borderRadius: 22,
+              padding: 10,
+              backgroundColor: '#EAEAEA',
+              height: 40,
+              color: '#000',
+            }}
             value={this.state.text}
           />
         </View>
@@ -203,7 +184,7 @@ export default class ChatView extends Component<Props> {
             <MatIcon
               name="send"
               style={{
-                fontSize: 25,
+                fontSize: 30,
                 color: this.state.isReadySend
                   ? this.state.chatRoom.group.color
                   : '#D1D1D1',
@@ -237,8 +218,8 @@ export default class ChatView extends Component<Props> {
       contentSize.height - layoutMeasurement.height - paddingToTop <=
       contentOffset.y;
 
-    this.setState({isLoading: isLoading});
-    if (isLoading) {
+    if (isLoading && this.state.chatRoom.is_loading_more) {
+      this.setState({isLoading: isLoading});
       this.loadMoreMessage();
     }
   }
@@ -260,6 +241,19 @@ export default class ChatView extends Component<Props> {
       });
     }
   }
+
+  renderBubble = props => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: this.state.chatRoom.group.color || '#0084ff',
+          },
+        }}
+      />
+    );
+  };
 
   render() {
     return (
@@ -289,6 +283,7 @@ export default class ChatView extends Component<Props> {
               textInputStyle={{fontFamily: 'Kanit-Light'}}
               messages={this.state.messages}
               onSend={messages => this.onSend(messages)}
+              renderBubble={this.renderBubble}
               user={{
                 _id: this.state.user.id,
               }}

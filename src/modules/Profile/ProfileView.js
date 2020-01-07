@@ -10,6 +10,7 @@ import {styles} from '../../components/styles';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {ListItem} from 'react-native-elements';
 import RNRestart from 'react-native-restart';
+import UserAvatar from 'react-native-user-avatar';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -125,10 +126,12 @@ export default class ProfileView extends Component<Props> {
           <View style={{flex: 1}}>
             <View style={styles.cardProfile}>
               <View style={styles.profile}>
-                <Image
-                  source={{uri: this.state.photo}}
-                  style={styles.profilePhoto}
-                />
+                <View style={{alignSelf: 'center'}}>
+                  <UserAvatar
+                    size="120"
+                    name={this.state.firstName + ' ' + this.state.lastName}
+                  />
+                </View>
                 <Text style={styles.profileName}>
                   {this.state.firstName + ' ' + this.state.lastName}
                 </Text>

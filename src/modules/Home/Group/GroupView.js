@@ -23,6 +23,7 @@ import * as Api from '../../../util/Api';
 import * as GFunction from '../../../util/GlobalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
+import UserAvatar from 'react-native-user-avatar';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
@@ -74,16 +75,6 @@ export default class GroupView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {});
-
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        this.realTimeData(notification._data);
-      });
   }
 
   AppHerder() {
@@ -316,7 +307,9 @@ export default class GroupView extends Component<Props> {
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{source: {uri: item.photo}}}
+                leftAvatar={() => (
+                  <UserAvatar size="40" name={item.full_name} />
+                )}
                 title={item.full_name}
                 titleStyle={{fontFamily: 'Kanit-Light'}}
                 subtitle={item.email}
@@ -341,7 +334,7 @@ export default class GroupView extends Component<Props> {
               friction={90}
               tension={100}
               activeScale={0.95}
-              leftAvatar={{source: {uri: item.photo}}}
+              leftAvatar={() => <UserAvatar size="40" name={item.full_name} />}
               title={item.full_name}
               titleStyle={{fontFamily: 'Kanit-Light'}}
               subtitle={item.email}
