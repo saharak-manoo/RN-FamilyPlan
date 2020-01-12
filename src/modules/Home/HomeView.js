@@ -69,8 +69,9 @@ export default class HomeView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'group') {
-      console.log(JSON.parse(data.group));
-      this.refreshGroup(false);
+      if (!data.group) {
+        this.refreshGroup(false);
+      }
     }
   }
 
