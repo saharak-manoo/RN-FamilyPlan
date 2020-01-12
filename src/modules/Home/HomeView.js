@@ -23,16 +23,18 @@ import PTRView from 'react-native-pull-to-refresh';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
+import ContentLoader from 'react-native-content-loader';
+import {Circle, Rect} from 'react-native-svg';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
 import QrCodeView from '../Modal/QrCodeView';
 import JoinGroupView from '../Modal/JoinGroupView';
+import {array} from 'prop-types';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#2370E6' : '#000';
 
 export default class HomeView extends Component<Props> {
   constructor(props) {
@@ -258,6 +260,7 @@ export default class HomeView extends Component<Props> {
         style={{flex: 1}}
         data={myGroup}
         horizontal={true}
+        scrollEnabled={!this.state.spinner}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => {
           return (
@@ -298,6 +301,7 @@ export default class HomeView extends Component<Props> {
         data={publicGroup.filter(
           group => group.members.length < group.max_member,
         )}
+        scrollEnabled={!this.state.spinner}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => {
@@ -405,6 +409,35 @@ export default class HomeView extends Component<Props> {
     }
   }
 
+  renderLoadingCard() {
+    return (
+      <FlatList
+        style={{flex: 1}}
+        data={Array(4)
+          .fill(null)
+          .map((x, i) => i)}
+        horizontal={true}
+        scrollEnabled={!this.state.spinner}
+        showsHorizontalScrollIndicator={false}
+        renderItem={() => {
+          return (
+            <ContentLoader height={height / 5} width={width / 3}>
+              <Rect
+                x={14}
+                y={0}
+                rx={20}
+                ry={20}
+                width={width / 3}
+                height={height / 5}
+              />
+            </ContentLoader>
+          );
+        }}
+        keyExtractor={item => item}
+      />
+    );
+  }
+
   render() {
     return (
       <View style={styles.defaultView}>
@@ -420,27 +453,23 @@ export default class HomeView extends Component<Props> {
           />
         </View>
 
-        {this.state.spinner ? (
-          <Spinner
-            visible={this.state.spinner}
-            textContent={`${I18n.t('placeholder.loading')}...`}
-            textStyle={styles.spinnerTextStyle}
-          />
-        ) : (
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.refreshGroup}
-              />
-            }>
-            <View style={{flex: 1, padding: 15, paddingTop: 35}}>
-              <View style={{flex: 1}}>
-                <View style={styles.listCard}>
-                  <Text style={styles.textCardList}>
-                    {I18n.t('placeholder.myGroup')}
-                  </Text>
-                </View>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.refreshGroup}
+            />
+          }>
+          <View style={{flex: 1, padding: 15, paddingTop: 35}}>
+            <View style={{flex: 1}}>
+              <View style={styles.listCard}>
+                <Text style={styles.textCardList}>
+                  {I18n.t('placeholder.myGroup')}
+                </Text>
+              </View>
+              {this.state.spinner ? (
+                <View style={styles.listCards}>{this.renderLoadingCard()}</View>
+              ) : (
                 <View style={styles.listCards}>
                   {this.state.myGroups.length !== 0 ? (
                     this.listMyGroup(this.state.myGroups)
@@ -490,23 +519,25 @@ export default class HomeView extends Component<Props> {
                     </View>
                   )}
                 </View>
-              </View>
-
-              {this.state.publicGroups.length !== 0 ? (
-                <View style={{flex: 1, paddingTop: 40}}>
-                  <View style={styles.listPublicCard}>
-                    <Text style={styles.textCardList}>
-                      {I18n.t('placeholder.publicGroup')}
-                    </Text>
-                  </View>
-                  <View style={styles.listCards}>
-                    {this.listPublicGroup(this.state.publicGroups)}
-                  </View>
-                </View>
-              ) : null}
+              )}
             </View>
-          </ScrollView>
-        )}
+
+            <View style={{flex: 1, paddingTop: 40}}>
+              <View style={styles.listPublicCard}>
+                <Text style={styles.textCardList}>
+                  {I18n.t('placeholder.publicGroup')}
+                </Text>
+              </View>
+              {this.state.spinner ? (
+                <View style={styles.listCards}>{this.renderLoadingCard()}</View>
+              ) : (
+                <View style={styles.listCards}>
+                  {this.listPublicGroup(this.state.publicGroups)}
+                </View>
+              )}
+            </View>
+          </View>
+        </ScrollView>
 
         {this.popUpModalJoinGroup(this.state.group)}
         {this.popUpModalNewGroup()}

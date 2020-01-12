@@ -69,7 +69,8 @@
     "settingServiceCharge": "Setting service charge",
     "serviceCharge": "Service charge",
     "clickNewGroup": "Click to new group",
-    "leaveGroup": "Leave group"
+    "leaveGroup": "Leave group",
+    "darkMode": "Dark Mode"
   },
   "message": {
     "forgotPassword": "Forgot password",

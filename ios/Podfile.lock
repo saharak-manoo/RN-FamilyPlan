@@ -326,6 +326,8 @@ PODS:
     - React
   - RNPermissions (2.0.3):
     - React
+  - RNSVG (10.0.0):
+    - React
   - RNTextGradientView (0.1.7):
     - React
   - RNVectorIcons (6.6.0):
@@ -377,6 +379,7 @@ DEPENDENCIES:
   - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
   - RNLanguages (from `../node_modules/react-native-languages`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNTextGradientView (from `../node_modules/react-native-text-gradient`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -476,6 +479,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-languages"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNTextGradientView:
     :path: "../node_modules/react-native-text-gradient"
   RNVectorIcons:
@@ -536,10 +541,11 @@ SPEC CHECKSUMS:
   RNInAppBrowser: 9d1ffb9db0d0cbdf03f528f1f0624b2c533b93fd
   RNLanguages: 962e562af0d34ab1958d89bcfdb64fafc37c513e
   RNPermissions: 9e437a90de84a5402ff689d4da233730b81556c2
+  RNSVG: 9d45f03136ecc9b5497e12f6f20838b568acb9f4
   RNTextGradientView: 3eb4744303f801546fad35ac47a53cc82257cb25
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: 6911bfb297920d1177bd43bfc03c94bf34c14bff
+PODFILE CHECKSUM: 0ceb91ce3bf74ff0b9e79cd208a6e1649c4901a7
 
 COCOAPODS: 1.8.4

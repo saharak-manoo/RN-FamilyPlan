@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
 
   cardProfile: {
     fontFamily: 'Kanit-Light',
-    flex: 1,
+    flex: 1.4,
     margin: 10,
     backgroundColor: '#FFF',
     borderRadius: 10,
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
 
   cardSetting: {
     fontFamily: 'Kanit-Light',
-    flex: 0.3,
+    flex: 0.5,
     margin: 10,
     backgroundColor: '#FFF',
     borderRadius: 10,
@@ -141,6 +141,7 @@ export const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 20,
     width: width / 3,
+    height: height / 5,
   },
 
   headerCard: {
