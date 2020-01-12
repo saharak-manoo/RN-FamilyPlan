@@ -74,24 +74,26 @@ export default class ChatListView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
-      let chatRoom = JSON.parse(data.chat_room);
-      let chatRoomIndex = this.state.chatRooms.findIndex(
-        c => c.id === chatRoom.id,
-      );
+      if (!data.chat_room) {
+        let chatRoom = JSON.parse(data.chat_room);
+        let chatRoomIndex = this.state.chatRooms.findIndex(
+          c => c.id === chatRoom.id,
+        );
 
-      if (chatRoomIndex === -1) {
-        this.setState({
-          chatRooms: GFun.sortByDate([chatRoom].concat(this.state.chatRooms)),
-          tempChatRooms: GFun.sortByDate(
-            [chatRoom].concat(this.state.chatRooms),
-          ),
-        });
-      } else {
-        this.state.chatRooms[chatRoomIndex] = chatRoom;
-        this.setState({
-          chatRooms: GFun.sortByDate(this.state.chatRooms),
-          tempChatRooms: GFun.sortByDate(this.state.chatRooms),
-        });
+        if (chatRoomIndex === -1) {
+          this.setState({
+            chatRooms: GFun.sortByDate([chatRoom].concat(this.state.chatRooms)),
+            tempChatRooms: GFun.sortByDate(
+              [chatRoom].concat(this.state.chatRooms),
+            ),
+          });
+        } else {
+          this.state.chatRooms[chatRoomIndex] = chatRoom;
+          this.setState({
+            chatRooms: GFun.sortByDate(this.state.chatRooms),
+            tempChatRooms: GFun.sortByDate(this.state.chatRooms),
+          });
+        }
       }
     }
   }
@@ -107,8 +109,8 @@ export default class ChatListView extends Component<Props> {
     let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
     if (resp.success) {
       await this.setState({
-        chatRooms: resp.chat_rooms,
-        tempChatRooms: resp.chat_rooms,
+        chatRooms: GFun.sortByDate(resp.chat_rooms),
+        tempChatRooms: GFun.sortByDate(resp.chat_rooms),
         refreshing: false,
       });
     }
@@ -284,9 +286,6 @@ export default class ChatListView extends Component<Props> {
           />
         ) : (
           <ScrollView
-            onScroll={({nativeEvent}) => {
-              this.isToBottom(nativeEvent);
-            }}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}

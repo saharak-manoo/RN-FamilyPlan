@@ -70,18 +70,20 @@ export default class NotificationView extends Component<Props> {
       data.noti_type === 'group' ||
       data.noti_type.includes('request_join-')
     ) {
-      let group_noti_id = JSON.parse(data.group_noti_id);
-      let user = await GFun.user();
-      let resp = await Api.getNotificationById(
-        user.authentication_jwt,
-        group_noti_id,
-      );
-      if (resp.success) {
-        this.setState({
-          notifications: GFun.sortByDate(
-            GFun.uniq(resp.notification.concat(this.state.notifications)),
-          ),
-        });
+      if (!data.group_noti_id) {
+        let group_noti_id = JSON.parse(data.group_noti_id);
+        let user = await GFun.user();
+        let resp = await Api.getNotificationById(
+          user.authentication_jwt,
+          group_noti_id,
+        );
+        if (resp.success) {
+          this.setState({
+            notifications: GFun.sortByDate(
+              GFun.uniq(resp.notification.concat(this.state.notifications)),
+            ),
+          });
+        }
       }
     }
   }

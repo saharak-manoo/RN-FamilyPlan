@@ -62,11 +62,13 @@ export default class GroupView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'group') {
-      let group = JSON.parse(data.group);
-      if (this.state.group.id === group.id) {
-        this.setState({
-          group: group,
-        });
+      if (!data.group) {
+        let group = JSON.parse(data.group);
+        if (this.state.group.id === group.id) {
+          this.setState({
+            group: group,
+          });
+        }
       }
     }
   }

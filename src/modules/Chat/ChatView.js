@@ -21,6 +21,7 @@ import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
+import QuickReplies from 'react-native-gifted-chat/lib/QuickReplies';
 
 const IS_IOS = Platform.OS === 'ios';
 export default class ChatView extends Component<Props> {
@@ -52,12 +53,6 @@ export default class ChatView extends Component<Props> {
             title={this.state.chatRoom.name}
             titleStyle={{fontFamily: 'Kanit-Light'}}
           />
-          {this.state.chatRoom.is_request_join_group_leader ? (
-            <Appbar.Action
-              icon="plus-one"
-              onPress={() => this.dialogAddMemberToGroup()}
-            />
-          ) : null}
         </Appbar.Header>
       </View>
     );
@@ -65,16 +60,18 @@ export default class ChatView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
-      let message = JSON.parse(data.message);
-      if (this.state.user.id !== message.user._id) {
-        let messageIndex = this.state.messages.findIndex(
-          m => m.id === message.id,
-        );
+      if (!data.message) {
+        let message = JSON.parse(data.message);
+        if (this.state.user.id !== message.user._id) {
+          let messageIndex = this.state.messages.findIndex(
+            m => m.id === message.id,
+          );
 
-        if (messageIndex !== -1) {
-          this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, message),
-          }));
+          if (messageIndex !== -1) {
+            this.setState(previousState => ({
+              messages: GiftedChat.append(previousState.messages, message),
+            }));
+          }
         }
       }
     }
@@ -96,10 +93,10 @@ export default class ChatView extends Component<Props> {
     });
   }
 
-  dialogAddMemberToGroup() {
+  dialogAddMemberToGroup(requestUserId, requestUserFullName) {
     Alert.alert(
       '',
-      `Are your sure ?`,
+      `Are your sure to add ${requestUserFullName} to the group ?`,
       [
         {
           text: 'Cancel',
@@ -108,19 +105,19 @@ export default class ChatView extends Component<Props> {
         },
         {
           text: 'Yes',
-          onPress: () => this.addMemberToGroup(),
+          onPress: () => this.addMemberToGroup(requestUserId),
         },
       ],
       {cancelable: false},
     );
   }
 
-  async addMemberToGroup() {
+  async addMemberToGroup(requestUserId) {
     let user = await GFun.user();
     let response = await Api.joinGroup(
       user.authentication_jwt,
       this.state.chatRoom.group.id,
-      this.state.messages[0].user._id,
+      requestUserId,
     );
 
     if (response.success) {
@@ -255,6 +252,23 @@ export default class ChatView extends Component<Props> {
     );
   };
 
+  renderQuickReplies = props => {
+    return props.user._id === this.state.chatRoom.group_leader_id ? (
+      <QuickReplies
+        color={this.state.chatRoom.group.color || '#0084ff'}
+        {...props}
+      />
+    ) : null;
+  };
+
+  onQuickReply(quickReplys) {
+    quickReply = quickReplys[0];
+    this.dialogAddMemberToGroup(
+      quickReply.requestUserId,
+      quickReply.requestUserFullName,
+    );
+  }
+
   render() {
     return (
       <View style={styles.chatView}>
@@ -284,6 +298,8 @@ export default class ChatView extends Component<Props> {
               messages={this.state.messages}
               onSend={messages => this.onSend(messages)}
               renderBubble={this.renderBubble}
+              renderQuickReplies={this.renderQuickReplies}
+              onQuickReply={quickReply => this.onQuickReply(quickReply)}
               user={{
                 _id: this.state.user.id,
               }}
