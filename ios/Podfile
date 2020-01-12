@@ -70,6 +70,8 @@ target 'FamilyPlan' do
 
   pod 'Firebase/Messaging', '~>5.20.2'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

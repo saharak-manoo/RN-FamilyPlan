@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
   Alert,
   ActivityIndicator,
+  Dimensions,
   FlatList,
   Platform,
   StatusBar,
@@ -20,8 +21,12 @@ import * as GFun from '../../util/GlobalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
+import ContentLoader from 'react-native-content-loader';
+import {Circle, Rect} from 'react-native-svg';
 
 const IS_IOS = Platform.OS === 'ios';
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 export default class NotificationView extends Component<Props> {
   constructor(props) {
@@ -237,16 +242,42 @@ export default class NotificationView extends Component<Props> {
     }
   };
 
+  renderLoadingNotification() {
+    return (
+      <FlatList
+        style={{flex: 1}}
+        data={Array(10)
+          .fill(null)
+          .map((x, i) => i)}
+        scrollEnabled={!this.state.spinner}
+        renderItem={() => {
+          return (
+            <ContentLoader height={height / 12} width={width / 1}>
+              <Circle cx={36} cy={36} r={20} x={14} />
+              <Rect
+                x={10}
+                y={0}
+                rx={20}
+                ry={20}
+                width={width / 1.06}
+                height={height / 13}
+              />
+              <Rect x="90" y="15" width={width / 1.5} height={15} />
+              <Rect x="90" y="50" width={width / 2} height={10} />
+            </ContentLoader>
+          );
+        }}
+        keyExtractor={item => item}
+      />
+    );
+  }
+
   render() {
     return (
       <View style={styles.defaultView}>
         {this.AppHerder()}
         {this.state.spinner ? (
-          <Spinner
-            visible={this.state.spinner}
-            textContent={`${I18n.t('placeholder.loading')}...`}
-            textStyle={styles.spinnerTextStyle}
-          />
+          this.renderLoadingNotification()
         ) : (
           <ScrollView
             onScroll={({nativeEvent}) => {

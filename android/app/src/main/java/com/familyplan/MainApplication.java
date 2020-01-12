@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.taluttasgiran.pickermodule.ReactNativePickerModulePackage;
 import com.henninghall.date_picker.DatePickerPackage;
