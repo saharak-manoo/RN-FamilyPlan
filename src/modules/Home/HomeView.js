@@ -10,6 +10,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import {styles} from '../../components/styles';
@@ -23,22 +24,26 @@ import PTRView from 'react-native-pull-to-refresh';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
+import ContentLoader from 'react-native-content-loader';
+import {Circle, Rect} from 'react-native-svg';
+import Loader from 'react-native-easy-content-loader';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
 import QrCodeView from '../Modal/QrCodeView';
 import JoinGroupView from '../Modal/JoinGroupView';
+import {array} from 'prop-types';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#2370E6' : '#000';
 
 export default class HomeView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
       search: '',
+      isDarkMode: true,
       groupName: '',
       spinner: false,
       modalGroup: false,
@@ -52,14 +57,18 @@ export default class HomeView extends Component<Props> {
 
   componentWillMount = async () => {
     this.fcmCheckPermissions();
-    this.setState({spinner: true});
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
+
     let user = await GFunction.user();
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       this.setState({
         spinner: false,
         myGroups: resp.my_groups,
+        tempMyGroups: resp.my_groups,
         publicGroups: resp.public_groups,
+        tempPublicGroups: resp.public_groups,
         services: resp.services,
       });
     }
@@ -67,8 +76,9 @@ export default class HomeView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'group') {
-      console.log(JSON.parse(data.group));
-      this.refreshGroup(false);
+      if (!data.group) {
+        this.refreshGroup(false);
+      }
     }
   }
 
@@ -76,21 +86,6 @@ export default class HomeView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {});
-
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        this.realTimeData(notification._data);
-      });
-  }
-
-  componentWillUnmount() {
-    this.notificationDisplayedListener();
-    this.notificationListener();
   }
 
   fcmCheckPermissions() {
@@ -256,7 +251,9 @@ export default class HomeView extends Component<Props> {
       await this.setState({
         refreshing: false,
         myGroups: resp.my_groups,
+        tempMyGroups: resp.my_groups,
         publicGroups: resp.public_groups,
+        tempPublicGroups: resp.public_groups,
         services: resp.services,
       });
     }
@@ -268,11 +265,20 @@ export default class HomeView extends Component<Props> {
         style={{flex: 1}}
         data={myGroup}
         horizontal={true}
+        scrollEnabled={!this.state.spinner}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
-              style={styles.card}
+              style={{
+                fontFamily: 'Kanit-Light',
+                flex: 0.7,
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                margin: 10,
+                borderRadius: 20,
+                width: width / 3,
+                height: height / 5,
+              }}
               onPress={() => this.goToGroup(item)}>
               <View style={{flex: 1}}>
                 <View
@@ -308,12 +314,21 @@ export default class HomeView extends Component<Props> {
         data={publicGroup.filter(
           group => group.members.length < group.max_member,
         )}
+        scrollEnabled={!this.state.spinner}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
-              style={styles.card}
+              style={{
+                fontFamily: 'Kanit-Light',
+                flex: 0.7,
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                margin: 10,
+                borderRadius: 20,
+                width: width / 3,
+                height: height / 5,
+              }}
               onPress={() => this.showJoinGroupModal(item)}>
               <View style={{flex: 1}}>
                 <View
@@ -327,7 +342,6 @@ export default class HomeView extends Component<Props> {
                     numberOfLines={1}
                     style={{
                       fontSize: 20,
-                      color: '#000',
                       alignSelf: 'center',
                       padding: 15,
                       fontFamily: 'Kanit-Light',
@@ -340,7 +354,6 @@ export default class HomeView extends Component<Props> {
                     numberOfLines={1}
                     style={{
                       fontSize: 13,
-                      color: '#000',
                       alignSelf: 'center',
                       justifyContent: 'flex-end',
                       padding: 10,
@@ -384,49 +397,132 @@ export default class HomeView extends Component<Props> {
   //   await this.setState({myGroups: myGroups, publicGroups: publicGroups});
   // };
 
+  async searchGroup(search) {
+    await this.setState({
+      search: search,
+      myGroups: this.state.tempMyGroups,
+      publicGroups: this.state.tempPublicGroups,
+    });
+    if (search !== '') {
+      search = search.toLowerCase();
+      let myGroups = this.state.myGroups;
+      let publicGroups = this.state.publicGroups;
+      if (myGroups !== undefined) {
+        myGroups = myGroups.filter(
+          group =>
+            group.name.toLowerCase().includes(search) ||
+            group.serviceName.toLowerCase().includes(search),
+        );
+
+        await this.setState({myGroups: myGroups});
+      }
+      if (publicGroups !== undefined) {
+        publicGroups = publicGroups.filter(
+          group =>
+            group.name.toLowerCase().includes(search) ||
+            group.serviceName.toLowerCase().includes(search),
+        );
+
+        await this.setState({publicGroups: publicGroups});
+      }
+    }
+  }
+
+  renderLoadingCard() {
+    return (
+      <FlatList
+        style={{flex: 1}}
+        data={Array(4)
+          .fill(null)
+          .map((x, i) => i)}
+        horizontal={true}
+        scrollEnabled={!this.state.spinner}
+        showsHorizontalScrollIndicator={false}
+        renderItem={() => {
+          return (
+            <TouchableOpacity
+              style={{
+                fontFamily: 'Kanit-Light',
+                flex: 0.7,
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                margin: 10,
+                borderRadius: 20,
+                width: width / 3,
+                height: height / 5,
+              }}>
+              <ContentLoader height={height / 5} width={width / 3}>
+                <Circle x={35} y={-50} cx={34} cy={65} r={70} />
+                <Rect x="25" y="110" width={width / 5} height="25" />
+                <Rect x="15" y="150" width={width / 3.8} height="15" />
+              </ContentLoader>
+            </TouchableOpacity>
+          );
+        }}
+        keyExtractor={item => item}
+      />
+    );
+  }
+
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View
+        style={[
+          styles.defaultView,
+          {backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE'},
+        ]}>
         {this.AppHerder()}
         <View style={{padding: 10}}>
           <Searchbar
-            inputStyle={{fontFamily: 'Kanit-Light'}}
+            style={{
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+            }}
+            inputStyle={{
+              fontFamily: 'Kanit-Light',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+            }}
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
-              this.setState({search: searching});
+              this.searchGroup(searching);
             }}
             value={this.state.search}
           />
         </View>
 
-        {this.state.spinner ? (
-          <Spinner
-            visible={this.state.spinner}
-            textContent={`${I18n.t('placeholder.loading')}...`}
-            textStyle={styles.spinnerTextStyle}
-          />
-        ) : (
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.refreshGroup}
-              />
-            }>
-            <View style={{flex: 1, padding: 15, paddingTop: 35}}>
-              <View style={{flex: 1}}>
-                <View style={styles.listCard}>
-                  <Text style={styles.textCardList}>
-                    {I18n.t('placeholder.myGroup')}
-                  </Text>
-                </View>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              tintColor={this.state.isDarkMode ? '#FFF' : '#000'}
+              refreshing={this.state.refreshing}
+              onRefresh={this.refreshGroup}
+            />
+          }>
+          <View style={{flex: 1, padding: 15, paddingTop: 35}}>
+            <View style={{flex: 1}}>
+              <View style={styles.listCard}>
+                <Text style={styles.textCardList}>
+                  {I18n.t('placeholder.myGroup')}
+                </Text>
+              </View>
+              {this.state.spinner ? (
+                <View style={styles.listCards}>{this.renderLoadingCard()}</View>
+              ) : (
                 <View style={styles.listCards}>
                   {this.state.myGroups.length !== 0 ? (
                     this.listMyGroup(this.state.myGroups)
                   ) : (
                     <View>
                       <TouchableOpacity
-                        style={styles.card}
+                        style={{
+                          fontFamily: 'Kanit-Light',
+                          flex: 0.7,
+                          backgroundColor: this.state.isDarkMode
+                            ? '#202020'
+                            : '#FFF',
+                          margin: 10,
+                          borderRadius: 20,
+                          width: width / 3,
+                          height: height / 5,
+                        }}
                         onPress={this.showNewGroupModal}>
                         <View style={{flex: 1}}>
                           <View style={styles.headerCardNewGroup}>
@@ -469,23 +565,25 @@ export default class HomeView extends Component<Props> {
                     </View>
                   )}
                 </View>
-              </View>
-
-              {this.state.publicGroups.length !== 0 ? (
-                <View style={{flex: 1, paddingTop: 40}}>
-                  <View style={styles.listPublicCard}>
-                    <Text style={styles.textCardList}>
-                      {I18n.t('placeholder.publicGroup')}
-                    </Text>
-                  </View>
-                  <View style={styles.listCards}>
-                    {this.listPublicGroup(this.state.publicGroups)}
-                  </View>
-                </View>
-              ) : null}
+              )}
             </View>
-          </ScrollView>
-        )}
+
+            <View style={{flex: 1, paddingTop: 40}}>
+              <View style={styles.listPublicCard}>
+                <Text style={styles.textCardList}>
+                  {I18n.t('placeholder.publicGroup')}
+                </Text>
+              </View>
+              {this.state.spinner ? (
+                <View style={styles.listCards}>{this.renderLoadingCard()}</View>
+              ) : (
+                <View style={styles.listCards}>
+                  {this.listPublicGroup(this.state.publicGroups)}
+                </View>
+              )}
+            </View>
+          </View>
+        </ScrollView>
 
         {this.popUpModalJoinGroup(this.state.group)}
         {this.popUpModalNewGroup()}

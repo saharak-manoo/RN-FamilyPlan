@@ -1,4 +1,5 @@
 import {Dimensions, StyleSheet, Platform} from 'react-native';
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_ANDROID = Platform.OS === 'android';
@@ -18,23 +19,21 @@ export const styles = StyleSheet.create({
 
   cardProfile: {
     fontFamily: 'Kanit-Light',
-    flex: 1,
+    flex: 1.4,
     margin: 10,
-    marginTop: 90,
     backgroundColor: '#FFF',
     borderRadius: 10,
   },
 
   cardSetting: {
     fontFamily: 'Kanit-Light',
-    flex: 0.3,
+    flex: 0.5,
     margin: 10,
     backgroundColor: '#FFF',
     borderRadius: 10,
   },
 
   profilePhoto: {
-    fontFamily: 'Kanit-Light',
     alignSelf: 'center',
     marginTop: -85,
     width: 150,
@@ -72,7 +71,6 @@ export const styles = StyleSheet.create({
 
   spinnerTextStyle: {
     fontFamily: 'Kanit-Light',
-    color: '#FFF',
   },
 
   actionButtonIcon: {
@@ -143,6 +141,7 @@ export const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 20,
     width: width / 3,
+    height: height / 5,
   },
 
   headerCard: {
@@ -167,7 +166,6 @@ export const styles = StyleSheet.create({
   textHeadCard: {
     fontFamily: 'Kanit-Light',
     fontSize: 24,
-    color: '#FFF',
     alignSelf: 'center',
     padding: 20,
   },
@@ -175,7 +173,6 @@ export const styles = StyleSheet.create({
   textNameCard: {
     fontFamily: 'Kanit-Light',
     fontSize: 20,
-    color: '#000',
     alignSelf: 'center',
     padding: 15,
   },
@@ -183,7 +180,6 @@ export const styles = StyleSheet.create({
   totalMembersCard: {
     fontFamily: 'Kanit-Light',
     fontSize: 13,
-    color: '#000',
     alignSelf: 'center',
     justifyContent: 'flex-end',
     padding: 10,

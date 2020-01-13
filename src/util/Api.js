@@ -153,7 +153,7 @@ export async function signOut(token) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.signOut(newTokenJwt);
+      return await this.signOut(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -179,7 +179,7 @@ export async function getProfile(token, user_id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
     if (status === 'reload') {
-      return this.getProfile(newTokenJwt, user_id);
+      return await this.getProfile(newTokenJwt, user_id);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -202,7 +202,7 @@ export async function getGroup(token) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.getGroup(newTokenJwt);
+      return await this.getGroup(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -225,7 +225,7 @@ export async function newGroup(token) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.newGroup(newTokenJwt);
+      return await this.newGroup(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -249,7 +249,7 @@ export async function createGroup(token, params) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.createGroup(newTokenJwt, params);
+      return await this.createGroup(newTokenJwt, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -273,7 +273,7 @@ export async function updateGroup(token, id, params) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.updateGroup(newTokenJwt, id, params);
+      return await this.updateGroup(newTokenJwt, id, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -297,7 +297,7 @@ export async function inviteGroup(token, id, email) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.inviteGroup(newTokenJwt, id, email);
+      return await this.inviteGroup(newTokenJwt, id, email);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -321,9 +321,10 @@ export async function joinGroup(token, id, user_id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.joinGroup(newTokenJwt, id, user_id);
+      return await this.joinGroup(newTokenJwt, id, user_id);
     } else if (status === 'ok') {
       let response = await resp.json();
+      console.log(response);
       return response;
     }
   } catch (e) {
@@ -345,7 +346,7 @@ export async function leaveGroup(token, id, user_id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.leaveGroup(newTokenJwt, id, user_id);
+      return await this.leaveGroup(newTokenJwt, id, user_id);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -368,7 +369,7 @@ export async function searchGroup(token, email) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.searchGroup(newTokenJwt, email);
+      return await this.searchGroup(newTokenJwt, email);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -378,20 +379,23 @@ export async function searchGroup(token, email) {
   }
 }
 
-export async function getChatRoom(token) {
+export async function getChatRoom(token, params) {
   try {
-    const resp = await fetch(joinUrl(HOST, CHAT_ROOM), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const resp = await fetch(
+      joinUrl(HOST, `${CHAT_ROOM}?${new URLSearchParams(params).toString()}`),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.getChatRoom(newTokenJwt);
+      return await this.getChatRoom(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -401,20 +405,26 @@ export async function getChatRoom(token) {
   }
 }
 
-export async function getChatMessage(token, id) {
+export async function getChatMessage(token, id, params) {
   try {
-    const resp = await fetch(joinUrl(HOST, CHAT.replace(':id', id)), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const resp = await fetch(
+      joinUrl(
+        HOST,
+        `${CHAT.replace(':id', id)}?${new URLSearchParams(params).toString()}`,
+      ),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.getChatMessage(newTokenJwt, id);
+      return await this.getChatMessage(newTokenJwt, id);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -438,7 +448,7 @@ export async function createChatRoom(token, groupId) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.createChatRoom(newTokenJwt, groupId);
+      return await this.createChatRoom(newTokenJwt, groupId);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -462,7 +472,7 @@ export async function createChat(token, id, params) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.createChat(newTokenJwt, id, params);
+      return await this.createChat(newTokenJwt, id, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -507,7 +517,7 @@ export async function createFcmToken(token, user_id, fcmToken) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
     if (status === 'reload') {
-      return this.getProfile(newTokenJwt, user_id);
+      return await this.getProfile(newTokenJwt, user_id);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -536,7 +546,7 @@ export async function getNotification(token, params) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.getChatRoom(newTokenJwt);
+      return await this.getChatRoom(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -562,7 +572,7 @@ export async function getNotificationById(token, notification_id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return this.getChatRoom(newTokenJwt);
+      return await this.getChatRoom(newTokenJwt);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
