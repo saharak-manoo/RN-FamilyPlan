@@ -8,6 +8,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
@@ -23,6 +24,7 @@ import * as Api from '../../../util/Api';
 import * as GFunction from '../../../util/GlobalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
+import UserAvatar from 'react-native-user-avatar';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
@@ -37,6 +39,7 @@ export default class GroupView extends Component<Props> {
     super(props);
     let group = this.props.navigation.state.params.group;
     this.state = {
+      isDarkMode: true,
       group: group,
       userView: [],
       selectedDay: null,
@@ -49,6 +52,8 @@ export default class GroupView extends Component<Props> {
   settingServiceChargeModal = React.createRef();
 
   async componentWillMount() {
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFunction.user();
     let userView = this.props.navigation.state.params.group.members.filter(
       m => m.id === user.id,
@@ -61,11 +66,13 @@ export default class GroupView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'group') {
-      let group = JSON.parse(data.group);
-      if (this.state.group.id === group.id) {
-        this.setState({
-          group: group,
-        });
+      if (!data.group) {
+        let group = JSON.parse(data.group);
+        if (this.state.group.id === group.id) {
+          this.setState({
+            group: group,
+          });
+        }
       }
     }
   }
@@ -74,16 +81,6 @@ export default class GroupView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {});
-
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        this.realTimeData(notification._data);
-      });
   }
 
   AppHerder() {
@@ -133,6 +130,12 @@ export default class GroupView extends Component<Props> {
       </Modalize>
     );
   }
+
+  showModalSetUpReminder = () => {
+    if (this.state.userView.group_leader) {
+      this.pickerRef.show();
+    }
+  };
 
   popUpModalSetUpReminder() {
     return (
@@ -236,9 +239,7 @@ export default class GroupView extends Component<Props> {
             name="add-alert"
             type="mat-icon"
             color={this.state.group.color}
-            onPress={() => {
-              this.pickerRef.show();
-            }}
+            onPress={this.showModalSetUpReminder}
           />
           <Text
             style={{
@@ -301,22 +302,33 @@ export default class GroupView extends Component<Props> {
                 },
               ]}
               style={{
-                backgroundColor: '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
                 borderRadius: 15,
                 fontFamily: 'Kanit-Light',
               }}>
               <ListItem
                 key={index}
-                containerStyle={{borderRadius: 15}}
+                containerStyle={{
+                  borderRadius: 15,
+                  backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                }}
                 Component={TouchableScale}
                 friction={90}
                 tension={100}
                 activeScale={0.95}
-                leftAvatar={{source: {uri: item.photo}}}
+                leftAvatar={() => (
+                  <UserAvatar size="40" name={item.full_name} />
+                )}
                 title={item.full_name}
-                titleStyle={{fontFamily: 'Kanit-Light'}}
+                titleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 subtitle={item.email}
-                subtitleStyle={{fontFamily: 'Kanit-Light'}}
+                subtitleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 bottomDivider
                 chevron={
                   item.group_leader ? (
@@ -332,16 +344,25 @@ export default class GroupView extends Component<Props> {
           ) : (
             <ListItem
               key={index}
-              containerStyle={{borderRadius: 15}}
+              containerStyle={{
+                borderRadius: 15,
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              }}
               Component={TouchableScale}
               friction={90}
               tension={100}
               activeScale={0.95}
-              leftAvatar={{source: {uri: item.photo}}}
+              leftAvatar={() => <UserAvatar size="40" name={item.full_name} />}
               title={item.full_name}
-              titleStyle={{fontFamily: 'Kanit-Light'}}
+              titleStyle={{
+                fontFamily: 'Kanit-Light',
+                color: this.state.isDarkMode ? '#FFF' : '#000',
+              }}
               subtitle={item.email}
-              subtitleStyle={{fontFamily: 'Kanit-Light'}}
+              subtitleStyle={{
+                fontFamily: 'Kanit-Light',
+                color: this.state.isDarkMode ? '#FFF' : '#000',
+              }}
               bottomDivider
               chevron={
                 item.group_leader ? (
@@ -438,21 +459,42 @@ export default class GroupView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View
+        style={{
+          fontFamily: 'Kanit-Light',
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+        }}>
         {this.AppHerder()}
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
           <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
             {I18n.t('text.info')}
           </Text>
         </View>
-        <View style={styles.cardListInfo}>{this.listInfo()}</View>
+        <View
+          style={{
+            fontFamily: 'Kanit-Light',
+            flex: 0.6,
+            margin: 10,
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+            borderRadius: 15,
+          }}>
+          {this.listInfo()}
+        </View>
 
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
           <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
             {I18n.t('text.members')}
           </Text>
         </View>
-        <View style={styles.cardListMember}>
+        <View
+          style={{
+            fontFamily: 'Kanit-Light',
+            flex: 1,
+            margin: 10,
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+            borderRadius: 15,
+          }}>
           {this.listMembers(this.state.group.members)}
         </View>
 
@@ -480,27 +522,36 @@ export default class GroupView extends Component<Props> {
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.setUpAReminder')}
               textStyle={{fontFamily: 'Kanit-Light'}}
-              onPress={() => {
-                this.pickerRef.show();
-              }}>
+              onPress={this.showModalSetUpReminder}>
               <MatIcon name="add-alert" style={styles.actionButtonIcon} />
             </ActionButton.Item>
           </ActionButton>
         ) : (
           <ActionButton
-            icon={
+            buttonColor="#03C8A1"
+            icon={<MatIcon name="menu" style={styles.actionButtonIcon} />}>
+            <ActionButton.Item
+              buttonColor="#3D71FB"
+              title={I18n.t('placeholder.chat')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={() => this.goToChatRoom(this.state.group.chat_room)}>
+              <MatIcon name="chat" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="rgba(231,76,60,1)"
+              title={I18n.t('placeholder.leaveGroup')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={() =>
+                this.alertLeaveGroup(
+                  this.state.userView.id,
+                  this.state.group.members.findIndex(
+                    m => m.id === this.state.userView.id,
+                  ),
+                )
+              }>
               <MatIcon name="exit-to-app" style={styles.actionButtonIcon} />
-            }
-            buttonColor="rgba(231,76,60,1)"
-            onPress={() =>
-              this.alertLeaveGroup(
-                this.state.userView.id,
-                this.state.group.members.findIndex(
-                  m => m.id === this.state.userView.id,
-                ),
-              )
-            }
-          />
+            </ActionButton.Item>
+          </ActionButton>
         )}
       </View>
     );

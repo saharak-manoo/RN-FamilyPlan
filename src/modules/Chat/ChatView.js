@@ -1,29 +1,45 @@
 import React, {Component} from 'react';
-import {Alert, FlatList, Platform, StatusBar, View} from 'react-native';
-import {Appbar, Text, Searchbar, TextInput} from 'react-native-paper';
+import {
+  Alert,
+  ActivityIndicator,
+  FlatList,
+  Platform,
+  StatusBar,
+  TouchableOpacity,
+  View,
+  TextInput,
+} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
-import {ListItem, Icon} from 'react-native-elements';
+import {ListItem, Icon, SearchBar} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
-import {GiftedChat} from 'react-native-gifted-chat';
+import * as GFun from '../../util/GlobalFunction';
+import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
+import QuickReplies from 'react-native-gifted-chat/lib/QuickReplies';
 
 const IS_IOS = Platform.OS === 'ios';
-
 export default class ChatView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isDarkMode: true,
       user: [],
-      spinner: true,
+      spinner: false,
       chatRoom: this.props.navigation.state.params.chatRoom,
       messages: [],
       search: '',
+      text: '',
+      isReadySend: false,
+      isLoading: false,
+      limit: 15,
+      offset: 0,
     };
   }
 
@@ -39,12 +55,6 @@ export default class ChatView extends Component<Props> {
             title={this.state.chatRoom.name}
             titleStyle={{fontFamily: 'Kanit-Light'}}
           />
-          {this.state.chatRoom.is_request_join_group_leader ? (
-            <Appbar.Action
-              icon="plus-one"
-              onPress={() => this.dialogAddMemberToGroup()}
-            />
-          ) : null}
         </Appbar.Header>
       </View>
     );
@@ -52,16 +62,18 @@ export default class ChatView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
-      let message = JSON.parse(data.message);
-      if (this.state.user.id !== message.user._id) {
-        let messageIndex = this.state.messages.findIndex(
-          m => m.id === message.id,
-        );
+      if (!data.message) {
+        let message = JSON.parse(data.message);
+        if (this.state.user.id !== message.user._id) {
+          let messageIndex = this.state.messages.findIndex(
+            m => m.id === message.id,
+          );
 
-        if (messageIndex !== -1) {
-          this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, message),
-          }));
+          if (messageIndex !== -1) {
+            this.setState(previousState => ({
+              messages: GiftedChat.append(previousState.messages, message),
+            }));
+          }
         }
       }
     }
@@ -71,48 +83,23 @@ export default class ChatView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed(notification => {});
-
-    this.notificationListener = firebase
-      .notifications()
-      .onNotification(notification => {
-        this.realTimeData(notification._data);
-      });
-  }
-
-  componentWillUnmount() {
-    this.notificationDisplayedListener();
-    this.notificationListener();
   }
 
   async componentWillMount() {
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({isDarkMode: JSON.parse(isDarkMode)});
     // get user
-    let user = await GFunction.user();
-    await this.setState({user: user});
-
-    this.loadChat();
+    let user = await GFun.user();
+    await this.setState({
+      user: user,
+      messages: this.state.chatRoom.messages,
+    });
   }
 
-  async loadChat() {
-    let resp = await Api.getChatMessage(
-      this.state.user.authentication_jwt,
-      this.state.chatRoom.id,
-    );
-    if (resp.success) {
-      await this.setState({
-        messages: resp.messages,
-        spinner: false,
-      });
-    }
-  }
-
-  dialogAddMemberToGroup() {
+  dialogAddMemberToGroup(requestUserId, requestUserFullName) {
     Alert.alert(
       '',
-      `Are your sure ?`,
+      `Are your sure to add ${requestUserFullName} to the group ?`,
       [
         {
           text: 'Cancel',
@@ -121,51 +108,182 @@ export default class ChatView extends Component<Props> {
         },
         {
           text: 'Yes',
-          onPress: () => this.addMemberToGroup(),
+          onPress: () => this.addMemberToGroup(requestUserId),
         },
       ],
       {cancelable: false},
     );
   }
 
-  async addMemberToGroup() {
-    let user = await GFunction.user();
+  async addMemberToGroup(requestUserId) {
+    let user = await GFun.user();
     let response = await Api.joinGroup(
       user.authentication_jwt,
       this.state.chatRoom.group.id,
-      this.state.messages[0].user._id,
+      requestUserId,
     );
 
     if (response.success) {
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.joinGroupSuccessful'),
       );
     } else {
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.error'), errors.join('\n'));
     }
   }
 
+  loadEarlier() {
+    return (
+      <View style={{padding: 20}}>
+        <ActivityIndicator size="small"></ActivityIndicator>
+      </View>
+    );
+  }
+
+  renderComposer = props => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+        }}>
+        <View style={{flex: 1, padding: 3}}>
+          <TextInput
+            keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+            placeholder={props.placeholder}
+            placeholderTextColor={'#A4A4A4'}
+            onChangeText={text => {
+              this.setState({
+                text: text,
+                isReadySend: text !== '',
+              });
+            }}
+            style={{
+              borderRadius: 22,
+              padding: 10,
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+              height: 40,
+              color: this.state.isDarkMode ? '#FFF' : '#000',
+            }}
+            value={this.state.text}
+          />
+        </View>
+        <View
+          style={{
+            flex: 0.1,
+            padding: 3,
+            justifyContent: 'center',
+            alignSelf: 'center',
+          }}>
+          <TouchableOpacity
+            disabled={!this.state.isReadySend}
+            onPress={() => {
+              props.onSend({text: this.state.text.trim()}, true);
+              this.setState({text: '', isReadySend: false});
+            }}>
+            <MatIcon
+              name="send"
+              style={{
+                fontSize: 30,
+                color: this.state.isReadySend
+                  ? this.state.chatRoom.group.color
+                  : '#D1D1D1',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
   async onSend(messages = []) {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages[0]),
+    }));
     let resp = await Api.createChat(
       this.state.user.authentication_jwt,
       this.state.chatRoom.id,
       messages[0],
     );
     if (resp.success) {
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, resp.message),
-      }));
+      // this.setState(previousState => ({
+      //   messages: GiftedChat.append(previousState.messages, resp.message),
+      // }));
     }
+  }
+
+  isCloseToTop({layoutMeasurement, contentOffset, contentSize}) {
+    let paddingToTop = 80;
+    let isLoading =
+      contentSize.height - layoutMeasurement.height - paddingToTop <=
+      contentOffset.y;
+
+    if (isLoading && this.state.chatRoom.is_loading_more) {
+      this.setState({isLoading: isLoading});
+      this.loadMoreMessage();
+    }
+  }
+
+  async loadMoreMessage() {
+    let params = {
+      limit: this.state.limit,
+      offset: this.state.messages.length,
+    };
+    let resp = await Api.getChatMessage(
+      this.state.user.authentication_jwt,
+      this.state.chatRoom.id,
+      params,
+    );
+    if (resp.success) {
+      await this.setState({
+        messages: GFun.unique(this.state.messages.concat(resp.messages), '_id'),
+        isLoading: false,
+      });
+    }
+  }
+
+  renderBubble = props => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: this.state.chatRoom.group.color || '#0084ff',
+          },
+        }}
+      />
+    );
+  };
+
+  renderQuickReplies = props => {
+    return props.user._id === this.state.chatRoom.group_leader_id ? (
+      <QuickReplies
+        color={this.state.chatRoom.group.color || '#0084ff'}
+        {...props}
+      />
+    ) : null;
+  };
+
+  onQuickReply(quickReplys) {
+    quickReply = quickReplys[0];
+    this.dialogAddMemberToGroup(
+      quickReply.requestUserId,
+      quickReply.requestUserFullName,
+    );
   }
 
   render() {
     return (
-      <View style={styles.chatView}>
+      <View
+        style={[
+          styles.chatView,
+          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
+        ]}>
         {this.AppHerder()}
         <View style={{flex: 1}}>
           {this.state.spinner ? (
@@ -176,9 +294,24 @@ export default class ChatView extends Component<Props> {
             />
           ) : (
             <GiftedChat
+              listViewProps={{
+                scrollEventThrottle: 400,
+                onScroll: ({nativeEvent}) => {
+                  this.isCloseToTop(nativeEvent);
+                },
+              }}
+              isAnimated
+              loadEarlier={this.state.isLoading}
+              text={this.state.text}
+              renderLoadEarlier={this.loadEarlier}
+              renderUsernameOnMessage
+              renderComposer={this.renderComposer}
               textInputStyle={{fontFamily: 'Kanit-Light'}}
               messages={this.state.messages}
               onSend={messages => this.onSend(messages)}
+              renderBubble={this.renderBubble}
+              renderQuickReplies={this.renderQuickReplies}
+              onQuickReply={quickReply => this.onQuickReply(quickReply)}
               user={{
                 _id: this.state.user.id,
               }}

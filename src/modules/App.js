@@ -2,30 +2,41 @@ import React, {Component} from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import NavigatorView from './Navigator/NavigatorView';
 import FlashMessage from 'react-native-flash-message';
-import RNRestart from 'react-native-restart';
 import AsyncStorage from '@react-native-community/async-storage';
 import I18n from '../components/i18n';
 
 const theme = {
   ...DefaultTheme,
-  roundness: 2,
+  roundness: 30,
   colors: {
     ...DefaultTheme.colors,
     placeholder: '#6D6D6D',
     text: '#000',
-    primary: '#000',
+    primary: '#0041E2',
+    accent: '#00E2B2',
     underlineColor: '#6D6D6D',
   },
   fonts: {light: 'Kanit-Light'},
+  dark: true,
 };
 
 export default class App extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isDarkMode: false,
+    };
   }
 
   async componentWillMount() {
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({isDarkMode: JSON.parse(isDarkMode)});
+    if (this.state.isDarkMode) {
+      theme.colors.text = '#FFF';
+      theme.dark = true;
+    } else {
+      theme.dark = false;
+    }
     await AsyncStorage.getItem('locale').then(language => {
       if (language == null) {
         language = 'en';

@@ -301,6 +301,8 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
     - ReactCommon/jscallinvoker (= 0.61.2)
+  - ReactNativeDarkMode (0.2.1):
+    - React
   - RNAppleAuthentication (0.1.1):
     - React
   - RNCAsyncStorage (1.6.2):
@@ -325,6 +327,8 @@ PODS:
   - RNLanguages (3.0.2):
     - React
   - RNPermissions (2.0.3):
+    - React
+  - RNSVG (10.0.0):
     - React
   - RNTextGradientView (0.1.7):
     - React
@@ -368,6 +372,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeDarkMode (from `../node_modules/react-native-dark-mode`)
   - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
@@ -377,6 +382,7 @@ DEPENDENCIES:
   - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
   - RNLanguages (from `../node_modules/react-native-languages`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNTextGradientView (from `../node_modules/react-native-text-gradient`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -458,6 +464,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeDarkMode:
+    :path: "../node_modules/react-native-dark-mode"
   RNAppleAuthentication:
     :path: "../node_modules/@invertase/react-native-apple-authentication"
   RNCAsyncStorage:
@@ -476,6 +484,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-languages"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNTextGradientView:
     :path: "../node_modules/react-native-text-gradient"
   RNVectorIcons:
@@ -527,6 +537,7 @@ SPEC CHECKSUMS:
   React-RCTText: e3ef6191cdb627855ff7fe8fa0c1e14094967fb8
   React-RCTVibration: fb54c732fd20405a76598e431aa2f8c2bf527de9
   ReactCommon: 5848032ed2f274fcb40f6b9ec24067787c42d479
+  ReactNativeDarkMode: 0e6e7bdbd387eb949fa7ff238a48f6d6431a428d
   RNAppleAuthentication: 9cca53676f5f010ffbf33eb99604383bfe0eb020
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
   RNDateTimePicker: 9db00606d689f5653f08aa601c81b9d3266a0a19
@@ -536,10 +547,11 @@ SPEC CHECKSUMS:
   RNInAppBrowser: 9d1ffb9db0d0cbdf03f528f1f0624b2c533b93fd
   RNLanguages: 962e562af0d34ab1958d89bcfdb64fafc37c513e
   RNPermissions: 9e437a90de84a5402ff689d4da233730b81556c2
+  RNSVG: 9d45f03136ecc9b5497e12f6f20838b568acb9f4
   RNTextGradientView: 3eb4744303f801546fad35ac47a53cc82257cb25
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: 6911bfb297920d1177bd43bfc03c94bf34c14bff
+PODFILE CHECKSUM: d284a6cb25648b0e2acf97155619375b473d9a3f
 
 COCOAPODS: 1.8.4

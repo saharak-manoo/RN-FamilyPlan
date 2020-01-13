@@ -1,28 +1,31 @@
 import React, {Component} from 'react';
 import {Dimensions, Image, Platform, StatusBar, View} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Switch} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../components/i18n';
-import AsyncStorage from '@react-native-community/async-storage';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import {styles} from '../../components/styles';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {ListItem} from 'react-native-elements';
 import RNRestart from 'react-native-restart';
+import UserAvatar from 'react-native-user-avatar';
+import ContentLoader from 'react-native-content-loader';
+import {Circle, Rect} from 'react-native-svg';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#6D06F9' : '#000';
 
 export default class ProfileView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      spinner: false,
+      spinner: true,
       user: null,
       isLanguageTH: false,
+      isDarkMode: true,
     };
     this.getProfile();
   }
@@ -30,9 +33,12 @@ export default class ProfileView extends Component<Props> {
   componentDidMount = async () => {
     this.setState({spinner: true});
     let locale = await AsyncStorage.getItem('locale');
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+
     this.setState({
       user: await GFunction.user(),
       isLanguageTH: locale === 'th',
+      isDarkMode: JSON.parse(isDarkMode),
     });
   };
 
@@ -41,6 +47,12 @@ export default class ProfileView extends Component<Props> {
     I18n.locale = locale;
     await AsyncStorage.setItem('locale', locale);
     this.setState({isLanguageTH: isLanguageTH});
+    RNRestart.Restart();
+  };
+
+  onSwitchDarkMode = async isDarkMode => {
+    await AsyncStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
+    this.setState({isDarkMode: isDarkMode});
     RNRestart.Restart();
   };
 
@@ -113,68 +125,167 @@ export default class ProfileView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View
+        style={{
+          fontFamily: 'Kanit-Light',
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+        }}>
         {this.AppHerder()}
-        {this.state.spinner ? (
-          <Spinner
-            visible={this.state.spinner}
-            textContent={`${I18n.t('placeholder.loading')}...`}
-            textStyle={styles.spinnerTextStyle}
-          />
-        ) : (
-          <View style={{flex: 1}}>
-            <View style={styles.cardProfile}>
-              <View style={styles.profile}>
-                <Image
-                  source={{uri: this.state.photo}}
-                  style={styles.profilePhoto}
+
+        <View style={{flex: 1}}>
+          <View
+            style={{
+              fontFamily: 'Kanit-Light',
+              flex: 1.4,
+              margin: 10,
+              backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              borderRadius: 10,
+            }}>
+            {this.state.spinner ? (
+              <ContentLoader height={height} width={width / 0.5}>
+                <Circle cx="200" cy="65" r="60" />
+                <Rect x="10" y="180" width={width / 1.12} height="50" />
+                <Rect x="75" y="250" width={width / 1.75} height="20" />
+                <Rect x="90" y="290" width={width / 2} height="20" />
+                <Rect
+                  x="55"
+                  y="360"
+                  rx={20}
+                  ry={20}
+                  width={width / 1.5}
+                  height="40"
                 />
+              </ContentLoader>
+            ) : (
+              <View style={styles.profile}>
+                <View style={{alignSelf: 'center'}}>
+                  <UserAvatar
+                    size="120"
+                    name={this.state.firstName + ' ' + this.state.lastName}
+                  />
+                </View>
                 <Text style={styles.profileName}>
                   {this.state.firstName + ' ' + this.state.lastName}
                 </Text>
                 <Text style={styles.profileText}>{this.state.email}</Text>
                 <Text style={styles.profileText}>{this.state.phoneNumber}</Text>
               </View>
+            )}
 
-              <View style={{paddingBottom: 15}}>
-                <AnimateLoadingButton
-                  ref={load => (this.loadingEditProfile = load)}
-                  width={width - 125}
-                  height={40}
-                  title={I18n.t('button.editProfile')}
-                  titleFontSize={18}
-                  titleColor="#FFF"
-                  backgroundColor="#2AAEF9"
-                  titleFontFamily={'Kanit-Light'}
-                  borderRadius={25}
-                  onPress={this.clickEditProfile.bind(this)}
+            <View style={{paddingBottom: 15}}>
+              <AnimateLoadingButton
+                ref={load => (this.loadingEditProfile = load)}
+                width={width - 125}
+                height={40}
+                title={I18n.t('button.editProfile')}
+                titleFontSize={18}
+                titleColor="#FFF"
+                backgroundColor="#2AAEF9"
+                titleFontFamily={'Kanit-Light'}
+                borderRadius={25}
+                onPress={this.clickEditProfile.bind(this)}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              fontFamily: 'Kanit-Light',
+              flex: 0.5,
+              margin: 10,
+              backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              borderRadius: 10,
+            }}>
+            {this.state.spinner ? (
+              <ContentLoader height={height} width={width / 0.5}>
+                <Rect x="10" y="20" width={width / 2} height="20" />
+                <Rect x="340" y="20" width={width / 10} height="20" />
+                <Rect x="10" y="70" width={width / 2} height="20" />
+                <Rect x="340" y="70" width={width / 10} height="20" />
+                <Rect x="10" y="120" width={width / 2} height="20" />
+                <Rect x="340" y="120" width={width / 10} height="20" />
+                <Rect
+                  x="55"
+                  y="360"
+                  rx={20}
+                  ry={20}
+                  width={width / 1.5}
+                  height="40"
+                />
+              </ContentLoader>
+            ) : (
+              <View>
+                <ListItem
+                  containerStyle={{
+                    borderRadius: 10,
+                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  }}
+                  title={I18n.t('placeholder.th')}
+                  titleStyle={{
+                    fontFamily: 'Kanit-Light',
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
+                  }}
+                  chevron={
+                    <Switch
+                      value={this.state.isLanguageTH}
+                      onValueChange={isLanguageTH =>
+                        this.onSelectedLanguageTh(isLanguageTH)
+                      }
+                    />
+                  }
+                />
+                <ListItem
+                  containerStyle={{
+                    borderRadius: 10,
+                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  }}
+                  title={I18n.t('placeholder.darkMode')}
+                  titleStyle={{
+                    fontFamily: 'Kanit-Light',
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
+                  }}
+                  chevron={
+                    <Switch
+                      value={this.state.isDarkMode}
+                      onValueChange={isDarkMode =>
+                        this.onSwitchDarkMode(isDarkMode)
+                      }
+                    />
+                  }
+                />
+                <ListItem
+                  containerStyle={{
+                    borderRadius: 10,
+                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  }}
+                  title={I18n.t('placeholder.appVersion')}
+                  titleStyle={{
+                    fontFamily: 'Kanit-Light',
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
+                  }}
+                  chevron={<Text>0.0.1</Text>}
                 />
               </View>
-            </View>
+            )}
+          </View>
 
-            <View style={styles.cardSetting}>
-              <ListItem
-                containerStyle={{borderRadius: 10}}
-                title={I18n.t('placeholder.th')}
-                titleStyle={{fontFamily: 'Kanit-Light'}}
-                chevron={
-                  <Switch
-                    value={this.state.isLanguageTH}
-                    onValueChange={isLanguageTH =>
-                      this.onSelectedLanguageTh(isLanguageTH)
-                    }
-                  />
-                }
-              />
-              <ListItem
-                containerStyle={{borderRadius: 10}}
-                title={I18n.t('placeholder.appVersion')}
-                titleStyle={{fontFamily: 'Kanit-Light'}}
-                chevron={<Text>0.0.1</Text>}
-              />
-            </View>
-
-            <View style={styles.buttonSignOut}>
+          <View style={styles.buttonSignOut}>
+            {this.state.spinner ? (
+              <ContentLoader
+                height={height}
+                width={width / 0.9}
+                primaryColor={'#E7E7E7'}>
+                <Rect
+                  x={15}
+                  y={840}
+                  rx={25}
+                  ry={25}
+                  width={width / 1.07}
+                  height="50"
+                />
+              </ContentLoader>
+            ) : (
               <AnimateLoadingButton
                 ref={load => (this.loadingSignOut = load)}
                 width={width - 25}
@@ -187,9 +298,9 @@ export default class ProfileView extends Component<Props> {
                 borderRadius={25}
                 onPress={this.clickSignOut.bind(this)}
               />
-            </View>
+            )}
           </View>
-        )}
+        </View>
       </View>
     );
   }
