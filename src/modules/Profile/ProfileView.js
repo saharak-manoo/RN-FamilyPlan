@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Dimensions, Image, Platform, StatusBar, View} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Switch} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../components/i18n';
-import AsyncStorage from '@react-native-community/async-storage';
 import * as Api from '../../util/Api';
 import * as GFunction from '../../util/GlobalFunction';
 import {styles} from '../../components/styles';
@@ -189,7 +189,14 @@ export default class ProfileView extends Component<Props> {
             </View>
           </View>
 
-          <View style={styles.cardSetting}>
+          <View
+            style={{
+              fontFamily: 'Kanit-Light',
+              flex: 0.5,
+              margin: 10,
+              backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              borderRadius: 10,
+            }}>
             {this.state.spinner ? (
               <ContentLoader height={height} width={width / 0.5}>
                 <Rect x="10" y="20" width={width / 2} height="20" />
@@ -210,9 +217,15 @@ export default class ProfileView extends Component<Props> {
             ) : (
               <View>
                 <ListItem
-                  containerStyle={{borderRadius: 10}}
+                  containerStyle={{
+                    borderRadius: 10,
+                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  }}
                   title={I18n.t('placeholder.th')}
-                  titleStyle={{fontFamily: 'Kanit-Light'}}
+                  titleStyle={{
+                    fontFamily: 'Kanit-Light',
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
+                  }}
                   chevron={
                     <Switch
                       value={this.state.isLanguageTH}
@@ -223,9 +236,15 @@ export default class ProfileView extends Component<Props> {
                   }
                 />
                 <ListItem
-                  containerStyle={{borderRadius: 10}}
+                  containerStyle={{
+                    borderRadius: 10,
+                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  }}
                   title={I18n.t('placeholder.darkMode')}
-                  titleStyle={{fontFamily: 'Kanit-Light'}}
+                  titleStyle={{
+                    fontFamily: 'Kanit-Light',
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
+                  }}
                   chevron={
                     <Switch
                       value={this.state.isDarkMode}
@@ -236,9 +255,15 @@ export default class ProfileView extends Component<Props> {
                   }
                 />
                 <ListItem
-                  containerStyle={{borderRadius: 10}}
+                  containerStyle={{
+                    borderRadius: 10,
+                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  }}
                   title={I18n.t('placeholder.appVersion')}
-                  titleStyle={{fontFamily: 'Kanit-Light'}}
+                  titleStyle={{
+                    fontFamily: 'Kanit-Light',
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
+                  }}
                   chevron={<Text>0.0.1</Text>}
                 />
               </View>
