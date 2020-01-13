@@ -37,9 +37,10 @@ const IS_IOS = Platform.OS === 'ios';
 export default class GroupView extends Component<Props> {
   constructor(props) {
     super(props);
-    let group = this.props.navigation.state.params.group;
+    let params = this.props.navigation.state.params;
+    let group = params.group;
     this.state = {
-      isDarkMode: true,
+      isDarkMode: params.isDarkMode,
       group: group,
       userView: [],
       selectedDay: null,
@@ -52,8 +53,6 @@ export default class GroupView extends Component<Props> {
   settingServiceChargeModal = React.createRef();
 
   async componentWillMount() {
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
-    this.setState({isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFunction.user();
     let userView = this.props.navigation.state.params.group.members.filter(
       m => m.id === user.id,
@@ -124,6 +123,7 @@ export default class GroupView extends Component<Props> {
         adjustToContentHeight>
         <InviteMemberView
           modal={this.inviteMemberModal}
+          isDarkMode={this.state.isDarkMode}
           group={this.state.group}
           onSetNewData={this.setNewData}
         />
@@ -213,6 +213,7 @@ export default class GroupView extends Component<Props> {
         adjustToContentHeight>
         <SettingServiceChargeView
           modal={this.settingServiceChargeModal}
+          isDarkMode={this.state.isDarkMode}
           group={this.state.group}
           onSetNewData={this.setNewData}
         />
@@ -235,6 +236,7 @@ export default class GroupView extends Component<Props> {
             fontFamily: 'Kanit-Light',
           }}>
           <Icon
+            size={height / 40}
             raised
             name="add-alert"
             type="mat-icon"
@@ -261,6 +263,7 @@ export default class GroupView extends Component<Props> {
             padding: IS_IOS ? 14 : 10,
           }}>
           <Icon
+            size={height / 40}
             raised
             name="dollar"
             type="font-awesome"
@@ -433,7 +436,9 @@ export default class GroupView extends Component<Props> {
           I18n.t('message.leaveGroupSuccessful'),
         );
         this.props.navigation.state.params.onLeaveGroup();
-        this.props.navigation.navigate('Home');
+        this.props.navigation.navigate('Home', {
+          isDarkMode: this.state.isDarkMode,
+        });
       } else {
         GFunction.successMessage(
           I18n.t('message.success'),
@@ -452,6 +457,7 @@ export default class GroupView extends Component<Props> {
 
   goToChatRoom(chatRoom) {
     this.props.navigation.navigate('ChatRoom', {
+      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
       isRequestJoin: false,
     });

@@ -14,7 +14,9 @@ const height = Dimensions.get('window').height;
 export default class JoinGroupView extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isDarkMode: this.props.isDarkMode,
+    };
   }
 
   async clickJoinGroup() {

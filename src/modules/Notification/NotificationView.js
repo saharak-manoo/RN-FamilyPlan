@@ -108,11 +108,13 @@ export default class NotificationView extends Component<Props> {
       notification.noti_type.includes('request_join-')
     ) {
       this.props.navigation.navigate('ChatRoom', {
+        isDarkMode: this.state.isDarkMode,
         chatRoom: notification.data,
         isRequestJoin: false,
       });
     } else if (notification.noti_type === 'group') {
       this.props.navigation.navigate('Group', {
+        isDarkMode: this.state.isDarkMode,
         group: notification.data,
       });
     }
@@ -278,24 +280,48 @@ export default class NotificationView extends Component<Props> {
               tension={100}
               activeScale={0.95}
               leftAvatar={() => (
-                <ContentLoader height={45} width={50}>
+                <ContentLoader
+                  height={45}
+                  width={50}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Circle r={18} x={22} y={25} />
                 </ContentLoader>
               )}
               title={() => (
-                <ContentLoader height={30} width={width / 2}>
+                <ContentLoader
+                  height={30}
+                  width={width / 2}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="5" y="5" width={width / 1} height={10} />
                 </ContentLoader>
               )}
               subtitle={() => (
-                <ContentLoader height={20} width={width / 1.8}>
+                <ContentLoader
+                  height={20}
+                  width={width / 1.8}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="5" y="5" width={width / 1.8} height={5} />
                   <Rect x="5" y="15" width={width / 1.8} height={5} />
                   <Rect x="5" y="30" width={width / 1.8} height={5} />
                 </ContentLoader>
               )}
               rightSubtitle={() => (
-                <ContentLoader height={20} width={width / 5}>
+                <ContentLoader
+                  height={20}
+                  width={width / 5}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="40" y="10" width={width / 5} height={15} />
                 </ContentLoader>
               )}

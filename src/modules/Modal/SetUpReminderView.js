@@ -17,6 +17,7 @@ export default class SetUpReminderView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isDarkMode: this.props.isDarkMode,
       dueDate: GFunction.strToDate(this.props.group.due_date) || new Date(),
     };
   }
@@ -55,7 +56,14 @@ export default class SetUpReminderView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1, padding: 30}}>
+      <View
+        style={{
+          flex: 1,
+          padding: 30,
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}>
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.setUpAReminder')}
         </Text>

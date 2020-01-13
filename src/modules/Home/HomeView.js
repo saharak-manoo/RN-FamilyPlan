@@ -26,7 +26,6 @@ import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
-import Loader from 'react-native-easy-content-loader';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -41,9 +40,10 @@ const IS_IOS = Platform.OS === 'ios';
 export default class HomeView extends Component<Props> {
   constructor(props) {
     super(props);
+    let params = this.props.navigation.state.params;
     this.state = {
       search: '',
-      isDarkMode: true,
+      isDarkMode: params.isDarkMode || true,
       groupName: '',
       spinner: false,
       modalGroup: false,
@@ -173,6 +173,7 @@ export default class HomeView extends Component<Props> {
           modal={this.newGroupModal}
           services={this.state.services}
           myGroups={this.state.myGroups}
+          isDarkMode={this.state.isDarkMode}
           onSetAndGoToModalGroup={this.setAndGoToModalGroup}
         />
       </Modalize>
@@ -203,7 +204,10 @@ export default class HomeView extends Component<Props> {
           spring: {speed: 10, bounciness: 10},
         }}
         withReactModal>
-        <QrCodeView modal={this.scanQrCodeModal} />
+        <QrCodeView
+          modal={this.scanQrCodeModal}
+          isDarkMode={this.state.isDarkMode}
+        />
       </Modalize>
     );
   }
@@ -380,6 +384,7 @@ export default class HomeView extends Component<Props> {
 
   goToGroup = group => {
     this.props.navigation.navigate('Group', {
+      isDarkMode: this.state.isDarkMode,
       group: group,
       onLeaveGroup: () => this.refreshGroup(),
     });
@@ -388,6 +393,7 @@ export default class HomeView extends Component<Props> {
   setAndGoToModalGroup = async myGroups => {
     await this.setState({myGroups: myGroups});
     this.props.navigation.navigate('Group', {
+      isDarkMode: this.state.isDarkMode,
       group: myGroups[0],
       onLeaveGroup: () => this.refreshGroup(),
     });
@@ -450,7 +456,11 @@ export default class HomeView extends Component<Props> {
                 width: width / 3,
                 height: height / 5,
               }}>
-              <ContentLoader height={height / 5} width={width / 3}>
+              <ContentLoader
+                height={height / 5}
+                width={width / 3}
+                primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Circle x={35} y={-50} cx={34} cy={65} r={70} />
                 <Rect x="25" y="110" width={width / 5} height="25" />
                 <Rect x="15" y="150" width={width / 3.8} height="15" />
@@ -595,13 +605,6 @@ export default class HomeView extends Component<Props> {
             textStyle={{fontFamily: 'Kanit-Light'}}
             onPress={this.showNewGroupModal}>
             <MatIcon name="group-add" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item
-            buttonColor="#3D71FB"
-            title={I18n.t('placeholder.qrCode')}
-            textStyle={{fontFamily: 'Kanit-Light'}}
-            onPress={this.showScanQrCodeModal}>
-            <FAIcon name="qrcode" style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>
       </View>

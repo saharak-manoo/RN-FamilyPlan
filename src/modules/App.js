@@ -12,7 +12,7 @@ const theme = {
     ...DefaultTheme.colors,
     placeholder: '#6D6D6D',
     text: '#000',
-    primary: '#0041E2',
+    primary: '#009FF5',
     accent: '#00E2B2',
     underlineColor: '#6D6D6D',
   },
