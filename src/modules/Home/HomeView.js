@@ -10,6 +10,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import {styles} from '../../components/styles';
@@ -42,6 +43,7 @@ export default class HomeView extends Component<Props> {
     super(props);
     this.state = {
       search: '',
+      isDarkMode: true,
       groupName: '',
       spinner: false,
       modalGroup: false,
@@ -55,7 +57,9 @@ export default class HomeView extends Component<Props> {
 
   componentWillMount = async () => {
     this.fcmCheckPermissions();
-    this.setState({spinner: true});
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
+
     let user = await GFunction.user();
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
@@ -266,7 +270,15 @@ export default class HomeView extends Component<Props> {
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
-              style={styles.card}
+              style={{
+                fontFamily: 'Kanit-Light',
+                flex: 0.7,
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                margin: 10,
+                borderRadius: 20,
+                width: width / 3,
+                height: height / 5,
+              }}
               onPress={() => this.goToGroup(item)}>
               <View style={{flex: 1}}>
                 <View
@@ -308,7 +320,15 @@ export default class HomeView extends Component<Props> {
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
-              style={styles.card}
+              style={{
+                fontFamily: 'Kanit-Light',
+                flex: 0.7,
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                margin: 10,
+                borderRadius: 20,
+                width: width / 3,
+                height: height / 5,
+              }}
               onPress={() => this.showJoinGroupModal(item)}>
               <View style={{flex: 1}}>
                 <View
@@ -322,7 +342,6 @@ export default class HomeView extends Component<Props> {
                     numberOfLines={1}
                     style={{
                       fontSize: 20,
-                      color: '#000',
                       alignSelf: 'center',
                       padding: 15,
                       fontFamily: 'Kanit-Light',
@@ -335,7 +354,6 @@ export default class HomeView extends Component<Props> {
                     numberOfLines={1}
                     style={{
                       fontSize: 13,
-                      color: '#000',
                       alignSelf: 'center',
                       justifyContent: 'flex-end',
                       padding: 10,
@@ -422,7 +440,16 @@ export default class HomeView extends Component<Props> {
         showsHorizontalScrollIndicator={false}
         renderItem={() => {
           return (
-            <TouchableOpacity style={styles.card}>
+            <TouchableOpacity
+              style={{
+                fontFamily: 'Kanit-Light',
+                flex: 0.7,
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                margin: 10,
+                borderRadius: 20,
+                width: width / 3,
+                height: height / 5,
+              }}>
               <ContentLoader height={height / 5} width={width / 3}>
                 <Circle x={35} y={-50} cx={34} cy={65} r={70} />
                 <Rect x="25" y="110" width={width / 5} height="25" />
@@ -438,7 +465,11 @@ export default class HomeView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View
+        style={[
+          styles.defaultView,
+          {backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE'},
+        ]}>
         {this.AppHerder()}
         <View style={{padding: 10}}>
           <Searchbar
@@ -474,7 +505,17 @@ export default class HomeView extends Component<Props> {
                   ) : (
                     <View>
                       <TouchableOpacity
-                        style={styles.card}
+                        style={{
+                          fontFamily: 'Kanit-Light',
+                          flex: 0.7,
+                          backgroundColor: this.state.isDarkMode
+                            ? '#202020'
+                            : '#FFF',
+                          margin: 10,
+                          borderRadius: 20,
+                          width: width / 3,
+                          height: height / 5,
+                        }}
                         onPress={this.showNewGroupModal}>
                         <View style={{flex: 1}}>
                           <View style={styles.headerCardNewGroup}>

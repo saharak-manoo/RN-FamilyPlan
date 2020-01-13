@@ -1,4 +1,5 @@
 import {Dimensions, StyleSheet, Platform} from 'react-native';
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_ANDROID = Platform.OS === 'android';
@@ -70,7 +71,6 @@ export const styles = StyleSheet.create({
 
   spinnerTextStyle: {
     fontFamily: 'Kanit-Light',
-    color: '#FFF',
   },
 
   actionButtonIcon: {
@@ -166,7 +166,6 @@ export const styles = StyleSheet.create({
   textHeadCard: {
     fontFamily: 'Kanit-Light',
     fontSize: 24,
-    color: '#FFF',
     alignSelf: 'center',
     padding: 20,
   },
@@ -174,7 +173,6 @@ export const styles = StyleSheet.create({
   textNameCard: {
     fontFamily: 'Kanit-Light',
     fontSize: 20,
-    color: '#000',
     alignSelf: 'center',
     padding: 15,
   },
@@ -182,7 +180,6 @@ export const styles = StyleSheet.create({
   totalMembersCard: {
     fontFamily: 'Kanit-Light',
     fontSize: 13,
-    color: '#000',
     alignSelf: 'center',
     justifyContent: 'flex-end',
     padding: 10,

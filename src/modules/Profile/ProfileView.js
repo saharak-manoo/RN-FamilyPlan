@@ -25,6 +25,7 @@ export default class ProfileView extends Component<Props> {
       spinner: true,
       user: null,
       isLanguageTH: false,
+      isDarkMode: true,
     };
     this.getProfile();
   }
@@ -32,9 +33,12 @@ export default class ProfileView extends Component<Props> {
   componentDidMount = async () => {
     this.setState({spinner: true});
     let locale = await AsyncStorage.getItem('locale');
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+
     this.setState({
       user: await GFunction.user(),
       isLanguageTH: locale === 'th',
+      isDarkMode: JSON.parse(isDarkMode),
     });
   };
 
@@ -43,6 +47,12 @@ export default class ProfileView extends Component<Props> {
     I18n.locale = locale;
     await AsyncStorage.setItem('locale', locale);
     this.setState({isLanguageTH: isLanguageTH});
+    RNRestart.Restart();
+  };
+
+  onSwitchDarkMode = async isDarkMode => {
+    await AsyncStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
+    this.setState({isDarkMode: isDarkMode});
     RNRestart.Restart();
   };
 
@@ -115,11 +125,23 @@ export default class ProfileView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View
+        style={{
+          fontFamily: 'Kanit-Light',
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+        }}>
         {this.AppHerder()}
 
         <View style={{flex: 1}}>
-          <View style={styles.cardProfile}>
+          <View
+            style={{
+              fontFamily: 'Kanit-Light',
+              flex: 1.4,
+              margin: 10,
+              backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              borderRadius: 10,
+            }}>
             {this.state.spinner ? (
               <ContentLoader height={height} width={width / 0.5}>
                 <Circle cx="200" cy="65" r="60" />
@@ -206,9 +228,9 @@ export default class ProfileView extends Component<Props> {
                   titleStyle={{fontFamily: 'Kanit-Light'}}
                   chevron={
                     <Switch
-                      value={this.state.isLanguageTH}
-                      onValueChange={isLanguageTH =>
-                        this.onSelectedLanguageTh(isLanguageTH)
+                      value={this.state.isDarkMode}
+                      onValueChange={isDarkMode =>
+                        this.onSwitchDarkMode(isDarkMode)
                       }
                     />
                   }
