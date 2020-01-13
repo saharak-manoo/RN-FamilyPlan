@@ -39,7 +39,10 @@ export default class LoginView extends Component<Props> {
     };
   }
 
-  componentDidMount = async () => {};
+  componentDidMount = async () => {
+    // set dark mode
+    await AsyncStorage.setItem('isDarkMode', JSON.stringify(true));
+  };
 
   appHerder() {
     return (

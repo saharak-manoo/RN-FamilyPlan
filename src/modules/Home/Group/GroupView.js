@@ -8,6 +8,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
@@ -38,6 +39,7 @@ export default class GroupView extends Component<Props> {
     super(props);
     let group = this.props.navigation.state.params.group;
     this.state = {
+      isDarkMode: true,
       group: group,
       userView: [],
       selectedDay: null,
@@ -50,6 +52,8 @@ export default class GroupView extends Component<Props> {
   settingServiceChargeModal = React.createRef();
 
   async componentWillMount() {
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFunction.user();
     let userView = this.props.navigation.state.params.group.members.filter(
       m => m.id === user.id,
@@ -304,7 +308,10 @@ export default class GroupView extends Component<Props> {
               }}>
               <ListItem
                 key={index}
-                containerStyle={{borderRadius: 15}}
+                containerStyle={{
+                  borderRadius: 15,
+                  backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                }}
                 Component={TouchableScale}
                 friction={90}
                 tension={100}
@@ -313,9 +320,15 @@ export default class GroupView extends Component<Props> {
                   <UserAvatar size="40" name={item.full_name} />
                 )}
                 title={item.full_name}
-                titleStyle={{fontFamily: 'Kanit-Light'}}
+                titleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 subtitle={item.email}
-                subtitleStyle={{fontFamily: 'Kanit-Light'}}
+                subtitleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 bottomDivider
                 chevron={
                   item.group_leader ? (
@@ -331,16 +344,25 @@ export default class GroupView extends Component<Props> {
           ) : (
             <ListItem
               key={index}
-              containerStyle={{borderRadius: 15}}
+              containerStyle={{
+                borderRadius: 15,
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              }}
               Component={TouchableScale}
               friction={90}
               tension={100}
               activeScale={0.95}
               leftAvatar={() => <UserAvatar size="40" name={item.full_name} />}
               title={item.full_name}
-              titleStyle={{fontFamily: 'Kanit-Light'}}
+              titleStyle={{
+                fontFamily: 'Kanit-Light',
+                color: this.state.isDarkMode ? '#FFF' : '#000',
+              }}
               subtitle={item.email}
-              subtitleStyle={{fontFamily: 'Kanit-Light'}}
+              subtitleStyle={{
+                fontFamily: 'Kanit-Light',
+                color: this.state.isDarkMode ? '#FFF' : '#000',
+              }}
               bottomDivider
               chevron={
                 item.group_leader ? (
@@ -437,21 +459,42 @@ export default class GroupView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View
+        style={{
+          fontFamily: 'Kanit-Light',
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+        }}>
         {this.AppHerder()}
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
           <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
             {I18n.t('text.info')}
           </Text>
         </View>
-        <View style={styles.cardListInfo}>{this.listInfo()}</View>
+        <View
+          style={{
+            fontFamily: 'Kanit-Light',
+            flex: 0.6,
+            margin: 10,
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+            borderRadius: 15,
+          }}>
+          {this.listInfo()}
+        </View>
 
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
           <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
             {I18n.t('text.members')}
           </Text>
         </View>
-        <View style={styles.cardListMember}>
+        <View
+          style={{
+            fontFamily: 'Kanit-Light',
+            flex: 1,
+            margin: 10,
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+            borderRadius: 15,
+          }}>
           {this.listMembers(this.state.group.members)}
         </View>
 
