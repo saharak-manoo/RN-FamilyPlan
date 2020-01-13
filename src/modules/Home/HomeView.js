@@ -25,6 +25,7 @@ import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
+import Loader from 'react-native-easy-content-loader';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -421,16 +422,13 @@ export default class HomeView extends Component<Props> {
         showsHorizontalScrollIndicator={false}
         renderItem={() => {
           return (
-            <ContentLoader height={height / 5} width={width / 3}>
-              <Rect
-                x={14}
-                y={0}
-                rx={20}
-                ry={20}
-                width={width / 3}
-                height={height / 5}
-              />
-            </ContentLoader>
+            <TouchableOpacity style={styles.card}>
+              <ContentLoader height={height / 5} width={width / 3}>
+                <Circle x={35} y={-50} cx={34} cy={65} r={70} />
+                <Rect x="25" y="110" width={width / 5} height="25" />
+                <Rect x="15" y="150" width={width / 3.8} height="15" />
+              </ContentLoader>
+            </TouchableOpacity>
           );
         }}
         keyExtractor={item => item}

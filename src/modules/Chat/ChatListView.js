@@ -270,19 +270,35 @@ export default class ChatListView extends Component<Props> {
         scrollEnabled={!this.state.spinner}
         renderItem={() => {
           return (
-            <ContentLoader height={height / 12} width={width / 1}>
-              <Circle cx={36} cy={36} r={20} x={14} />
-              <Rect
-                x={10}
-                y={0}
-                rx={20}
-                ry={20}
-                width={width / 1.06}
-                height={height / 13}
-              />
-              <Rect x="90" y="15" width={width / 1.5} height={15} />
-              <Rect x="90" y="50" width={width / 2} height={10} />
-            </ContentLoader>
+            <ListItem
+              Component={TouchableScale}
+              friction={90}
+              tension={100}
+              activeScale={0.95}
+              leftAvatar={() => (
+                <ContentLoader height={45} width={50}>
+                  <Circle r={18} x={22} y={25} />
+                </ContentLoader>
+              )}
+              title={() => (
+                <ContentLoader height={30} width={width / 2}>
+                  <Rect x="5" y="10" width={width / 1} height={15} />
+                </ContentLoader>
+              )}
+              titleStyle={{fontFamily: 'Kanit-Light'}}
+              subtitle={() => (
+                <ContentLoader height={20} width={width / 1.8}>
+                  <Rect x="5" y="10" width={width / 1.8} height={9} />
+                </ContentLoader>
+              )}
+              subtitleStyle={{fontFamily: 'Kanit-Light'}}
+              rightSubtitle={() => (
+                <ContentLoader height={20} width={width / 5}>
+                  <Rect x="40" y="10" width={width / 5} height={15} />
+                </ContentLoader>
+              )}
+              rightSubtitleStyle={{fontFamily: 'Kanit-Light'}}
+            />
           );
         }}
         keyExtractor={item => item}
