@@ -15,6 +15,7 @@ export default class SettingServiceChargeView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isDarkMode: this.props.isDarkMode,
       serviceCharge: this.props.group.service_charge.toString(),
     };
   }
@@ -53,15 +54,30 @@ export default class SettingServiceChargeView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1, padding: 30}}>
+      <View
+        style={{
+          flex: 1,
+          padding: 30,
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}>
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.settingServiceCharge')}
         </Text>
         <View style={{paddingTop: 15}}>
           <TextInput
-            style={{backgroundColor: '#FFF', fontFamily: 'Kanit-Light'}}
+            keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+            style={{
+              paddingBottom: 6,
+              fontFamily: 'Kanit-Light',
+              height: 50,
+              textAlign: 'center',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+            }}
+            mode="outlined"
             keyboardType="numeric"
-            label={I18n.t('placeholder.serviceCharge')}
+            placeholder={I18n.t('placeholder.serviceCharge')}
             value={this.state.serviceCharge}
             onChangeText={serviceCharge =>
               this.setState({

@@ -22,7 +22,9 @@ const BAR_COLOR = IS_IOS ? '#0144A4' : '#000';
 export default class ForgotPasswordView extends Component<Props> {
   constructor(props) {
     super(props);
+    let params = this.props.navigation.state.params;
     this.state = {
+      isDarkMode: params.isDarkMode,
       email: '',
     };
   }
@@ -70,7 +72,11 @@ export default class ForgotPasswordView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+        }}>
         {this.appHerder()}
         <View style={{padding: 45, alignContent: 'center'}}>
           <Text
@@ -84,14 +90,20 @@ export default class ForgotPasswordView extends Component<Props> {
         </View>
         <View style={{padding: 15}}>
           <TextInput
-            style={{paddingBottom: 7, fontFamily: 'Kanit-Light'}}
-            label={I18n.t('placeholder.email')}
+            keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+            style={{
+              paddingBottom: 6,
+              fontFamily: 'Kanit-Light',
+              height: 50,
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+            }}
+            placeholder={I18n.t('placeholder.email')}
             mode="outlined"
             value={this.state.email}
             onChangeText={email => this.setState({email: email})}
           />
           <HelperText
-            style={{fontFamily: 'Kanit-Light'}}
+            style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
             type="error"
             visible={GFunction.validateEmail(this.state.email)}>
             {I18n.t('message.emailIsInvalid')}

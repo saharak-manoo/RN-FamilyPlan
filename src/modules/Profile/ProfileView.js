@@ -143,7 +143,11 @@ export default class ProfileView extends Component<Props> {
               borderRadius: 10,
             }}>
             {this.state.spinner ? (
-              <ContentLoader height={height} width={width / 0.5}>
+              <ContentLoader
+                height={height}
+                width={width / 0.5}
+                primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Circle cx="200" cy="65" r="60" />
                 <Rect x="10" y="180" width={width / 1.12} height="50" />
                 <Rect x="75" y="250" width={width / 1.75} height="20" />
@@ -198,7 +202,11 @@ export default class ProfileView extends Component<Props> {
               borderRadius: 10,
             }}>
             {this.state.spinner ? (
-              <ContentLoader height={height} width={width / 0.5}>
+              <ContentLoader
+                height={height}
+                width={width / 0.5}
+                primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Rect x="10" y="20" width={width / 2} height="20" />
                 <Rect x="340" y="20" width={width / 10} height="20" />
                 <Rect x="10" y="70" width={width / 2} height="20" />
@@ -275,7 +283,8 @@ export default class ProfileView extends Component<Props> {
               <ContentLoader
                 height={height}
                 width={width / 0.9}
-                primaryColor={'#E7E7E7'}>
+                primaryColor={this.state.isDarkMode ? '#333' : '#E7E7E7'}
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Rect
                   x={15}
                   y={840}

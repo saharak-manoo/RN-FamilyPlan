@@ -28,8 +28,9 @@ const IS_IOS = Platform.OS === 'ios';
 export default class ChatView extends Component<Props> {
   constructor(props) {
     super(props);
+    let params = this.props.navigation.state.params;
     this.state = {
-      isDarkMode: true,
+      isDarkMode: params.isDarkMode,
       user: [],
       spinner: false,
       chatRoom: this.props.navigation.state.params.chatRoom,
@@ -86,8 +87,6 @@ export default class ChatView extends Component<Props> {
   }
 
   async componentWillMount() {
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
-    this.setState({isDarkMode: JSON.parse(isDarkMode)});
     // get user
     let user = await GFun.user();
     await this.setState({
@@ -251,7 +250,15 @@ export default class ChatView extends Component<Props> {
     return (
       <Bubble
         {...props}
+        textStyle={{
+          left: {
+            color: this.state.isDarkMode ? '#FFF' : '#000',
+          },
+        }}
         wrapperStyle={{
+          left: {
+            backgroundColor: this.state.isDarkMode ? '#6A6A6A' : '#EEEEEE',
+          },
           right: {
             backgroundColor: this.state.chatRoom.group.color || '#0084ff',
           },

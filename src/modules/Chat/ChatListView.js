@@ -211,6 +211,7 @@ export default class ChatListView extends Component<Props> {
 
   goToChatRoom(chatRoom) {
     this.props.navigation.navigate('ChatRoom', {
+      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
       isRequestJoin: false,
     });
@@ -294,24 +295,48 @@ export default class ChatListView extends Component<Props> {
               tension={100}
               activeScale={0.95}
               leftAvatar={() => (
-                <ContentLoader height={45} width={50}>
+                <ContentLoader
+                  height={45}
+                  width={50}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Circle r={18} x={22} y={25} />
                 </ContentLoader>
               )}
               title={() => (
-                <ContentLoader height={30} width={width / 2}>
+                <ContentLoader
+                  height={30}
+                  width={width / 2}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="5" y="10" width={width / 1} height={15} />
                 </ContentLoader>
               )}
               titleStyle={{fontFamily: 'Kanit-Light'}}
               subtitle={() => (
-                <ContentLoader height={20} width={width / 1.8}>
+                <ContentLoader
+                  height={20}
+                  width={width / 1.8}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="5" y="10" width={width / 1.8} height={9} />
                 </ContentLoader>
               )}
               subtitleStyle={{fontFamily: 'Kanit-Light'}}
               rightSubtitle={() => (
-                <ContentLoader height={20} width={width / 5}>
+                <ContentLoader
+                  height={20}
+                  width={width / 5}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="40" y="10" width={width / 5} height={15} />
                 </ContentLoader>
               )}
