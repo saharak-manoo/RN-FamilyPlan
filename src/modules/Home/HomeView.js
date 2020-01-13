@@ -473,7 +473,13 @@ export default class HomeView extends Component<Props> {
         {this.AppHerder()}
         <View style={{padding: 10}}>
           <Searchbar
-            inputStyle={{fontFamily: 'Kanit-Light'}}
+            style={{
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+            }}
+            inputStyle={{
+              fontFamily: 'Kanit-Light',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+            }}
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
               this.searchGroup(searching);
@@ -485,6 +491,7 @@ export default class HomeView extends Component<Props> {
         <ScrollView
           refreshControl={
             <RefreshControl
+              tintColor={this.state.isDarkMode ? '#FFF' : '#000'}
               refreshing={this.state.refreshing}
               onRefresh={this.refreshGroup}
             />

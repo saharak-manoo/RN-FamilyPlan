@@ -302,7 +302,7 @@ export default class GroupView extends Component<Props> {
                 },
               ]}
               style={{
-                backgroundColor: '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
                 borderRadius: 15,
                 fontFamily: 'Kanit-Light',
               }}>

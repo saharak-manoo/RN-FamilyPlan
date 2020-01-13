@@ -10,6 +10,7 @@ import {
   ScrollView,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
@@ -32,6 +33,7 @@ export default class NotificationView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isDarkMode: true,
       spinner: false,
       refreshing: false,
       isLoading: false,
@@ -55,7 +57,8 @@ export default class NotificationView extends Component<Props> {
   }
 
   componentWillMount = async () => {
-    this.setState({spinner: true});
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFun.user();
     let params = {
       limit: this.state.limit,
@@ -118,7 +121,9 @@ export default class NotificationView extends Component<Props> {
   listNotification = notifications => {
     return (
       <FlatList
-        style={{flex: 1}}
+        style={{
+          flex: 1,
+        }}
         data={notifications}
         renderItem={({item, index}) => {
           return (
@@ -134,23 +139,35 @@ export default class NotificationView extends Component<Props> {
                   },
                 },
               ]}
-              style={{backgroundColor: '#FFF'}}>
+              style={{
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              }}>
               <ListItem
                 key={index}
                 Component={TouchableScale}
+                containerStyle={{
+                  backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 friction={90}
                 tension={100}
                 activeScale={0.95}
                 leftAvatar={() => <UserAvatar size="40" name={item.name} />}
                 title={item.name}
-                titleStyle={{fontFamily: 'Kanit-Light'}}
+                titleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 subtitle={item.message}
-                subtitleStyle={{fontFamily: 'Kanit-Light'}}
-                containerStyle={{
-                  backgroundColor: index == 0 ? '#D4FDE8' : '#FFF',
+                subtitleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
                 }}
                 rightSubtitle={item.time}
-                rightSubtitleStyle={{fontFamily: 'Kanit-Light'}}
+                rightSubtitleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 onPress={() => this.goTo(item)}
               />
             </Swipeout>
@@ -254,6 +271,9 @@ export default class NotificationView extends Component<Props> {
           return (
             <ListItem
               Component={TouchableScale}
+              containerStyle={{
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              }}
               friction={90}
               tension={100}
               activeScale={0.95}
@@ -267,7 +287,6 @@ export default class NotificationView extends Component<Props> {
                   <Rect x="5" y="5" width={width / 1} height={10} />
                 </ContentLoader>
               )}
-              titleStyle={{fontFamily: 'Kanit-Light'}}
               subtitle={() => (
                 <ContentLoader height={20} width={width / 1.8}>
                   <Rect x="5" y="5" width={width / 1.8} height={5} />
@@ -275,13 +294,11 @@ export default class NotificationView extends Component<Props> {
                   <Rect x="5" y="30" width={width / 1.8} height={5} />
                 </ContentLoader>
               )}
-              subtitleStyle={{fontFamily: 'Kanit-Light'}}
               rightSubtitle={() => (
                 <ContentLoader height={20} width={width / 5}>
                   <Rect x="40" y="10" width={width / 5} height={15} />
                 </ContentLoader>
               )}
-              rightSubtitleStyle={{fontFamily: 'Kanit-Light'}}
             />
           );
         }}
@@ -292,7 +309,11 @@ export default class NotificationView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.defaultView}>
+      <View
+        style={[
+          styles.defaultView,
+          {backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE'},
+        ]}>
         {this.AppHerder()}
         {this.state.spinner ? (
           this.renderLoadingNotification()
@@ -304,6 +325,7 @@ export default class NotificationView extends Component<Props> {
             style={{flex: 1}}
             refreshControl={
               <RefreshControl
+                tintColor={this.state.isDarkMode ? '#FFF' : '#000'}
                 refreshing={this.state.refreshing}
                 onRefresh={this.refreshNotification}
               />

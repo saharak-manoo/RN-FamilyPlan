@@ -10,6 +10,7 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
@@ -32,6 +33,7 @@ export default class ChatListView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isDarkMode: true,
       user: [],
       spinner: false,
       search: '',
@@ -57,7 +59,8 @@ export default class ChatListView extends Component<Props> {
   }
 
   componentWillMount = async () => {
-    this.setState({spinner: true});
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFun.user();
     let params = {
       limit: this.state.limit,
@@ -140,23 +143,35 @@ export default class ChatListView extends Component<Props> {
                 },
               ]}
               style={{
-                backgroundColor: '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
                 fontFamily: 'Kanit-Light',
               }}>
               <ListItem
                 key={index}
+                containerStyle={{
+                  backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                }}
                 Component={TouchableScale}
                 friction={90}
                 tension={100}
                 activeScale={0.95}
                 leftAvatar={() => <UserAvatar size="40" name={item.name} />}
                 title={item.name}
-                titleStyle={{fontFamily: 'Kanit-Light'}}
+                titleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 subtitle={item.last_messags}
-                subtitleStyle={{fontFamily: 'Kanit-Light'}}
+                subtitleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
                 onPress={() => this.goToChatRoom(item)}
                 rightSubtitle={item.last_messags_time}
-                rightSubtitleStyle={{fontFamily: 'Kanit-Light'}}
+                rightSubtitleStyle={{
+                  fontFamily: 'Kanit-Light',
+                  color: this.state.isDarkMode ? '#FFF' : '#000',
+                }}
               />
             </Swipeout>
           );
@@ -271,6 +286,9 @@ export default class ChatListView extends Component<Props> {
         renderItem={() => {
           return (
             <ListItem
+              containerStyle={{
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              }}
               Component={TouchableScale}
               friction={90}
               tension={100}
@@ -308,20 +326,21 @@ export default class ChatListView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.chatView}>
+      <View
+        style={[
+          styles.chatView,
+          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
+        ]}>
         {this.AppHerder()}
         <View style={{padding: 15}}>
           <Searchbar
-            theme={{
-              colors: {
-                placeholder: '#6D6D6D',
-                text: '#000',
-                primary: '#000',
-                underlineColor: '#6D6D6D',
-              },
-              fonts: {regular: 'Kanit-Light'},
+            style={{
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
             }}
-            inputStyle={{fontFamily: 'Kanit-Light'}}
+            inputStyle={{
+              fontFamily: 'Kanit-Light',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+            }}
             placeholder={I18n.t('placeholder.search')}
             onChangeText={searching => {
               this.searchChatRoom(searching);
@@ -335,6 +354,7 @@ export default class ChatListView extends Component<Props> {
           <ScrollView
             refreshControl={
               <RefreshControl
+                tintColor={this.state.isDarkMode ? '#FFF' : '#000'}
                 refreshing={this.state.refreshing}
                 onRefresh={this.refreshChatRoom}
               />
