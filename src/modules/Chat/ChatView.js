@@ -9,6 +9,7 @@ import {
   View,
   TextInput,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
@@ -28,8 +29,9 @@ export default class ChatView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isDarkMode: true,
       user: [],
-      spinner: true,
+      spinner: false,
       chatRoom: this.props.navigation.state.params.chatRoom,
       messages: [],
       search: '',
@@ -84,11 +86,12 @@ export default class ChatView extends Component<Props> {
   }
 
   async componentWillMount() {
+    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
+    this.setState({isDarkMode: JSON.parse(isDarkMode)});
     // get user
     let user = await GFun.user();
     await this.setState({
       user: user,
-      spinner: false,
       messages: this.state.chatRoom.messages,
     });
   }
@@ -144,9 +147,14 @@ export default class ChatView extends Component<Props> {
 
   renderComposer = props => {
     return (
-      <View style={{flexDirection: 'row'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+        }}>
         <View style={{flex: 1, padding: 3}}>
           <TextInput
+            keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
             placeholder={props.placeholder}
             placeholderTextColor={'#A4A4A4'}
             onChangeText={text => {
@@ -158,9 +166,9 @@ export default class ChatView extends Component<Props> {
             style={{
               borderRadius: 22,
               padding: 10,
-              backgroundColor: '#EAEAEA',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
               height: 40,
-              color: '#000',
+              color: this.state.isDarkMode ? '#FFF' : '#000',
             }}
             value={this.state.text}
           />
@@ -271,7 +279,11 @@ export default class ChatView extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.chatView}>
+      <View
+        style={[
+          styles.chatView,
+          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
+        ]}>
         {this.AppHerder()}
         <View style={{flex: 1}}>
           {this.state.spinner ? (
