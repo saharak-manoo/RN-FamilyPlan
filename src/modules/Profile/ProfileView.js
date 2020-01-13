@@ -17,7 +17,6 @@ import {Circle, Rect} from 'react-native-svg';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#6D06F9' : '#000';
 
 export default class ProfileView extends Component<Props> {
   constructor(props) {
