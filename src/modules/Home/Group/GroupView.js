@@ -21,7 +21,7 @@ import TouchableScale from 'react-native-touchable-scale';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../../util/Api';
-import * as GFunction from '../../../util/GlobalFunction';
+import * as GFun from '../../../util/GlobalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
@@ -53,7 +53,7 @@ export default class GroupView extends Component<Props> {
   settingServiceChargeModal = React.createRef();
 
   async componentWillMount() {
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let userView = this.props.navigation.state.params.group.members.filter(
       m => m.id === user.id,
     )[0];
@@ -156,7 +156,7 @@ export default class GroupView extends Component<Props> {
   }
 
   async updateNotiPayment() {
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       noti_payment: parseInt(this.state.notiPayment),
     };
@@ -168,16 +168,16 @@ export default class GroupView extends Component<Props> {
     );
 
     if (response.success) {
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.settingDueDateSuccessful'),
       );
     } else {
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
@@ -244,8 +244,8 @@ export default class GroupView extends Component<Props> {
           <Text
             style={{
               padding: IS_IOS ? 13 : 5,
-              paddingLeft: 35,
-              fontSize: 25,
+              paddingLeft: GFun.wp(8),
+              fontSize: GFun.hp(3),
               justifyContent: 'center',
               fontFamily: 'Kanit-Light',
             }}>
@@ -271,8 +271,8 @@ export default class GroupView extends Component<Props> {
           <Text
             style={{
               padding: IS_IOS ? 14 : 4,
-              paddingLeft: 35,
-              fontSize: 25,
+              paddingLeft: GFun.wp(8),
+              fontSize: GFun.hp(3),
               justifyContent: 'center',
               fontFamily: 'Kanit-Light',
             }}>
@@ -417,7 +417,7 @@ export default class GroupView extends Component<Props> {
   }
 
   async removeMember(id, index) {
-    let user = await GFunction.user();
+    let user = await GFun.user();
 
     let response = await Api.leaveGroup(
       user.authentication_jwt,
@@ -429,7 +429,7 @@ export default class GroupView extends Component<Props> {
       this.state.group.members.splice(index, 1);
       await this.setState({group: this.state.group});
       if (id === user.id) {
-        GFunction.successMessage(
+        GFun.successMessage(
           I18n.t('message.success'),
           I18n.t('message.leaveGroupSuccessful'),
         );
@@ -438,7 +438,7 @@ export default class GroupView extends Component<Props> {
           isDarkMode: this.state.isDarkMode,
         });
       } else {
-        GFunction.successMessage(
+        GFun.successMessage(
           I18n.t('message.success'),
           I18n.t('message.removeMemberSuccessful'),
         );
@@ -447,9 +447,9 @@ export default class GroupView extends Component<Props> {
       this.loadingJoinGroup.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.error'), errors.join('\n'));
     }
   }
 

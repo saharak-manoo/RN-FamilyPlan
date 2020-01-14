@@ -24,7 +24,7 @@ export default class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isDarkMode: false,
+      isDarkMode: true,
     };
   }
 

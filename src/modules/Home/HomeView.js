@@ -17,11 +17,8 @@ import {styles} from '../../components/styles';
 import I18n from '../../components/i18n';
 import Modalize from 'react-native-modalize';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import PTRView from 'react-native-pull-to-refresh';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
 import ContentLoader from 'react-native-content-loader';
@@ -32,13 +29,9 @@ import UserAvatar from 'react-native-user-avatar';
 import NewGroupView from '../Modal/NewGroupVew';
 import QrCodeView from '../Modal/QrCodeView';
 import JoinGroupView from '../Modal/JoinGroupView';
-import {array} from 'prop-types';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const IS_IOS = Platform.OS === 'ios';
-console.log(width);
-console.log(height);
 
 export default class HomeView extends Component<Props> {
   constructor(props) {
@@ -63,7 +56,7 @@ export default class HomeView extends Component<Props> {
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
 
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       this.setState({
@@ -121,7 +114,7 @@ export default class HomeView extends Component<Props> {
       .getToken()
       .then(async fcmToken => {
         if (fcmToken) {
-          let user = await GFunction.user();
+          let user = await GFun.user();
           let resp = await Api.createFcmToken(
             user.authentication_jwt,
             user.id,
@@ -257,7 +250,7 @@ export default class HomeView extends Component<Props> {
 
   refreshGroup = async (reload = true) => {
     await this.setState({refreshing: reload});
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       await this.setState({
@@ -286,7 +279,7 @@ export default class HomeView extends Component<Props> {
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
                 backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
-                margin: 10,
+                margin: GFun.hp(1),
                 borderRadius: 20,
                 width: width / 3,
                 height: height / 5,
@@ -299,21 +292,36 @@ export default class HomeView extends Component<Props> {
                     justifyContent: 'center',
                     alignContent: 'center',
                     alignSelf: 'center',
-                    paddingTop: 5,
+                    paddingTop: GFun.hp(1),
                   }}>
                   <UserAvatar
-                    size="60"
+                    size={GFun.hp(6)}
                     name={item.serviceName[0]}
                     color={item.color}
                   />
                 </View>
                 <View style={{flex: 0.4}}>
-                  <Text numberOfLines={1} style={styles.textNameCard}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontFamily: 'Kanit-Light',
+                      fontSize: 20,
+                      alignSelf: 'center',
+                      padding: GFun.hp(1),
+                    }}>
                     {item.name}
                   </Text>
                 </View>
                 <View style={{flex: 0.3}}>
-                  <Text numberOfLines={1} style={styles.totalMembersCard}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontFamily: 'Kanit-Light',
+                      fontSize: 13,
+                      alignSelf: 'center',
+                      justifyContent: 'flex-end',
+                      padding: GFun.hp(1),
+                    }}>
                     {I18n.t('placeholder.members')} : {item.members.length}/
                     {item.max_member}
                   </Text>
@@ -344,7 +352,7 @@ export default class HomeView extends Component<Props> {
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
                 backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
-                margin: 10,
+                margin: GFun.hp(1),
                 borderRadius: 20,
                 width: width / 3,
                 height: height / 5,
@@ -357,10 +365,10 @@ export default class HomeView extends Component<Props> {
                     justifyContent: 'center',
                     alignContent: 'center',
                     alignSelf: 'center',
-                    paddingTop: 5,
+                    paddingTop: GFun.hp(1),
                   }}>
                   <UserAvatar
-                    size="60"
+                    size={GFun.hp(6)}
                     name={item.serviceName[0]}
                     color={item.color}
                   />
@@ -384,7 +392,7 @@ export default class HomeView extends Component<Props> {
                       fontSize: 13,
                       alignSelf: 'center',
                       justifyContent: 'flex-end',
-                      padding: 10,
+                      padding: GFun.hp(1),
                       fontFamily: 'Kanit-Light',
                     }}>
                     {I18n.t('placeholder.members')} : {item.members.length}/
@@ -475,7 +483,7 @@ export default class HomeView extends Component<Props> {
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
                 backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
-                margin: 10,
+                margin: GFun.hp(1),
                 borderRadius: 20,
                 width: width / 3,
                 height: height / 5,
@@ -485,9 +493,25 @@ export default class HomeView extends Component<Props> {
                 width={width / 3}
                 primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
                 secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
-                <Circle x={35} y={-20} cx={34} cy={65} r={34} />
-                <Rect x="25" y="110" width={width / 5} height="25" />
-                <Rect x="15" y="150" width={width / 3.8} height="15" />
+                <Circle
+                  x={GFun.wp(8)}
+                  y={GFun.wp(-6)}
+                  cx={34}
+                  cy={65}
+                  r={GFun.wp(9)}
+                />
+                <Rect
+                  x={GFun.wp(6)}
+                  y={GFun.hp(12)}
+                  width={width / 5}
+                  height={GFun.hp(2)}
+                />
+                <Rect
+                  x={GFun.wp(4)}
+                  y={GFun.hp(16)}
+                  width={width / 3.8}
+                  height={GFun.hp(1)}
+                />
               </ContentLoader>
             </TouchableOpacity>
           );
@@ -531,7 +555,7 @@ export default class HomeView extends Component<Props> {
               onRefresh={this.refreshGroup}
             />
           }>
-          <View style={{flex: 1, padding: 15, paddingTop: 35}}>
+          <View style={{flex: 1, padding: GFun.hp(2), paddingTop: GFun.hp(3)}}>
             <View style={{flex: 1}}>
               <View style={styles.listCard}>
                 <Text style={styles.textCardList}>
@@ -539,9 +563,21 @@ export default class HomeView extends Component<Props> {
                 </Text>
               </View>
               {this.state.spinner ? (
-                <View style={styles.listCards}>{this.renderLoadingCard()}</View>
+                <View
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    flex: 0.4,
+                    flexDirection: 'row',
+                  }}>
+                  {this.renderLoadingCard()}
+                </View>
               ) : (
-                <View style={styles.listCards}>
+                <View
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    flex: 0.4,
+                    flexDirection: 'row',
+                  }}>
                   {this.state.myGroups.length !== 0 ? (
                     this.listMyGroup(this.state.myGroups)
                   ) : (
@@ -553,7 +589,7 @@ export default class HomeView extends Component<Props> {
                           backgroundColor: this.state.isDarkMode
                             ? '#363636'
                             : '#FFF',
-                          margin: 10,
+                          margin: GFun.hp(1),
                           borderRadius: 20,
                           width: width / 3,
                           height: height / 5,
@@ -566,10 +602,10 @@ export default class HomeView extends Component<Props> {
                               justifyContent: 'center',
                               alignContent: 'center',
                               alignSelf: 'center',
-                              paddingTop: 5,
+                              paddingTop: GFun.hp(1),
                             }}>
                             <Icon
-                              size={28}
+                              size={GFun.hp(4)}
                               reverse
                               name="add"
                               type="mat-icon"
@@ -582,7 +618,7 @@ export default class HomeView extends Component<Props> {
                               style={{
                                 fontSize: 20,
                                 alignSelf: 'center',
-                                padding: 15,
+                                padding: GFun.hp(1),
                                 fontFamily: 'Kanit-Light',
                               }}>
                               {I18n.t('placeholder.newGroup')}
@@ -595,7 +631,7 @@ export default class HomeView extends Component<Props> {
                                 fontSize: 13,
                                 alignSelf: 'center',
                                 justifyContent: 'flex-end',
-                                padding: 10,
+                                padding: GFun.hp(1),
                                 fontFamily: 'Kanit-Light',
                               }}>
                               {I18n.t('placeholder.clickNewGroup')}
@@ -609,16 +645,28 @@ export default class HomeView extends Component<Props> {
               )}
             </View>
 
-            <View style={{flex: 1, paddingTop: 40}}>
+            <View style={{flex: 1, paddingTop: GFun.hp(3)}}>
               <View style={styles.listPublicCard}>
                 <Text style={styles.textCardList}>
                   {I18n.t('placeholder.publicGroup')}
                 </Text>
               </View>
               {this.state.spinner ? (
-                <View style={styles.listCards}>{this.renderLoadingCard()}</View>
+                <View
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    flex: 0.4,
+                    flexDirection: 'row',
+                  }}>
+                  {this.renderLoadingCard()}
+                </View>
               ) : (
-                <View style={styles.listCards}>
+                <View
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    flex: 0.4,
+                    flexDirection: 'row',
+                  }}>
                   {this.listPublicGroup(this.state.publicGroups)}
                 </View>
               )}
