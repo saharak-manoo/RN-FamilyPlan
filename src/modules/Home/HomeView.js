@@ -296,7 +296,7 @@ export default class HomeView extends Component<Props> {
                   }}>
                   <UserAvatar
                     size={GFun.hp(6)}
-                    name={item.serviceName[0]}
+                    name={item.service_name[0]}
                     color={item.color}
                   />
                 </View>
@@ -369,7 +369,7 @@ export default class HomeView extends Component<Props> {
                   }}>
                   <UserAvatar
                     size={GFun.hp(6)}
-                    name={item.serviceName[0]}
+                    name={item.service_name[0]}
                     color={item.color}
                   />
                 </View>
@@ -410,6 +410,7 @@ export default class HomeView extends Component<Props> {
 
   goToRequestJoinGroup = chatRoom => {
     this.props.navigation.navigate('ChatRoom', {
+      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
     });
   };
@@ -449,7 +450,7 @@ export default class HomeView extends Component<Props> {
         myGroups = myGroups.filter(
           group =>
             group.name.toLowerCase().includes(search) ||
-            group.serviceName.toLowerCase().includes(search),
+            group.service_name.toLowerCase().includes(search),
         );
 
         await this.setState({myGroups: myGroups});
@@ -458,7 +459,7 @@ export default class HomeView extends Component<Props> {
         publicGroups = publicGroups.filter(
           group =>
             group.name.toLowerCase().includes(search) ||
-            group.serviceName.toLowerCase().includes(search),
+            group.service_name.toLowerCase().includes(search),
         );
 
         await this.setState({publicGroups: publicGroups});

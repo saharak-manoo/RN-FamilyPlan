@@ -145,9 +145,11 @@ export default class GroupView extends Component<Props> {
         confirmButton={I18n.t('button.save')}
         cancelButton={I18n.t('button.cancel')}
         onValueChange={(day, index) => {
+          this.state.group.noti_payment = day.toString();
           this.setState({
             notiPayment: day,
             selectedDay: index,
+            group: this.state.group,
           });
           this.updateNotiPayment();
         }}
@@ -276,7 +278,7 @@ export default class GroupView extends Component<Props> {
               justifyContent: 'center',
               fontFamily: 'Kanit-Light',
             }}>
-            {this.state.group.service_charge}
+            {parseFloat(this.state.group.service_charge).toFixed(2)}
           </Text>
         </View>
       </View>
@@ -472,7 +474,7 @@ export default class GroupView extends Component<Props> {
         {this.AppHerder()}
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
           <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
-            {I18n.t('text.info')}
+            {this.state.group.service_name}
           </Text>
         </View>
         <View
