@@ -6,7 +6,7 @@ import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
@@ -39,7 +39,7 @@ export default class NewGroupView extends Component<Props> {
   }
 
   async createGroup() {
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       name: this.state.groupName,
       service_id: this.state.serviceId,
@@ -50,7 +50,7 @@ export default class NewGroupView extends Component<Props> {
     if (response.success) {
       this.props.myGroups.unshift(response.group);
       this.loadingCreateGroup.showLoading(false);
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.createGroupSuccessful'),
       );
@@ -60,9 +60,9 @@ export default class NewGroupView extends Component<Props> {
       this.loadingCreateGroup.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
@@ -79,7 +79,7 @@ export default class NewGroupView extends Component<Props> {
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.newGroup')}
         </Text>
-        <View style={{paddingTop: 15}}>
+        <View style={{paddingTop: GFun.hp(2)}}>
           <TextInput
             keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
             style={{
@@ -96,7 +96,7 @@ export default class NewGroupView extends Component<Props> {
           />
         </View>
 
-        <View style={{paddingTop: 20}}>
+        <View style={{paddingTop: GFun.hp(2)}}>
           <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
             {I18n.t('placeholder.chooseService')}
           </Text>

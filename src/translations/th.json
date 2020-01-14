@@ -15,7 +15,8 @@
     "editProfile": "แก้ไขโปรไฟล์",
     "joinGroup": "เข้าร่วมกลุ่ม",
     "invite": "ส่งคำเชิญ",
-    "search": "ค้นหา"
+    "search": "ค้นหา",
+    "close": "ปิด"
   },
   "text": {
     "mr": "นาย",
@@ -66,7 +67,10 @@
     "serviceCharge": "ค่าบริการ",
     "clickNewGroup": "คลิกเพื่อสร้างกลุ่ม",
     "leaveGroup": "ออกจากกลุ่ม",
-    "darkMode": "โหมดมืด"
+    "darkMode": "โหมดมืด",
+    "usernameAndPassword": "ชื่อผู้ใช้และรหัสผ่าน",
+    "username": "ชื่อผู้ใช้",
+    "editProfile": "แก้ไขโปรไฟล์"
   },
   "message": {
     "success": "สำเร็จ",
@@ -114,6 +118,8 @@
     "notFoundUser": "ไม่พบผู้ใช้ที่ค้นหา โปรดลองใหม่อีกครั้ง",
     "requestGroupSuccessful": "ส่งคำขอเข้าร่วมกลุ่มสำเร็จ",
     "removeChatSuccessful": "ลบแชทสำเร็จ",
-    "removeNotiSuccessful": "ลบแจ้งเตือนสำเร็จ"
+    "removeNotiSuccessful": "ลบแจ้งเตือนสำเร็จ",
+    "copyUserNameSuccessful": "ก็อปชื่อผู้ใช้สำเร็จ",
+    "copyPasswordSuccessful": "ก็อปรหัสผ่านสำเร็จ"
   }
 }

@@ -15,7 +15,8 @@
     "editProfile": "Edit profile",
     "joinGroup": "Join Group",
     "invite": "Invite",
-    "search": "Search"
+    "search": "Search",
+    "close": "Close"
   },
   "text": {
     "mr": "Mr",
@@ -70,7 +71,10 @@
     "serviceCharge": "Service charge",
     "clickNewGroup": "Click to new group",
     "leaveGroup": "Leave group",
-    "darkMode": "Dark Mode"
+    "darkMode": "Dark Mode",
+    "usernameAndPassword": "Username password",
+    "username": "Username",
+    "editProfile": "Edit profile"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -119,6 +123,8 @@
     "notFoundUser": "The user searched for was not found. Please try again",
     "requestGroupSuccessful": "Request group successful",
     "removeChatSuccessful": "Remove chat successful",
-    "removeNotiSuccessful": "Remove notification successful"
+    "removeNotiSuccessful": "Remove notification successful",
+    "copyUserNameSuccessful": "Copy username successful",
+    "copyPasswordSuccessful": "Copy password successful"
   }
 }

@@ -296,7 +296,7 @@ export default class HomeView extends Component<Props> {
                   }}>
                   <UserAvatar
                     size={GFun.hp(6)}
-                    name={item.service_name[0]}
+                    name={item.service_initial}
                     color={item.color}
                   />
                 </View>
@@ -369,7 +369,7 @@ export default class HomeView extends Component<Props> {
                   }}>
                   <UserAvatar
                     size={GFun.hp(6)}
-                    name={item.service_name[0]}
+                    name={item.service_initial}
                     color={item.color}
                   />
                 </View>

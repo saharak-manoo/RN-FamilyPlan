@@ -37,7 +37,7 @@ export default class NotificationView extends Component<Props> {
       spinner: false,
       refreshing: false,
       isLoading: false,
-      limit: 150,
+      limit: 20,
       offset: 0,
       notifications: [],
     };

@@ -6,7 +6,7 @@ import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -22,7 +22,7 @@ export default class SettingServiceChargeView extends Component<Props> {
 
   async clickSettingServiceCharge() {
     this.loadingSettingServiceCharge.showLoading(true);
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       service_charge: this.state.serviceCharge,
     };
@@ -35,7 +35,7 @@ export default class SettingServiceChargeView extends Component<Props> {
 
     if (response.success) {
       this.loadingSettingServiceCharge.showLoading(false);
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.settingServiceChargeSuccessful'),
       );
@@ -46,9 +46,9 @@ export default class SettingServiceChargeView extends Component<Props> {
       this.loadingSettingServiceCharge.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
@@ -65,7 +65,7 @@ export default class SettingServiceChargeView extends Component<Props> {
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.settingServiceCharge')}
         </Text>
-        <View style={{paddingTop: 15}}>
+        <View style={{paddingTop: GFun.hp(2)}}>
           <TextInput
             keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
             style={{
@@ -88,7 +88,7 @@ export default class SettingServiceChargeView extends Component<Props> {
           <HelperText
             style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
             type="error"
-            visible={GFunction.validateBlank(this.state.serviceCharge)}>
+            visible={GFun.validateBlank(this.state.serviceCharge)}>
             {I18n.t('message.valueCannotBeBlank')}
           </HelperText>
         </View>
