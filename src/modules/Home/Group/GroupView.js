@@ -65,13 +65,11 @@ export default class GroupView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'group') {
-      if (!data.group) {
-        let group = JSON.parse(data.group);
-        if (this.state.group.id === group.id) {
-          this.setState({
-            group: group,
-          });
-        }
+      let group = JSON.parse(data.group);
+      if (this.state.group.id === group.id) {
+        this.setState({
+          group: group,
+        });
       }
     }
   }
@@ -305,7 +303,7 @@ export default class GroupView extends Component<Props> {
                 },
               ]}
               style={{
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                 borderRadius: 15,
                 fontFamily: 'Kanit-Light',
               }}>
@@ -313,7 +311,7 @@ export default class GroupView extends Component<Props> {
                 key={index}
                 containerStyle={{
                   borderRadius: 15,
-                  backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                 }}
                 Component={TouchableScale}
                 friction={90}
@@ -349,7 +347,7 @@ export default class GroupView extends Component<Props> {
               key={index}
               containerStyle={{
                 borderRadius: 15,
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
               }}
               Component={TouchableScale}
               friction={90}
@@ -469,7 +467,7 @@ export default class GroupView extends Component<Props> {
         style={{
           fontFamily: 'Kanit-Light',
           flex: 1,
-          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
         }}>
         {this.AppHerder()}
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
@@ -482,7 +480,7 @@ export default class GroupView extends Component<Props> {
             fontFamily: 'Kanit-Light',
             flex: 0.6,
             margin: 10,
-            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+            backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
             borderRadius: 15,
           }}>
           {this.listInfo()}
@@ -498,7 +496,7 @@ export default class GroupView extends Component<Props> {
             fontFamily: 'Kanit-Light',
             flex: 1,
             margin: 10,
-            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+            backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
             borderRadius: 15,
           }}>
           {this.listMembers(this.state.group.members)}

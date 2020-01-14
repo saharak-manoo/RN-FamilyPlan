@@ -78,20 +78,18 @@ export default class NotificationView extends Component<Props> {
       data.noti_type === 'group' ||
       data.noti_type.includes('request_join-')
     ) {
-      if (!data.group_noti_id) {
-        let group_noti_id = JSON.parse(data.group_noti_id);
-        let user = await GFun.user();
-        let resp = await Api.getNotificationById(
-          user.authentication_jwt,
-          group_noti_id,
-        );
-        if (resp.success) {
-          this.setState({
-            notifications: GFun.sortByDate(
-              GFun.uniq(resp.notification.concat(this.state.notifications)),
-            ),
-          });
-        }
+      let group_noti_id = JSON.parse(data.group_noti_id);
+      let user = await GFun.user();
+      let resp = await Api.getNotificationById(
+        user.authentication_jwt,
+        group_noti_id,
+      );
+      if (resp.success) {
+        this.setState({
+          notifications: GFun.sortByDate(
+            GFun.uniq(resp.notification.concat(this.state.notifications)),
+          ),
+        });
       }
     }
   }
@@ -137,7 +135,7 @@ export default class NotificationView extends Component<Props> {
                   text: 'Delete',
                   type: 'delete',
                   onPress: () => {
-                    this.alertRemoveChatMember(item.id, index);
+                    this.alertRemoveNotification(item.id, index);
                   },
                 },
               ]}
@@ -183,7 +181,7 @@ export default class NotificationView extends Component<Props> {
   alertRemoveNotification(id, index) {
     Alert.alert(
       '',
-      'Are your sure tou want to delete this chat ?',
+      'Are your sure tou want to delete this notifications ?',
       [
         {
           text: 'Cancel',
@@ -201,10 +199,10 @@ export default class NotificationView extends Component<Props> {
 
   async removeChatNotification(id, index) {
     this.state.notifications.splice(index, 1);
-    await this.setState({group: this.state.notifications});
+    await this.setState({notifications: this.state.notifications});
     GFun.successMessage(
       I18n.t('message.success'),
-      I18n.t('message.removeChatSuccessful'),
+      I18n.t('message.removeNotiSuccessful'),
     );
   }
 
@@ -338,7 +336,7 @@ export default class NotificationView extends Component<Props> {
       <View
         style={[
           styles.defaultView,
-          {backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE'},
+          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
         ]}>
         {this.AppHerder()}
         {this.state.spinner ? (

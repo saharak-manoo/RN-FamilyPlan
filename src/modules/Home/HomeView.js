@@ -26,6 +26,7 @@ import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
+import UserAvatar from 'react-native-user-avatar';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -36,6 +37,8 @@ import {array} from 'prop-types';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
+console.log(width);
+console.log(height);
 
 export default class HomeView extends Component<Props> {
   constructor(props) {
@@ -76,9 +79,7 @@ export default class HomeView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'group') {
-      if (!data.group) {
-        this.refreshGroup(false);
-      }
+      this.refreshGroup(false);
     }
   }
 
@@ -86,6 +87,12 @@ export default class HomeView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
+
+    this.notificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(async notificationOpen => {
+        alert(JSON.stringify(notificationOpen.notification));
+      });
   }
 
   fcmCheckPermissions() {
@@ -241,6 +248,7 @@ export default class HomeView extends Component<Props> {
         <JoinGroupView
           modal={this.joinGroupModal}
           group={group}
+          isDarkMode={this.state.isDarkMode}
           onGoToRequestJoinGroup={this.goToRequestJoinGroup}
         />
       </Modalize>
@@ -277,7 +285,7 @@ export default class HomeView extends Component<Props> {
               style={{
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                 margin: 10,
                 borderRadius: 20,
                 width: width / 3,
@@ -286,10 +294,18 @@ export default class HomeView extends Component<Props> {
               onPress={() => this.goToGroup(item)}>
               <View style={{flex: 1}}>
                 <View
-                  style={[styles.headerCard, {backgroundColor: item.color}]}>
-                  <Text numberOfLines={1} style={styles.textHeadCard}>
-                    {item.serviceName}
-                  </Text>
+                  style={{
+                    flex: 0.5,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignSelf: 'center',
+                    paddingTop: 5,
+                  }}>
+                  <UserAvatar
+                    size="60"
+                    name={item.serviceName[0]}
+                    color={item.color}
+                  />
                 </View>
                 <View style={{flex: 0.4}}>
                   <Text numberOfLines={1} style={styles.textNameCard}>
@@ -327,7 +343,7 @@ export default class HomeView extends Component<Props> {
               style={{
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                 margin: 10,
                 borderRadius: 20,
                 width: width / 3,
@@ -336,10 +352,18 @@ export default class HomeView extends Component<Props> {
               onPress={() => this.showJoinGroupModal(item)}>
               <View style={{flex: 1}}>
                 <View
-                  style={[styles.headerCard, {backgroundColor: item.color}]}>
-                  <Text numberOfLines={1} style={styles.textHeadCard}>
-                    {item.serviceName}
-                  </Text>
+                  style={{
+                    flex: 0.5,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignSelf: 'center',
+                    paddingTop: 5,
+                  }}>
+                  <UserAvatar
+                    size="60"
+                    name={item.serviceName[0]}
+                    color={item.color}
+                  />
                 </View>
                 <View style={{flex: 0.4}}>
                   <Text
@@ -450,7 +474,7 @@ export default class HomeView extends Component<Props> {
               style={{
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                 margin: 10,
                 borderRadius: 20,
                 width: width / 3,
@@ -461,7 +485,7 @@ export default class HomeView extends Component<Props> {
                 width={width / 3}
                 primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
                 secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
-                <Circle x={35} y={-50} cx={34} cy={65} r={70} />
+                <Circle x={35} y={-20} cx={34} cy={65} r={34} />
                 <Rect x="25" y="110" width={width / 5} height="25" />
                 <Rect x="15" y="150" width={width / 3.8} height="15" />
               </ContentLoader>
@@ -478,10 +502,10 @@ export default class HomeView extends Component<Props> {
       <View
         style={[
           styles.defaultView,
-          {backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE'},
+          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
         ]}>
         {this.AppHerder()}
-        <View style={{padding: 10}}>
+        <View style={{padding: 15}}>
           <Searchbar
             style={{
               backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
@@ -499,6 +523,7 @@ export default class HomeView extends Component<Props> {
         </View>
 
         <ScrollView
+          scrollEnabled={!this.state.spinner}
           refreshControl={
             <RefreshControl
               tintColor={this.state.isDarkMode ? '#FFF' : '#000'}
@@ -526,7 +551,7 @@ export default class HomeView extends Component<Props> {
                           fontFamily: 'Kanit-Light',
                           flex: 0.7,
                           backgroundColor: this.state.isDarkMode
-                            ? '#202020'
+                            ? '#363636'
                             : '#FFF',
                           margin: 10,
                           borderRadius: 20,
@@ -535,8 +560,16 @@ export default class HomeView extends Component<Props> {
                         }}
                         onPress={this.showNewGroupModal}>
                         <View style={{flex: 1}}>
-                          <View style={styles.headerCardNewGroup}>
+                          <View
+                            style={{
+                              flex: 0.5,
+                              justifyContent: 'center',
+                              alignContent: 'center',
+                              alignSelf: 'center',
+                              paddingTop: 5,
+                            }}>
                             <Icon
+                              size={28}
                               reverse
                               name="add"
                               type="mat-icon"
@@ -548,7 +581,6 @@ export default class HomeView extends Component<Props> {
                               numberOfLines={1}
                               style={{
                                 fontSize: 20,
-                                color: '#000',
                                 alignSelf: 'center',
                                 padding: 15,
                                 fontFamily: 'Kanit-Light',
@@ -561,7 +593,6 @@ export default class HomeView extends Component<Props> {
                               numberOfLines={1}
                               style={{
                                 fontSize: 13,
-                                color: '#000',
                                 alignSelf: 'center',
                                 justifyContent: 'flex-end',
                                 padding: 10,

@@ -1,5 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {Dimensions, PixelRatio} from 'react-native';
 import {showMessage, hideMessage} from 'react-native-flash-message';
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 export async function user() {
   return JSON.parse(await AsyncStorage.getItem('user'));
@@ -105,3 +109,19 @@ export function sortByDate(datas, asc = false) {
     return asc ? dateA - dateB : dateB - dateA;
   });
 }
+
+export const wp = widthPercent => {
+  const elemWidth =
+    typeof widthPercent === 'number' ? widthPercent : parseFloat(widthPercent);
+
+  return PixelRatio.roundToNearestPixel((screenWidth * elemWidth) / 100);
+};
+
+export const hp = heightPercent => {
+  const elemHeight =
+    typeof heightPercent === 'number'
+      ? heightPercent
+      : parseFloat(heightPercent);
+
+  return PixelRatio.roundToNearestPixel((screenHeight * elemHeight) / 100);
+};

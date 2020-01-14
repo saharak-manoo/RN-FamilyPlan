@@ -58,7 +58,7 @@ export default class SettingServiceChargeView extends Component<Props> {
         style={{
           flex: 1,
           padding: 30,
-          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+          backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
           borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
         }}>
