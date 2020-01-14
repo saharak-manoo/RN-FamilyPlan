@@ -40,6 +40,9 @@ export default class EditProfileView extends Component<Props> {
 
   async clickSaveProfile() {
     this.loadingSaveProfile.showLoading(true);
+    this.props.navigation.navigate('Profile', {
+      isDarkMode: this.state.isDarkMode,
+    });
   }
 
   render() {

@@ -25,6 +25,7 @@ import * as GFun from '../../../util/GlobalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
+import {showMessage, hideMessage} from 'react-native-flash-message';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';

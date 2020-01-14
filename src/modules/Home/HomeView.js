@@ -24,6 +24,7 @@ import firebase from 'react-native-firebase';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
 import UserAvatar from 'react-native-user-avatar';
+import {showMessage, hideMessage} from 'react-native-flash-message';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
@@ -70,31 +71,96 @@ export default class HomeView extends Component<Props> {
     }
   };
 
-  realTimeData(data) {
-    if (data.noti_type === 'group') {
+  async realTimeData(data) {
+    let user = await GFun.user();
+    if (
+      data.noti_type === 'group' ||
+      data.noti_type.includes('request_join-')
+    ) {
+      let group_noti_id = JSON.parse(data.group_noti_id);
+      let resp = await Api.getNotificationById(
+        user.authentication_jwt,
+        group_noti_id,
+      );
       this.refreshGroup(false);
+      if (resp.success) {
+        let noti = resp.notification[0];
+        showMessage({
+          message: noti.name,
+          description: noti.message,
+          type: 'default',
+          backgroundColor: '#006FF6',
+          color: '#FFF',
+          duration: 5000,
+          onPress: () => {
+            this.goTo(noti);
+          },
+        });
+      }
+    } else if (data.noti_type === 'chat') {
+      let chatRoom = JSON.parse(data.chat_room);
+      let message = JSON.parse(data.message);
+      if (message.user._id !== user.id) {
+        showMessage({
+          message: chatRoom.name,
+          description: message.text,
+          type: 'default',
+          backgroundColor: '#006FF6',
+          color: '#FFF',
+          duration: 5000,
+          onPress: () => {
+            this.props.navigation.navigate('ChatRoom', {
+              isDarkMode: this.state.isDarkMode,
+              chatRoom: chatRoom,
+              isRequestJoin: false,
+            });
+          },
+        });
+      }
     }
   }
+
+  goTo = notification => {
+    if (
+      notification.noti_type === 'chat' ||
+      notification.noti_type.includes('request_join-')
+    ) {
+      this.props.navigation.navigate('ChatRoom', {
+        isDarkMode: this.state.isDarkMode,
+        chatRoom: notification.data,
+        isRequestJoin: false,
+      });
+    } else if (notification.noti_type === 'group') {
+      this.props.navigation.navigate('Group', {
+        isDarkMode: this.state.isDarkMode,
+        group: notification.data,
+      });
+    }
+  };
 
   componentDidMount() {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
-
-    this.notificationOpenedListener = firebase
-      .notifications()
-      .onNotificationOpened(async notificationOpen => {
-        alert(JSON.stringify(notificationOpen.notification));
-      });
   }
 
-  fcmCheckPermissions() {
+  componentWillUnmount() {
+    this.notificationOpenedListener();
+  }
+
+  async fcmCheckPermissions() {
     firebase
       .messaging()
       .hasPermission()
       .then(enabled => {
         if (enabled) {
-          // user has permissions
+          this.notificationOpenedListener = firebase
+            .notifications()
+            .onNotificationOpened(async notificationOpen => {
+              let action = notificationOpen.action;
+              let notification = notificationOpen.notification;
+              alert('notificationOpenedListener', JSON.stringify(notification));
+            });
         } else {
           firebase
             .messaging()
@@ -606,7 +672,7 @@ export default class HomeView extends Component<Props> {
                               paddingTop: GFun.hp(1),
                             }}>
                             <Icon
-                              size={GFun.hp(4)}
+                              size={GFun.hp(3.5)}
                               reverse
                               name="add"
                               type="mat-icon"
@@ -678,15 +744,17 @@ export default class HomeView extends Component<Props> {
         {this.popUpModalJoinGroup(this.state.group)}
         {this.popUpModalNewGroup()}
         {this.popUpModalScanQrCode()}
-        <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item
-            buttonColor="#03C8A1"
-            title={I18n.t('placeholder.newGroup')}
-            textStyle={{fontFamily: 'Kanit-Light'}}
-            onPress={this.showNewGroupModal}>
-            <MatIcon name="group-add" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton>
+        {!this.state.spinner && (
+          <ActionButton buttonColor="rgba(231,76,60,1)">
+            <ActionButton.Item
+              buttonColor="#03C8A1"
+              title={I18n.t('placeholder.newGroup')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showNewGroupModal}>
+              <MatIcon name="group-add" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+          </ActionButton>
+        )}
       </View>
     );
   }

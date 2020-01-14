@@ -149,7 +149,7 @@ export default class ProfileView extends Component<Props> {
                 height={height}
                 width={width / 0.5}
                 primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
-                secondaryColor={this.state.isDarkMode ? '#363636' : '#ecebeb'}>
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Circle
                   x={GFun.wp(40)}
                   y={GFun.wp(-1)}
@@ -251,7 +251,7 @@ export default class ProfileView extends Component<Props> {
                 height={height}
                 width={width / 0.5}
                 primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
-                secondaryColor={this.state.isDarkMode ? '#363636' : '#ecebeb'}>
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Rect
                   x={GFun.wp(2)}
                   y={GFun.hp(4)}
@@ -339,7 +339,7 @@ export default class ProfileView extends Component<Props> {
                 height={height}
                 width={width / 0.9}
                 primaryColor={this.state.isDarkMode ? '#333' : '#E7E7E7'}
-                secondaryColor={this.state.isDarkMode ? '#363636' : '#ecebeb'}>
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Rect
                   x={GFun.wp(3.5)}
                   y={GFun.hp(94)}

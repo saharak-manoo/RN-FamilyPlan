@@ -36,7 +36,7 @@ export function infoMessage(message, description) {
     message: message,
     description: description,
     type: 'default',
-    backgroundColor: '#0598E1',
+    backgroundColor: '#006FF6',
     color: '#FFF',
     duration: 3000,
   });
