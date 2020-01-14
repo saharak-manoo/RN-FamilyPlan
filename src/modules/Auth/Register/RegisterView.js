@@ -14,13 +14,12 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import {Dropdown} from 'react-native-material-dropdown';
 import * as Api from '../../../util/Api';
-import * as GFunction from '../../../util/GlobalFunction';
+import * as GFun from '../../../util/GlobalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#1C83F7' : '#000';
 
 export default class RegisterView extends Component<Props> {
   constructor(props) {
@@ -78,14 +77,14 @@ export default class RegisterView extends Component<Props> {
   validate() {
     if (this.state.password && this.state.confirmPassword) {
       if (this.state.password.length < 6 || this.state.confirmPassword < 6) {
-        GFunction.errorMessage(
+        GFun.errorMessage(
           I18n.t('message.notValidate'),
           I18n.t('message.passwordLessThanSix'),
         );
         this.loadingSignUp.showLoading(false);
       } else {
         if (this.state.password !== this.state.confirmPassword) {
-          GFunction.errorMessage(
+          GFun.errorMessage(
             I18n.t('message.notValidate'),
             I18n.t('message.passwordNotMatch'),
           );
@@ -95,7 +94,7 @@ export default class RegisterView extends Component<Props> {
         }
       }
     } else {
-      GFunction.errorMessage(
+      GFun.errorMessage(
         I18n.t('message.notValidate'),
         I18n.t('message.pleaseInputAllValue'),
       );
@@ -131,7 +130,7 @@ export default class RegisterView extends Component<Props> {
     if (response.success) {
       this.loadingSignUp.showLoading(false);
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.signUpSuccessful'),
       );
@@ -142,9 +141,9 @@ export default class RegisterView extends Component<Props> {
       this.loadingSignUp.showLoading(false);
       let errors = [];
       response.errors.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
@@ -163,25 +162,25 @@ export default class RegisterView extends Component<Props> {
       <View
         style={{
           flex: 1,
-          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
         }}>
         {this.appHerder()}
         <ScrollView style={{flex: 1}}>
-          <View style={{padding: 25, alignSelf: 'center'}}>
+          <View style={{padding: GFun.hp(2), alignSelf: 'center'}}>
             <Text
               style={{
                 alignSelf: 'center',
-                fontSize: 38,
+                fontSize: GFun.hp(6),
                 fontFamily: 'Kanit-Light',
               }}>
               {I18n.t('button.signUp')}
             </Text>
           </View>
-          <View style={{padding: 15}}>
+          <View style={{padding: GFun.hp(2)}}>
             <TextInput
               keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
               style={{
-                paddingBottom: 6,
+                paddingBottom: GFun.hp(1),
                 fontFamily: 'Kanit-Light',
                 height: 50,
                 textAlign: 'center',
@@ -195,14 +194,14 @@ export default class RegisterView extends Component<Props> {
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validateBlank(this.state.firstName)}>
+              visible={GFun.validateBlank(this.state.firstName)}>
               {I18n.t('message.firstNameCannotBeBlank')}
             </HelperText>
 
             <TextInput
               keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
               style={{
-                paddingBottom: 6,
+                paddingBottom: GFun.hp(1),
                 fontFamily: 'Kanit-Light',
                 height: 50,
                 textAlign: 'center',
@@ -216,14 +215,14 @@ export default class RegisterView extends Component<Props> {
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validateBlank(this.state.lastName)}>
+              visible={GFun.validateBlank(this.state.lastName)}>
               {I18n.t('message.lastNameCannotBeBlank')}
             </HelperText>
 
             <TextInput
               keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
               style={{
-                paddingBottom: 6,
+                paddingBottom: GFun.hp(1),
                 fontFamily: 'Kanit-Light',
                 height: 50,
                 textAlign: 'center',
@@ -237,7 +236,7 @@ export default class RegisterView extends Component<Props> {
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validateEmail(this.state.email)}>
+              visible={GFun.validateEmail(this.state.email)}>
               {I18n.t('message.emailIsInvalid')}
             </HelperText>
 
@@ -246,7 +245,7 @@ export default class RegisterView extends Component<Props> {
               maxLength={10}
               keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
               style={{
-                paddingBottom: 6,
+                paddingBottom: GFun.hp(1),
                 fontFamily: 'Kanit-Light',
                 height: 50,
                 textAlign: 'center',
@@ -262,7 +261,7 @@ export default class RegisterView extends Component<Props> {
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validatePhoneNumber(this.state.phoneNumber)}>
+              visible={GFun.validatePhoneNumber(this.state.phoneNumber)}>
               {I18n.t('message.telephoneMustBeTen')}
             </HelperText>
 
@@ -271,7 +270,7 @@ export default class RegisterView extends Component<Props> {
               autoCorrect={false}
               keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
               style={{
-                paddingBottom: 6,
+                paddingBottom: GFun.hp(1),
                 fontFamily: 'Kanit-Light',
                 height: 50,
                 textAlign: 'center',
@@ -285,9 +284,7 @@ export default class RegisterView extends Component<Props> {
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validatePasswordLessThanSix(
-                this.state.password,
-              )}>
+              visible={GFun.validatePasswordLessThanSix(this.state.password)}>
               {I18n.t('message.passwordLessThanSix')}
             </HelperText>
 
@@ -296,7 +293,7 @@ export default class RegisterView extends Component<Props> {
               autoCorrect={false}
               keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
               style={{
-                paddingBottom: 6,
+                paddingBottom: GFun.hp(1),
                 fontFamily: 'Kanit-Light',
                 height: 50,
                 textAlign: 'center',
@@ -312,14 +309,14 @@ export default class RegisterView extends Component<Props> {
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validatePasswordMatch(
+              visible={GFun.validatePasswordMatch(
                 this.state.password,
                 this.state.confirmPassword,
               )}>
               {I18n.t('message.passwordNotMatch')}
             </HelperText>
 
-            <View style={{justifyContent: 'center', paddingTop: 10}}>
+            <View style={{justifyContent: 'center', paddingTop: GFun.hp(1)}}>
               <AnimateLoadingButton
                 ref={load => (this.loadingSignUp = load)}
                 titleFontFamily={'Kanit-Light'}
@@ -334,7 +331,11 @@ export default class RegisterView extends Component<Props> {
               />
 
               <TouchableOpacity
-                style={{padding: 20, paddingTop: 15, alignItems: 'center'}}
+                style={{
+                  padding: GFun.hp(2),
+                  paddingTop: GFun.hp(2),
+                  alignItems: 'center',
+                }}
                 onPress={() =>
                   this.props.navigation.navigate('ForgotPassword', {
                     isDarkMode: this.state.isDarkMode,

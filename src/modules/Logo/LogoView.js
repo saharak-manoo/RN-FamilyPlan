@@ -50,7 +50,7 @@ export default class LogoView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#000'}}>
+      <View style={{flex: 1, backgroundColor: '#202020'}}>
         <View
           style={{
             flex: 1,

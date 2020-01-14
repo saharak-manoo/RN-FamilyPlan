@@ -14,7 +14,7 @@ import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import * as Api from '../../../util/Api';
-import * as GFunction from '../../../util/GlobalFunction';
+import * as GFun from '../../../util/GlobalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 import appleAuth, {
   AppleButton,
@@ -69,7 +69,7 @@ export default class LoginView extends Component<Props> {
     if (response.success) {
       this.loadingLogin.showLoading(false);
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.signInSuccessful'),
       );
@@ -78,7 +78,7 @@ export default class LoginView extends Component<Props> {
       });
     } else {
       this.loadingLogin.showLoading(false);
-      GFunction.errorMessage(
+      GFun.errorMessage(
         I18n.t('message.notValidate'),
         I18n.t('message.EmailOrPasswordMismatch'),
       );
@@ -125,7 +125,7 @@ export default class LoginView extends Component<Props> {
       let response = await Api.signInWith(user);
       if (response.success) {
         await AsyncStorage.setItem('user', JSON.stringify(response.user));
-        GFunction.successMessage(
+        GFun.successMessage(
           I18n.t('message.success'),
           I18n.t('message.signInSuccessful'),
         );
@@ -150,19 +150,24 @@ export default class LoginView extends Component<Props> {
       <View
         style={{
           flex: 1,
-          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
         }}>
         {this.appHerder()}
         <ScrollView>
-          <View style={{justifyContent: 'center', paddingTop: 40, padding: 15}}>
+          <View
+            style={{
+              justifyContent: 'center',
+              paddingTop: GFun.hp(2),
+              padding: GFun.hp(2),
+            }}>
             {appleAuth.isSupported && (
               <View style={{justifyContent: 'center', paddingTop: 2}}>
                 <TouchableOpacity
                   style={[
                     styles.buttonLoginWith,
                     {
-                      marginTop: 20,
-                      backgroundColor: '#202020',
+                      marginTop: GFun.hp(2),
+                      backgroundColor: '#000',
                       flexDirection: 'row',
                       borderRadius: 28,
                       height: 50,
@@ -194,7 +199,7 @@ export default class LoginView extends Component<Props> {
                 style={[
                   styles.buttonLoginWith,
                   {
-                    marginTop: 20,
+                    marginTop: GFun.hp(2),
                     backgroundColor: '#4267be',
                     flexDirection: 'row',
                     borderRadius: 28,
@@ -226,7 +231,7 @@ export default class LoginView extends Component<Props> {
                 style={[
                   styles.buttonLoginWith,
                   {
-                    marginTop: 20,
+                    marginTop: GFun.hp(2),
                     backgroundColor: '#18C464',
                     flexDirection: 'row',
                     borderRadius: 28,
@@ -270,7 +275,7 @@ export default class LoginView extends Component<Props> {
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validateEmail(this.state.email)}>
+              visible={GFun.validateEmail(this.state.email)}>
               {I18n.t('message.emailIsInvalid')}
             </HelperText>
 
@@ -293,9 +298,7 @@ export default class LoginView extends Component<Props> {
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validatePasswordLessThanSix(
-                this.state.password,
-              )}>
+              visible={GFun.validatePasswordLessThanSix(this.state.password)}>
               {I18n.t('message.passwordLessThanSix')}
             </HelperText>
 
@@ -315,8 +318,8 @@ export default class LoginView extends Component<Props> {
 
               <TouchableOpacity
                 style={{
-                  padding: 20,
-                  paddingTop: 15,
+                  padding: GFun.hp(2),
+                  paddingTop: GFun.hp(2),
                   alignItems: 'center',
                 }}
                 onPress={() =>
