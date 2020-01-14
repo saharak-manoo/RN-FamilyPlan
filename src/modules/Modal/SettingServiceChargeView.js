@@ -40,7 +40,7 @@ export default class SettingServiceChargeView extends Component<Props> {
         I18n.t('message.settingServiceChargeSuccessful'),
       );
       this.props.modal.current.close();
-      this.props.group.service_charge = this.state.serviceCharge;
+      this.props.group.service_charge = parseFloat(this.state.serviceCharge);
       this.props.onSetNewData(this.props.group);
     } else {
       this.loadingSettingServiceCharge.showLoading(false);
@@ -86,7 +86,7 @@ export default class SettingServiceChargeView extends Component<Props> {
             }
           />
           <HelperText
-            style={{fontFamily: 'Kanit-Light'}}
+            style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
             type="error"
             visible={GFunction.validateBlank(this.state.serviceCharge)}>
             {I18n.t('message.valueCannotBeBlank')}
