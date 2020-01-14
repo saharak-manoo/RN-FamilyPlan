@@ -16,7 +16,6 @@ import I18n from '../../components/i18n';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#2370E6' : '#000';
 
 export default class LogoView extends Component<Props> {
   constructor(props) {
