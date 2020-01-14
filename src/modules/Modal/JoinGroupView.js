@@ -6,7 +6,7 @@ import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -21,7 +21,7 @@ export default class JoinGroupView extends Component<Props> {
 
   async clickJoinGroup() {
     this.loadingJoinGroup.showLoading(true);
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let response = await Api.createChatRoom(
       user.authentication_jwt,
       this.props.group.id,
@@ -29,7 +29,7 @@ export default class JoinGroupView extends Component<Props> {
 
     if (response.success) {
       this.loadingJoinGroup.showLoading(false);
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.requestGroupSuccessful'),
       );
@@ -39,9 +39,9 @@ export default class JoinGroupView extends Component<Props> {
       this.loadingJoinGroup.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.error'), errors.join('\n'));
     }
   }
 
@@ -58,7 +58,7 @@ export default class JoinGroupView extends Component<Props> {
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.joinGroup')}
         </Text>
-        <View style={{paddingTop: 15, paddingLeft: 15}}>
+        <View style={{paddingTop: GFun.hp(2), paddingLeft: 15}}>
           <Text style={{fontSize: 20, fontFamily: 'Kanit-Light'}}>
             {I18n.t('placeholder.name') + ' : ' + this.props.group.name}
           </Text>

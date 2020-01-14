@@ -29,6 +29,7 @@ import UserAvatar from 'react-native-user-avatar';
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
 import SettingServiceChargeView from '../../Modal/SettingServiceChargeView';
+import UsernamePasswordGroupView from '../../Modal/UsernamePasswordGroupView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -51,6 +52,7 @@ export default class GroupView extends Component<Props> {
 
   inviteMemberModal = React.createRef();
   settingServiceChargeModal = React.createRef();
+  usernamePasswordModal = React.createRef();
 
   async componentWillMount() {
     let user = await GFun.user();
@@ -224,6 +226,42 @@ export default class GroupView extends Component<Props> {
   setNewData = async group => {
     await this.setState({group: group});
   };
+
+  showModalUsernamePassword = () => {
+    if (this.usernamePasswordModal.current) {
+      this.usernamePasswordModal.current.open();
+    }
+  };
+
+  popUpModalUsernamePassword() {
+    return (
+      <Modalize
+        ref={this.usernamePasswordModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <UsernamePasswordGroupView
+          modal={this.usernamePasswordModal}
+          isDarkMode={this.state.isDarkMode}
+          isGroupLeader={this.state.userView.group_leader}
+          userName={'test'}
+          password={'password'}
+        />
+      </Modalize>
+    );
+  }
 
   listInfo = () => {
     return (
@@ -507,6 +545,7 @@ export default class GroupView extends Component<Props> {
         {this.popUpModalInviteMember()}
         {this.popUpModalSettingServiceCharge()}
         {this.popUpModalSetUpReminder()}
+        {this.popUpModalUsernamePassword()}
 
         {this.state.userView.group_leader ? (
           <ActionButton buttonColor="rgba(231,76,60,1)">
@@ -531,6 +570,13 @@ export default class GroupView extends Component<Props> {
               onPress={this.showModalSetUpReminder}>
               <MatIcon name="add-alert" style={styles.actionButtonIcon} />
             </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="#ED5D00"
+              title={I18n.t('placeholder.usernameAndPassword')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalUsernamePassword}>
+              <MatIcon name="https" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
           </ActionButton>
         ) : (
           <ActionButton
@@ -542,6 +588,13 @@ export default class GroupView extends Component<Props> {
               textStyle={{fontFamily: 'Kanit-Light'}}
               onPress={() => this.goToChatRoom(this.state.group.chat_room)}>
               <MatIcon name="chat" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="#ED5D00"
+              title={I18n.t('placeholder.usernameAndPassword')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalUsernamePassword}>
+              <MatIcon name="https" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor="rgba(231,76,60,1)"

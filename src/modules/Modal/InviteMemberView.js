@@ -7,7 +7,7 @@ import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import {ListItem} from 'react-native-elements';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import TouchableScale from 'react-native-touchable-scale';
@@ -28,7 +28,7 @@ export default class InviteMemberView extends Component<Props> {
 
   async clickInviteMember() {
     this.loadingInviteMember.showLoading(true);
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let response = await Api.searchGroup(
       user.authentication_jwt,
       this.state.newMemberEmail,
@@ -39,7 +39,7 @@ export default class InviteMemberView extends Component<Props> {
       if (response.user != null) {
         await this.setState({newMember: response.user});
       } else {
-        GFunction.infoMessage(
+        GFun.infoMessage(
           I18n.t('message.notFound'),
           I18n.t('message.notFoundUser'),
         );
@@ -48,14 +48,14 @@ export default class InviteMemberView extends Component<Props> {
       this.loadingInviteMember.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
   async addToGroup(id) {
-    let user = await GFunction.user();
+    let user = await GFun.user();
 
     let response = await Api.joinGroup(
       user.authentication_jwt,
@@ -65,7 +65,7 @@ export default class InviteMemberView extends Component<Props> {
 
     if (response.success) {
       this.props.onSetNewData(response.group);
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.inviteMemberSuccessful'),
       );
@@ -73,9 +73,9 @@ export default class InviteMemberView extends Component<Props> {
     } else {
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.error'), errors.join('\n'));
     }
   }
 
@@ -92,7 +92,7 @@ export default class InviteMemberView extends Component<Props> {
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.inviteMember')}
         </Text>
-        <View style={{paddingTop: 15}}>
+        <View style={{paddingTop: GFun.hp(2)}}>
           <TextInput
             keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
             style={{
@@ -112,11 +112,11 @@ export default class InviteMemberView extends Component<Props> {
           <HelperText
             style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
             type="error"
-            visible={GFunction.validateEmail(this.state.newMemberEmail)}>
+            visible={GFun.validateEmail(this.state.newMemberEmail)}>
             {I18n.t('message.emailIsInvalid')}
           </HelperText>
         </View>
-        <View style={{paddingTop: 15}}>
+        <View style={{paddingTop: GFun.hp(2)}}>
           {this.state.newMember != null ? (
             <ListItem
               onPress={() => this.addToGroup(this.state.newMember.id)}

@@ -267,7 +267,7 @@ export default class ChatView extends Component<Props> {
         }}
         wrapperStyle={{
           left: {
-            backgroundColor: this.state.isDarkMode ? '#6A6A6A' : '#EEEEEE',
+            backgroundColor: this.state.isDarkMode ? '#383838' : '#EEEEEE',
           },
           right: {
             backgroundColor: this.state.chatRoom.group.color || '#0084ff',

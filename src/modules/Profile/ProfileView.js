@@ -63,6 +63,7 @@ export default class ProfileView extends Component<Props> {
     if (response.success) {
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
       this.setState({
+        user: response.user,
         prefix: response.user.prefix,
         firstName: response.user.first_name,
         lastName: response.user.last_name,
@@ -92,6 +93,11 @@ export default class ProfileView extends Component<Props> {
 
   clickEditProfile() {
     this.loadingEditProfile.showLoading(true);
+    this.props.navigation.navigate('EditProfile', {
+      isDarkMode: this.state.isDarkMode,
+      user: this.state.user,
+    });
+    this.loadingEditProfile.showLoading(false);
   }
 
   clickSignOut() {
@@ -272,7 +278,7 @@ export default class ProfileView extends Component<Props> {
                 />
               </ContentLoader>
             ) : (
-              <ScrollView>
+              <ScrollView style={{borderRadius: 10}}>
                 <ListItem
                   containerStyle={{
                     borderRadius: 10,
