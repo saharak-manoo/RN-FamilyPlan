@@ -82,26 +82,24 @@ export default class ChatListView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
-      if (!data.chat_room) {
-        let chatRoom = JSON.parse(data.chat_room);
-        let chatRoomIndex = this.state.chatRooms.findIndex(
-          c => c.id === chatRoom.id,
-        );
+      let chatRoom = JSON.parse(data.chat_room);
+      let chatRoomIndex = this.state.chatRooms.findIndex(
+        c => c.id === chatRoom.id,
+      );
 
-        if (chatRoomIndex === -1) {
-          this.setState({
-            chatRooms: GFun.sortByDate([chatRoom].concat(this.state.chatRooms)),
-            tempChatRooms: GFun.sortByDate(
-              [chatRoom].concat(this.state.chatRooms),
-            ),
-          });
-        } else {
-          this.state.chatRooms[chatRoomIndex] = chatRoom;
-          this.setState({
-            chatRooms: GFun.sortByDate(this.state.chatRooms),
-            tempChatRooms: GFun.sortByDate(this.state.chatRooms),
-          });
-        }
+      if (chatRoomIndex === -1) {
+        this.setState({
+          chatRooms: GFun.sortByDate([chatRoom].concat(this.state.chatRooms)),
+          tempChatRooms: GFun.sortByDate(
+            [chatRoom].concat(this.state.chatRooms),
+          ),
+        });
+      } else {
+        this.state.chatRooms[chatRoomIndex] = chatRoom;
+        this.setState({
+          chatRooms: GFun.sortByDate(this.state.chatRooms),
+          tempChatRooms: GFun.sortByDate(this.state.chatRooms),
+        });
       }
     }
   }

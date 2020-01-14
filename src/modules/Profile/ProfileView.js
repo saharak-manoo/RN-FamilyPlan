@@ -129,7 +129,7 @@ export default class ProfileView extends Component<Props> {
         style={{
           fontFamily: 'Kanit-Light',
           flex: 1,
-          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
         }}>
         {this.AppHerder()}
 
@@ -139,7 +139,7 @@ export default class ProfileView extends Component<Props> {
               fontFamily: 'Kanit-Light',
               flex: 1.4,
               margin: 10,
-              backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
               borderRadius: 10,
             }}>
             {this.state.spinner ? (
@@ -147,7 +147,7 @@ export default class ProfileView extends Component<Props> {
                 height={height}
                 width={width / 0.5}
                 primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
-                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
+                secondaryColor={this.state.isDarkMode ? '#363636' : '#ecebeb'}>
                 <Circle cx="200" cy="65" r="60" />
                 <Rect x="10" y="180" width={width / 1.12} height="50" />
                 <Rect x="75" y="250" width={width / 1.75} height="20" />
@@ -198,7 +198,7 @@ export default class ProfileView extends Component<Props> {
               fontFamily: 'Kanit-Light',
               flex: 0.5,
               margin: 10,
-              backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
               borderRadius: 10,
             }}>
             {this.state.spinner ? (
@@ -206,7 +206,7 @@ export default class ProfileView extends Component<Props> {
                 height={height}
                 width={width / 0.5}
                 primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
-                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
+                secondaryColor={this.state.isDarkMode ? '#363636' : '#ecebeb'}>
                 <Rect x="10" y="20" width={width / 2} height="20" />
                 <Rect x="340" y="20" width={width / 10} height="20" />
                 <Rect x="10" y="70" width={width / 2} height="20" />
@@ -227,7 +227,7 @@ export default class ProfileView extends Component<Props> {
                 <ListItem
                   containerStyle={{
                     borderRadius: 10,
-                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                    backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                   }}
                   title={I18n.t('placeholder.th')}
                   titleStyle={{
@@ -246,7 +246,7 @@ export default class ProfileView extends Component<Props> {
                 <ListItem
                   containerStyle={{
                     borderRadius: 10,
-                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                    backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                   }}
                   title={I18n.t('placeholder.darkMode')}
                   titleStyle={{
@@ -265,7 +265,7 @@ export default class ProfileView extends Component<Props> {
                 <ListItem
                   containerStyle={{
                     borderRadius: 10,
-                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                    backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                   }}
                   title={I18n.t('placeholder.appVersion')}
                   titleStyle={{
@@ -284,7 +284,7 @@ export default class ProfileView extends Component<Props> {
                 height={height}
                 width={width / 0.9}
                 primaryColor={this.state.isDarkMode ? '#333' : '#E7E7E7'}
-                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
+                secondaryColor={this.state.isDarkMode ? '#363636' : '#ecebeb'}>
                 <Rect
                   x={15}
                   y={840}

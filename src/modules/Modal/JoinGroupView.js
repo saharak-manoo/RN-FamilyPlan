@@ -47,7 +47,14 @@ export default class JoinGroupView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1, padding: 30}}>
+      <View
+        style={{
+          flex: 1,
+          padding: 30,
+          backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}>
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.joinGroup')}
         </Text>

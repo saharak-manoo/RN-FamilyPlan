@@ -11,7 +11,7 @@ const theme = {
   colors: {
     ...DefaultTheme.colors,
     placeholder: '#6D6D6D',
-    text: '#000',
+    text: '#FFF',
     primary: '#009FF5',
     accent: '#00E2B2',
     underlineColor: '#6D6D6D',
@@ -35,6 +35,7 @@ export default class App extends Component<Props> {
       theme.colors.text = '#FFF';
       theme.dark = true;
     } else {
+      theme.colors.text = '#000';
       theme.dark = false;
     }
     await AsyncStorage.getItem('locale').then(language => {

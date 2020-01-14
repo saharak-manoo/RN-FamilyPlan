@@ -63,18 +63,16 @@ export default class ChatView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
-      if (!data.message) {
-        let message = JSON.parse(data.message);
-        if (this.state.user.id !== message.user._id) {
-          let messageIndex = this.state.messages.findIndex(
-            m => m.id === message.id,
-          );
+      let message = JSON.parse(data.message);
+      if (this.state.user.id !== message.user._id) {
+        let messageIndex = this.state.messages.findIndex(
+          m => m.id === message.id,
+        );
 
-          if (messageIndex !== -1) {
-            this.setState(previousState => ({
-              messages: GiftedChat.append(previousState.messages, message),
-            }));
-          }
+        if (messageIndex !== -1) {
+          this.setState(previousState => ({
+            messages: GiftedChat.append(previousState.messages, message),
+          }));
         }
       }
     }
@@ -107,14 +105,15 @@ export default class ChatView extends Component<Props> {
         },
         {
           text: 'Yes',
-          onPress: () => this.addMemberToGroup(requestUserId),
+          onPress: () =>
+            this.addMemberToGroup(requestUserId, requestUserFullName),
         },
       ],
       {cancelable: false},
     );
   }
 
-  async addMemberToGroup(requestUserId) {
+  async addMemberToGroup(requestUserId, requestUserFullName) {
     let user = await GFun.user();
     let response = await Api.joinGroup(
       user.authentication_jwt,
@@ -130,9 +129,20 @@ export default class ChatView extends Component<Props> {
     } else {
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
+        errors.splice(
+          i,
+          0,
+          I18n.t(`message.${GFun.camelize(error)}`, {
+            name: requestUserFullName,
+          }),
+        );
       });
-      GFun.errorMessage(I18n.t('message.error'), errors.join('\n'));
+      GFun.errorMessage(
+        I18n.t('message.error', {
+          name: requestUserFullName,
+        }),
+        errors.join('\n'),
+      );
     }
   }
 
@@ -289,7 +299,9 @@ export default class ChatView extends Component<Props> {
       <View
         style={[
           styles.chatView,
-          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
+          {
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+          },
         ]}>
         {this.AppHerder()}
         <View style={{flex: 1}}>
