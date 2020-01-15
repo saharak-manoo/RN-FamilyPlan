@@ -41,7 +41,7 @@ export default class HomeView extends Component<Props> {
     this.state = {
       localNotiId: null,
       search: '',
-      isDarkMode: params.isDarkMode || true,
+      isDarkMode: params.isDarkMode || false,
       groupName: '',
       spinner: false,
       modalGroup: false,
@@ -55,7 +55,6 @@ export default class HomeView extends Component<Props> {
 
   componentDidMount() {
     this.messageListener = firebase.messaging().onMessage(message => {
-      console.log("message", message)
       this.realTimeData(message._data);
     });
   }
@@ -194,7 +193,9 @@ export default class HomeView extends Component<Props> {
   async triggerTurnOnNotification() {
     this.notificationListener = firebase
       .notifications()
-      .onNotification(async notification => {console.log("notification", notification)});
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
 
     this.notificationOpenedListener = firebase
       .notifications()

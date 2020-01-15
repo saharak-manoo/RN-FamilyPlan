@@ -21,7 +21,7 @@ export default class LogoView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isDarkMode: true,
+      isDarkMode: false,
       isSignIn: false,
     };
   }
@@ -30,9 +30,10 @@ export default class LogoView extends Component<Props> {
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     isDarkMode = JSON.parse(isDarkMode);
     if (isDarkMode == null) {
-      isDarkMode = true;
-      await AsyncStorage.setItem('isDarkMode', JSON.stringify(true));
+      isDarkMode = false;
+      await AsyncStorage.setItem('isDarkMode', JSON.stringify(false));
     }
+    this.setState({isDarkMode: isDarkMode});
 
     let isSignIn = await AsyncStorage.getItem('user');
     await this.setState({isSignIn: isSignIn != null});
@@ -49,7 +50,11 @@ export default class LogoView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#202020'}}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#000' : '#FFF',
+        }}>
         <View
           style={{
             flex: 1,

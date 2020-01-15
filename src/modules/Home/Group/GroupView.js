@@ -56,14 +56,24 @@ export default class GroupView extends Component<Props> {
   usernamePasswordModal = React.createRef();
 
   async componentWillMount() {
+    this.triggerTurnOnNotification();
     let user = await GFun.user();
     let userView = this.props.navigation.state.params.group.members.filter(
       m => m.id === user.id,
     )[0];
+
     await this.setState({
       group: this.props.navigation.state.params.group,
       userView: userView,
     });
+  }
+
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
   }
 
   realTimeData(data) {
@@ -85,6 +95,7 @@ export default class GroupView extends Component<Props> {
 
   componentWillUnmount() {
     this.messageListener();
+    this.notificationListener();
   }
 
   AppHerder() {

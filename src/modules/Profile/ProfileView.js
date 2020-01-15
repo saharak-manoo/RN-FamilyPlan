@@ -25,7 +25,7 @@ export default class ProfileView extends Component<Props> {
       spinner: true,
       user: null,
       isLanguageTH: false,
-      isDarkMode: true,
+      isDarkMode: false,
     };
     this.getProfile();
   }
