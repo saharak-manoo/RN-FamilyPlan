@@ -138,24 +138,19 @@ export default class HomeView extends Component<Props> {
     }
   };
 
-  componentDidMount() {
-    this.messageListener = firebase.messaging().onMessage(message => {
-      this.realTimeData(message._data);
-    });
-  }
-
   async fcmCheckPermissions() {
     firebase
       .messaging()
       .hasPermission()
       .then(enabled => {
         if (enabled) {
+          this.triggerTurnOnNotification();
         } else {
           firebase
             .messaging()
             .requestPermission()
             .then(() => {
-              // User has authorised
+              this.triggerTurnOnNotification();
             })
             .catch(error => {
               // User has rejected permissions
@@ -180,6 +175,42 @@ export default class HomeView extends Component<Props> {
           }
         }
       });
+  }
+
+  async triggerTurnOnNotification() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        alert('notificationListener', JSON.stringify(notification));
+      });
+
+    this.notificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(async notificationOpen => {
+        const action = notificationOpen.action;
+        const notification = notificationOpen.notification;
+        alert('onNotificationOpened action', JSON.stringify(action));
+        alert('onNotificationOpened', JSON.stringify(notification));
+      });
+
+    const notificationOpen = await firebase
+      .notifications()
+      .getInitialNotification();
+    if (notificationOpen) {
+      const action = notificationOpen.action;
+      const notification = notificationOpen.notification;
+      alert('getInitialNotification action', JSON.stringify(action));
+      alert('getInitialNotification', JSON.stringify(notification));
+    }
+  }
+
+  componentWillUnmount() {
+    this.notificationOpenedListener();
+    this.notificationListener();
   }
 
   newGroupModal = React.createRef();
