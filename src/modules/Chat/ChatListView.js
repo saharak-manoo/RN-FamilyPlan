@@ -33,7 +33,7 @@ export default class ChatListView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isDarkMode: true,
+      isDarkMode: false,
       user: [],
       spinner: false,
       search: '',
@@ -59,6 +59,7 @@ export default class ChatListView extends Component<Props> {
   }
 
   componentWillMount = async () => {
+    this.triggerTurnOnNotification();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFun.user();
@@ -104,6 +105,14 @@ export default class ChatListView extends Component<Props> {
     }
   }
 
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
   componentDidMount() {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
@@ -112,6 +121,7 @@ export default class ChatListView extends Component<Props> {
 
   componentWillUnmount() {
     this.messageListener();
+    this.notificationListener();
   }
 
   refreshChatRoom = async () => {
@@ -356,7 +366,7 @@ export default class ChatListView extends Component<Props> {
       <View
         style={[
           styles.chatView,
-          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
+          {backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF'},
         ]}>
         {this.AppHerder()}
         <View style={{padding: 15}}>

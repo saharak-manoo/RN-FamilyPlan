@@ -13,9 +13,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
-import {ListItem, Icon, SearchBar} from 'react-native-elements';
-import TouchableScale from 'react-native-touchable-scale';
-import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFun from '../../util/GlobalFunction';
 import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
@@ -61,6 +58,16 @@ export default class ChatView extends Component<Props> {
     );
   }
 
+  async componentWillMount() {
+    this.triggerTurnOnNotification();
+    // get user
+    let user = await GFun.user();
+    await this.setState({
+      user: user,
+      messages: this.state.chatRoom.messages,
+    });
+  }
+
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
       let message = JSON.parse(data.message);
@@ -78,6 +85,14 @@ export default class ChatView extends Component<Props> {
     }
   }
 
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
   componentDidMount() {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
@@ -86,15 +101,7 @@ export default class ChatView extends Component<Props> {
 
   componentWillUnmount() {
     this.messageListener();
-  }
-
-  async componentWillMount() {
-    // get user
-    let user = await GFun.user();
-    await this.setState({
-      user: user,
-      messages: this.state.chatRoom.messages,
-    });
+    this.notificationListener();
   }
 
   dialogAddMemberToGroup(requestUserId, requestUserFullName) {
@@ -179,7 +186,7 @@ export default class ChatView extends Component<Props> {
             style={{
               borderRadius: 22,
               padding: 10,
-              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#EAEAEA',
               height: 40,
               color: this.state.isDarkMode ? '#FFF' : '#000',
             }}
@@ -271,7 +278,7 @@ export default class ChatView extends Component<Props> {
         }}
         wrapperStyle={{
           left: {
-            backgroundColor: this.state.isDarkMode ? '#383838' : '#EEEEEE',
+            backgroundColor: this.state.isDarkMode ? '#383838' : '#DADADA',
           },
           right: {
             backgroundColor: this.state.chatRoom.group.color || '#0084ff',

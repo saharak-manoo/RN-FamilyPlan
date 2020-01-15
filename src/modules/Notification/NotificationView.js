@@ -33,7 +33,7 @@ export default class NotificationView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isDarkMode: true,
+      isDarkMode: false,
       spinner: false,
       refreshing: false,
       isLoading: false,
@@ -57,6 +57,7 @@ export default class NotificationView extends Component<Props> {
   }
 
   componentWillMount = async () => {
+    this.triggerTurnOnNotification();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFun.user();
@@ -73,6 +74,14 @@ export default class NotificationView extends Component<Props> {
     }
   };
 
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
   async realTimeData(data) {
     if (
       data.noti_type === 'group' ||
@@ -85,11 +94,17 @@ export default class NotificationView extends Component<Props> {
         group_noti_id,
       );
       if (resp.success) {
-        this.setState({
-          notifications: GFun.sortByDate(
-            GFun.uniq(resp.notification.concat(this.state.notifications)),
-          ),
-        });
+        let notiIndex = this.state.notifications.findIndex(
+          noti => noti.id === group_noti_id,
+        );
+
+        if (notiIndex === -1) {
+          this.setState({
+            notifications: GFun.sortByDate(
+              GFun.uniq(resp.notification.concat(this.state.notifications)),
+            ),
+          });
+        }
       }
     }
   }
@@ -102,6 +117,7 @@ export default class NotificationView extends Component<Props> {
 
   componentWillUnmount() {
     this.messageListener();
+    this.notificationListener();
   }
 
   goTo = notification => {
