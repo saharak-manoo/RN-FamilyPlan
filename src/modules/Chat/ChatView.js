@@ -84,6 +84,10 @@ export default class ChatView extends Component<Props> {
     });
   }
 
+  componentWillUnmount() {
+    this.messageListener();
+  }
+
   async componentWillMount() {
     // get user
     let user = await GFun.user();

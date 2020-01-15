@@ -100,6 +100,10 @@ export default class NotificationView extends Component<Props> {
     });
   }
 
+  componentWillUnmount() {
+    this.messageListener();
+  }
+
   goTo = notification => {
     if (
       notification.noti_type === 'chat' ||

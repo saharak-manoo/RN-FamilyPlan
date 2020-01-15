@@ -83,6 +83,10 @@ export default class GroupView extends Component<Props> {
     });
   }
 
+  componentWillUnmount() {
+    this.messageListener();
+  }
+
   AppHerder() {
     return (
       <View>
