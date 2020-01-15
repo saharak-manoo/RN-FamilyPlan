@@ -110,6 +110,10 @@ export default class ChatListView extends Component<Props> {
     });
   }
 
+  componentWillUnmount() {
+    this.messageListener();
+  }
+
   refreshChatRoom = async () => {
     await this.setState({refreshing: true});
     let resp = await Api.getChatRoom(this.state.user.authentication_jwt);
@@ -136,7 +140,7 @@ export default class ChatListView extends Component<Props> {
                   text: 'Delete',
                   type: 'delete',
                   onPress: () => {
-                    this.alertRemoveChatMember(item.id, index);
+                    this.alertRemoveChatRoom(item.id, index);
                   },
                 },
               ]}
@@ -179,7 +183,7 @@ export default class ChatListView extends Component<Props> {
     );
   };
 
-  alertRemoveChatMember(id, index) {
+  alertRemoveChatRoom(id, index) {
     Alert.alert(
       '',
       'Are your sure tou want to delete this chat ?',
@@ -190,7 +194,7 @@ export default class ChatListView extends Component<Props> {
         },
         {
           text: 'Delete',
-          onPress: () => this.state(id, index),
+          onPress: () => this.removeChat(id, index),
           style: 'destructive',
         },
       ],
@@ -200,7 +204,7 @@ export default class ChatListView extends Component<Props> {
 
   async removeChat(id, index) {
     this.state.chatRooms.splice(index, 1);
-    await this.setState({chatRooms: this.state.chat_rooms});
+    await this.setState({chatRooms: this.state.chatRooms});
     GFun.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),

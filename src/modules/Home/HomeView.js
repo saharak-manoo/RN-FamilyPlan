@@ -39,6 +39,7 @@ export default class HomeView extends Component<Props> {
     super(props);
     let params = this.props.navigation.state.params;
     this.state = {
+      localNotiId: null,
       search: '',
       isDarkMode: params.isDarkMode || true,
       groupName: '',
@@ -52,10 +53,20 @@ export default class HomeView extends Component<Props> {
     };
   }
 
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      console.log("message", message)
+      this.realTimeData(message._data);
+    });
+  }
+
   componentWillMount = async () => {
     this.fcmCheckPermissions();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
-    this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
+    this.setState({
+      spinner: true,
+      isDarkMode: JSON.parse(isDarkMode),
+    });
 
     let user = await GFun.user();
     let resp = await Api.getGroup(user.authentication_jwt);
@@ -78,24 +89,27 @@ export default class HomeView extends Component<Props> {
       data.noti_type.includes('request_join-')
     ) {
       let group_noti_id = JSON.parse(data.group_noti_id);
-      let resp = await Api.getNotificationById(
-        user.authentication_jwt,
-        group_noti_id,
-      );
-      this.refreshGroup(false);
-      if (resp.success) {
-        let noti = resp.notification[0];
-        showMessage({
-          message: noti.name,
-          description: noti.message,
-          type: 'default',
-          backgroundColor: '#006FF6',
-          color: '#FFF',
-          duration: 5000,
-          onPress: () => {
-            this.goTo(noti);
-          },
-        });
+      if (group_noti_id !== this.state.localNotiId) {
+        let resp = await Api.getNotificationById(
+          user.authentication_jwt,
+          group_noti_id,
+        );
+        this.refreshGroup(false);
+        if (resp.success) {
+          await this.setState({localNotiId: group_noti_id});
+          let noti = resp.notification[0];
+          showMessage({
+            message: noti.name,
+            description: noti.message,
+            type: 'default',
+            backgroundColor: '#006FF6',
+            color: '#FFF',
+            duration: 5000,
+            onPress: () => {
+              this.goTo(noti);
+            },
+          });
+        }
       }
     } else if (data.noti_type === 'chat') {
       let chatRoom = JSON.parse(data.chat_room);
@@ -178,14 +192,9 @@ export default class HomeView extends Component<Props> {
   }
 
   async triggerTurnOnNotification() {
-    let user = await GFun.user();
-    this.messageListener = firebase.messaging().onMessage(message => {
-      this.realTimeData(message._data);
-    });
-
     this.notificationListener = firebase
       .notifications()
-      .onNotification(async notification => {});
+      .onNotification(async notification => {console.log("notification", notification)});
 
     this.notificationOpenedListener = firebase
       .notifications()
@@ -216,6 +225,7 @@ export default class HomeView extends Component<Props> {
   }
 
   componentWillUnmount() {
+    this.messageListener();
     this.notificationOpenedListener();
     this.notificationListener();
   }
@@ -620,7 +630,9 @@ export default class HomeView extends Component<Props> {
       <View
         style={[
           styles.defaultView,
-          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
+          {
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+          },
         ]}>
         {this.AppHerder()}
         <View style={{padding: 15}}>
@@ -649,7 +661,12 @@ export default class HomeView extends Component<Props> {
               onRefresh={this.refreshGroup}
             />
           }>
-          <View style={{flex: 1, padding: GFun.hp(2), paddingTop: GFun.hp(3)}}>
+          <View
+            style={{
+              flex: 1,
+              padding: GFun.hp(2),
+              paddingTop: GFun.hp(3),
+            }}>
             <View style={{flex: 1}}>
               <View style={styles.listCard}>
                 <Text style={styles.textCardList}>
