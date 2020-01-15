@@ -26,12 +26,13 @@ export default class ChatView extends Component<Props> {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
+    let chatRoom = this.props.navigation.state.params.chatRoom;
     this.state = {
-      isDarkMode: params.isDarkMode,
+      isDarkMode: params.isDarkMode || false,
       user: [],
       spinner: false,
-      chatRoom: this.props.navigation.state.params.chatRoom,
-      messages: [],
+      chatRoom: chatRoom,
+      messages: chatRoom.messages,
       search: '',
       text: '',
       isReadySend: false,
@@ -81,6 +82,17 @@ export default class ChatView extends Component<Props> {
             messages: GiftedChat.append(previousState.messages, message),
           }));
         }
+      }
+    } else if (data.noti_type === 'group') {
+      let group = JSON.parse(data.group);
+
+      let isNotStayGroup =
+        group.members.filter(m => m.id === this.state.user.id).length === 0;
+      if (isNotStayGroup) {
+        GFun.errorMessage(group.name, I18n.t('message.removedFromTheGroup'));
+        this.props.navigation.navigate('ChatList', {
+          isDarkMode: this.state.isDarkMode,
+        });
       }
     }
   }

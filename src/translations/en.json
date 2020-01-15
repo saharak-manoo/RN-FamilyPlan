@@ -125,6 +125,7 @@
     "removeChatSuccessful": "Remove chat successful",
     "removeNotiSuccessful": "Remove notification successful",
     "copyUserNameSuccessful": "Copy username successful",
-    "copyPasswordSuccessful": "Copy password successful"
+    "copyPasswordSuccessful": "Copy password successful",
+    "removedFromTheGroup": "You have been removed from the group"
   }
 }

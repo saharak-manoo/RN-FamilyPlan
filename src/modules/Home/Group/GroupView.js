@@ -80,9 +80,19 @@ export default class GroupView extends Component<Props> {
     if (data.noti_type === 'group') {
       let group = JSON.parse(data.group);
       if (this.state.group.id === group.id) {
-        this.setState({
-          group: group,
-        });
+        let isNotStayGroup =
+          group.members.filter(m => m.id === this.state.userView.id).length ===
+          0;
+        if (isNotStayGroup) {
+          GFun.errorMessage(group.name, I18n.t('message.removedFromTheGroup'));
+          this.props.navigation.navigate('Home', {
+            isDarkMode: this.state.isDarkMode,
+          });
+        } else {
+          this.setState({
+            group: group,
+          });
+        }
       }
     }
   }

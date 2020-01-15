@@ -120,6 +120,7 @@
     "removeChatSuccessful": "ลบแชทสำเร็จ",
     "removeNotiSuccessful": "ลบแจ้งเตือนสำเร็จ",
     "copyUserNameSuccessful": "ก็อปชื่อผู้ใช้สำเร็จ",
-    "copyPasswordSuccessful": "ก็อปรหัสผ่านสำเร็จ"
+    "copyPasswordSuccessful": "ก็อปรหัสผ่านสำเร็จ",
+    "removedFromTheGroup": "คุณถูกนำออกจากกลุ่ม"
   }
 }

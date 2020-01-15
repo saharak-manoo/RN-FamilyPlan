@@ -81,7 +81,7 @@ export default class ChatListView extends Component<Props> {
     }
   };
 
-  realTimeData(data) {
+  async realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
       let chatRoom = JSON.parse(data.chat_room);
       let chatRoomIndex = this.state.chatRooms.findIndex(
@@ -101,6 +101,22 @@ export default class ChatListView extends Component<Props> {
           chatRooms: GFun.sortByDate(this.state.chatRooms),
           tempChatRooms: GFun.sortByDate(this.state.chatRooms),
         });
+      }
+    } else if (data.noti_type === 'group') {
+      let group = JSON.parse(data.group);
+
+      let isNotStayGroup =
+        group.members.filter(m => m.id === this.state.user.id).length === 0;
+      if (isNotStayGroup) {
+        GFun.errorMessage(group.name, I18n.t('message.removedFromTheGroup'));
+        let chatRoomIndex = this.state.chatRooms.findIndex(
+          c => c.group.id === group.id && c.group.name === group.name,
+        );
+
+        if (chatRoomIndex !== -1) {
+          this.state.chatRooms.splice(chatRoomIndex, 1);
+          await this.setState({chatRooms: this.state.chatRooms});
+        }
       }
     }
   }
