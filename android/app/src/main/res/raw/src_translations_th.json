@@ -15,7 +15,8 @@
     "editProfile": "แก้ไขโปรไฟล์",
     "joinGroup": "เข้าร่วมกลุ่ม",
     "invite": "ส่งคำเชิญ",
-    "search": "ค้นหา"
+    "search": "ค้นหา",
+    "close": "ปิด"
   },
   "text": {
     "mr": "นาย",
@@ -64,7 +65,12 @@
     "dueDate": "วันที่ครบกำหนด",
     "settingServiceCharge": "ตั้งค่าบริการ",
     "serviceCharge": "ค่าบริการ",
-    "clickNewGroup": "คลิกเพื่อสร้างกลุ่ม"
+    "clickNewGroup": "คลิกเพื่อสร้างกลุ่ม",
+    "leaveGroup": "ออกจากกลุ่ม",
+    "darkMode": "โหมดมืด",
+    "usernameAndPassword": "ชื่อผู้ใช้และรหัสผ่าน",
+    "username": "ชื่อผู้ใช้",
+    "editProfile": "แก้ไขโปรไฟล์"
   },
   "message": {
     "success": "สำเร็จ",
@@ -104,12 +110,16 @@
     "settingDueDateSuccessful": "ตั้งค่าวันที่ครบกำหนดสำเร็จ",
     "removeMemberSuccessful": "ลบสมาชิกที่เลือกสำเร็จ",
     "nameHasAlreadyBeenTaken": "ชื่อนี้ซ้ำกับที่มีอยู่แล้ว",
-    "alreadyInTheGroup": "คุณได้อยู่ในกลุ่มนี้แล้ว",
+    "alreadyInTheGroup": "คุณ %{name} ได้อยู่ในกลุ่มนี้แล้ว",
     "leaveGroupSuccessful": "คุณได้ออกจากกลุ่มเรียบร้อยแล้ว",
     "theGroupIsFull": "กลุ่มเต็มแล้ว",
     "somethingWentWrong": "มีข้อผิดพลาดเกิดขึ้น",
     "notFound": "ไม่พบ",
     "notFoundUser": "ไม่พบผู้ใช้ที่ค้นหา โปรดลองใหม่อีกครั้ง",
-    "requestGroupSuccessful": "ส่งคำขอเข้าร่วมกลุ่มสำเร็จ"
+    "requestGroupSuccessful": "ส่งคำขอเข้าร่วมกลุ่มสำเร็จ",
+    "removeChatSuccessful": "ลบแชทสำเร็จ",
+    "removeNotiSuccessful": "ลบแจ้งเตือนสำเร็จ",
+    "copyUserNameSuccessful": "ก็อปชื่อผู้ใช้สำเร็จ",
+    "copyPasswordSuccessful": "ก็อปรหัสผ่านสำเร็จ"
   }
 }

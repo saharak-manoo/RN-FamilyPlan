@@ -144,23 +144,12 @@ export default class HomeView extends Component<Props> {
     });
   }
 
-  componentWillUnmount() {
-    this.notificationOpenedListener();
-  }
-
   async fcmCheckPermissions() {
     firebase
       .messaging()
       .hasPermission()
       .then(enabled => {
         if (enabled) {
-          this.notificationOpenedListener = firebase
-            .notifications()
-            .onNotificationOpened(async notificationOpen => {
-              let action = notificationOpen.action;
-              let notification = notificationOpen.notification;
-              alert('notificationOpenedListener', JSON.stringify(notification));
-            });
         } else {
           firebase
             .messaging()
