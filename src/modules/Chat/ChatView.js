@@ -64,6 +64,7 @@ export default class ChatView extends Component<Props> {
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
       let message = JSON.parse(data.message);
+      console.log('message', message);
       if (this.state.user.id !== message.user._id) {
         let messageIndex = this.state.messages.findIndex(
           m => m.id === message.id,
