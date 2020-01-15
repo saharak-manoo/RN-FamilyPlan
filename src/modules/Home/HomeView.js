@@ -178,34 +178,41 @@ export default class HomeView extends Component<Props> {
   }
 
   async triggerTurnOnNotification() {
+    let user = await GFun.user();
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
 
     this.notificationListener = firebase
       .notifications()
-      .onNotification(async notification => {
-        alert('notificationListener', JSON.stringify(notification));
-      });
+      .onNotification(async notification => {});
 
     this.notificationOpenedListener = firebase
       .notifications()
-      .onNotificationOpened(async notificationOpen => {
-        const action = notificationOpen.action;
-        const notification = notificationOpen.notification;
-        alert('onNotificationOpened action', JSON.stringify(action));
-        alert('onNotificationOpened', JSON.stringify(notification));
+      .onNotificationOpened(async opened => {
+        let data = opened.notification._data;
+        if (data.noti_type === 'group') {
+          let group = JSON.parse(data.group);
+          this.props.navigation.navigate('Group', {
+            isDarkMode: this.state.isDarkMode,
+            group: group,
+          });
+        } else if (
+          data.noti_type === 'chat' ||
+          data.noti_type.includes('request_join-')
+        ) {
+          let chatRoom = JSON.parse(data.chat_room);
+          this.props.navigation.navigate('ChatRoom', {
+            isDarkMode: this.state.isDarkMode,
+            chatRoom: chatRoom,
+            isRequestJoin: false,
+          });
+        }
       });
 
     const notificationOpen = await firebase
       .notifications()
       .getInitialNotification();
-    if (notificationOpen) {
-      const action = notificationOpen.action;
-      const notification = notificationOpen.notification;
-      alert('getInitialNotification action', JSON.stringify(action));
-      alert('getInitialNotification', JSON.stringify(notification));
-    }
   }
 
   componentWillUnmount() {
