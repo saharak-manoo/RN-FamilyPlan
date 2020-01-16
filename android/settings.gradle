@@ -1,4 +1,6 @@
 rootProject.name = 'FamilyPlan'
+include ':react-native-touch-id'
+project(':react-native-touch-id').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-touch-id/android')
 include ':react-native-dark-mode'
 project(':react-native-dark-mode').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-dark-mode/android')
 include ':react-native-svg'
