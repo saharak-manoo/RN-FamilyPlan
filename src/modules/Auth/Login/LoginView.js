@@ -13,8 +13,8 @@ import {
 import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
-import * as Api from '../../../util/Api';
-import * as GFun from '../../../util/GlobalFunction';
+import * as Api from '../../actions/api';
+import * as GFun from '../../../helpers/globalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 import appleAuth, {
   AppleButton,

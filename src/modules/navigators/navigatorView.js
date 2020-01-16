@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import firebase from 'react-native-firebase';
 
 // View
-import NavigatorStack from './Navigator';
+import NavigatorStack from './navigator';
 
 export default class NavigatorView extends Component {
   constructor(props) {

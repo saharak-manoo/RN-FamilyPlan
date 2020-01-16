@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import * as GFun from './GlobalFunction';
+import * as GFun from '../../helpers/globalFunction';
 
 const HOSTS = [
   'https://family-plan.herokuapp.com',

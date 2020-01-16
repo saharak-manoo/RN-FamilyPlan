@@ -20,17 +20,16 @@ import {ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
-import * as Api from '../../../util/Api';
-import * as GFun from '../../../util/GlobalFunction';
+import * as Api from '../../actions/actions';
+import * as GFun from '../../../helpers/globalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
-import {showMessage, hideMessage} from 'react-native-flash-message';
 
 // View
-import InviteMemberView from '../../Modal/InviteMemberView';
-import SettingServiceChargeView from '../../Modal/SettingServiceChargeView';
-import UsernamePasswordGroupView from '../../Modal/UsernamePasswordGroupView';
+import InviteMemberView from '../../modal/inviteMemberView';
+import SettingServiceChargeView from '../../modal/settingServiceChargeView';
+import UsernamePasswordGroupView from '../../modal/usernamePasswordGroupView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;

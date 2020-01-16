@@ -13,9 +13,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
-import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
+import {
+  GiftedChat,
+  Bubble,
+  Composer,
+} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';

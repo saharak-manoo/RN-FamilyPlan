@@ -9,17 +9,17 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Badge} from 'react-native-elements';
 
 // View
-import HomeView from '../Home/HomeView';
-import ChatListView from '../Chat/ChatListView';
-import ChatView from '../Chat/ChatView';
-import NotificationView from '../Notification/NotificationView';
-import ProfileView from '../Profile/ProfileView';
-import LoginView from '../Auth/Login/LoginView';
-import RegisterView from '../Auth/Register/RegisterView';
-import ForgotPasswordView from '../Auth/ForgotPassword/ForgotPasswordView';
-import LogoView from '../Logo/LogoView';
-import GroupView from '../Home/Group/GroupView';
-import EditProfileView from '../Profile/EditProfileView';
+import HomeView from '../home/homeView';
+import ChatListView from '../chat/chatListView';
+import ChatView from '../chat/chatView';
+import NotificationView from '../notification/notificationView';
+import ProfileView from '../profile/profileView';
+import LoginView from '../auth/login/loginView';
+import RegisterView from '../auth/register/registerView';
+import ForgotPasswordView from '../auth/forgotPassword/forgotPasswordView';
+import LogoView from '../logo/logoView';
+import GroupView from '../home/group/groupView';
+import EditProfileView from '../profile/editProfileView';
 
 const HomeStack = createStackNavigator(
   {
