@@ -121,9 +121,10 @@
     "requestGroupSuccessful": "ส่งคำขอเข้าร่วมกลุ่มสำเร็จ",
     "removeChatSuccessful": "ลบแชทสำเร็จ",
     "removeNotiSuccessful": "ลบแจ้งเตือนสำเร็จ",
-    "copyUserNameSuccessful": "ก็อปชื่อผู้ใช้สำเร็จ",
+    "copyUsernameSuccessful": "ก็อปชื่อผู้ใช้สำเร็จ",
     "copyPasswordSuccessful": "ก็อปรหัสผ่านสำเร็จ",
     "authenticateFailed": "รับรองความถูกต้องล้มเหลว",
-    "requestToOpenUsernamePasswordGroup": "ดูชื่อผู้ใช้และรหัสผ่านของกลุ่ม %{name}"
+    "requestToOpenUsernamePasswordGroup": "ดูชื่อผู้ใช้และรหัสผ่านของกลุ่ม %{name}",
+    "settingUsernamePasswordSuccessful": "แก้ไขผู้ใช้และรหัสผ่านของกลุ่มสำเร็จ"
   }
 }

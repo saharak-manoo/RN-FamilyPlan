@@ -1,12 +1,7 @@
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {
-  Appbar,
-  Text,
-  HelperText,
-  TextInput,
-} from 'react-native-paper';
+import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../components/i18n';
 import * as Api from '../actions/api';
@@ -45,9 +40,32 @@ export default class EditProfileView extends Component {
 
   async clickSaveProfile() {
     this.loadingSaveProfile.showLoading(true);
-    this.props.navigation.navigate('Profile', {
-      isDarkMode: this.state.isDarkMode,
-    });
+    let user = this.state.user;
+    let params = {
+      first_name: this.state.firstName,
+      last_name: this.state.lastName,
+      phone_number: this.state.phoneNumber,
+    };
+    let response = await Api.updateProfile(
+      user.authentication_jwt,
+      user.id,
+      params,
+    );
+    if (response.success) {
+      this.loadingSaveProfile.showLoading(false);
+      await AsyncStorage.setItem('user', JSON.stringify(response.user));
+      this.props.navigation.state.params.onUpdated(response.user);
+      this.props.navigation.navigate('Profile', {
+        isDarkMode: this.state.isDarkMode,
+      });
+    } else {
+      this.loadingSaveProfile.showLoading(false);
+      let errors = [];
+      response.error.map((error, i) => {
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
+      });
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+    }
   }
 
   render() {
