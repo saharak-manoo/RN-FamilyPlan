@@ -4,6 +4,8 @@ import NavigatorView from './Navigator/NavigatorView';
 import FlashMessage from 'react-native-flash-message';
 import AsyncStorage from '@react-native-community/async-storage';
 import I18n from '../components/i18n';
+import {Provider} from 'react-redux';
+import ConfigureStore from './ConfigureStore';
 
 const theme = {
   ...DefaultTheme,
@@ -48,14 +50,16 @@ export default class App extends Component {
 
   render() {
     return (
-      <PaperProvider theme={theme}>
-        <NavigatorView />
-        <FlashMessage
-          position="top"
-          textStyle={{fontFamily: 'Kanit-Light'}}
-          titleStyle={{fontFamily: 'Kanit-Light', fontSize: 15}}
-        />
-      </PaperProvider>
+      <Provider store={ConfigureStore()}>
+        <PaperProvider theme={theme}>
+          <NavigatorView />
+          <FlashMessage
+            position="top"
+            textStyle={{fontFamily: 'Kanit-Light'}}
+            titleStyle={{fontFamily: 'Kanit-Light', fontSize: 15}}
+          />
+        </PaperProvider>
+      </Provider>
     );
   }
 }
