@@ -12,7 +12,7 @@ import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import * as Api from '../../../util/Api';
-import * as GFunction from '../../../util/GlobalFunction';
+import * as GFun from '../../../util/GlobalFunction';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -22,7 +22,9 @@ const BAR_COLOR = IS_IOS ? '#0144A4' : '#000';
 export default class ForgotPasswordView extends Component<Props> {
   constructor(props) {
     super(props);
+    let params = this.props.navigation.state.params;
     this.state = {
+      isDarkMode: params.isDarkMode,
       email: '',
     };
   }
@@ -54,14 +56,14 @@ export default class ForgotPasswordView extends Component<Props> {
     let response = await Api.forgotPassword(params);
     if (response.success) {
       this.loadingResetPassword.showLoading(false);
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.resetPassword'),
       );
       this.props.navigation.navigate('Login');
     } else {
       this.loadingResetPassword.showLoading(false);
-      GFunction.errorMessage(
+      GFun.errorMessage(
         I18n.t('message.notValidate'),
         I18n.t('message.' + response.messages),
       );
@@ -70,30 +72,40 @@ export default class ForgotPasswordView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+        }}>
         {this.appHerder()}
-        <View style={{padding: 45, alignContent: 'center'}}>
+        <View style={{padding: GFun.hp(2), alignContent: 'center'}}>
           <Text
             style={{
               alignSelf: 'center',
-              fontSize: 38,
+              fontSize: GFun.hp(5),
               fontFamily: 'Kanit-Light',
             }}>
             {I18n.t('message.forgotPassword')}
           </Text>
         </View>
-        <View style={{padding: 15}}>
+        <View style={{padding: GFun.hp(2)}}>
           <TextInput
-            style={{paddingBottom: 7, fontFamily: 'Kanit-Light'}}
-            label={I18n.t('placeholder.email')}
+            keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+            style={{
+              paddingBottom: GFun.hp(1),
+              fontFamily: 'Kanit-Light',
+              height: 50,
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+            }}
+            placeholder={I18n.t('placeholder.email')}
             mode="outlined"
             value={this.state.email}
             onChangeText={email => this.setState({email: email})}
           />
           <HelperText
-            style={{fontFamily: 'Kanit-Light'}}
+            style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
             type="error"
-            visible={GFunction.validateEmail(this.state.email)}>
+            visible={GFun.validateEmail(this.state.email)}>
             {I18n.t('message.emailIsInvalid')}
           </HelperText>
 

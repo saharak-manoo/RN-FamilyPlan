@@ -15,7 +15,8 @@
     "editProfile": "Edit profile",
     "joinGroup": "Join Group",
     "invite": "Invite",
-    "search": "Search"
+    "search": "Search",
+    "close": "Close"
   },
   "text": {
     "mr": "Mr",
@@ -68,7 +69,12 @@
     "dueDate": "Due date",
     "settingServiceCharge": "Setting service charge",
     "serviceCharge": "Service charge",
-    "clickNewGroup": "Click to new group"
+    "clickNewGroup": "Click to new group",
+    "leaveGroup": "Leave group",
+    "darkMode": "Dark Mode",
+    "usernameAndPassword": "Username password",
+    "username": "Username",
+    "editProfile": "Edit profile"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -109,12 +115,16 @@
     "settingDueDateSuccessful": "Setting due date successful",
     "removeMemberSuccessful": "Remove member successful",
     "nameHasAlreadyBeenTaken": "Name has already been taken",
-    "alreadyInTheGroup": "You are already in the group",
+    "alreadyInTheGroup": "%{name} are already in the group",
     "leaveGroupSuccessful": "Leave group successful",
     "theGroupIsFull": "The group is full",
     "somethingWentWrong": "Something went wrong",
     "notFound": "Not found",
     "notFoundUser": "The user searched for was not found. Please try again",
-    "requestGroupSuccessful": "Request group successful"
+    "requestGroupSuccessful": "Request group successful",
+    "removeChatSuccessful": "Remove chat successful",
+    "removeNotiSuccessful": "Remove notification successful",
+    "copyUserNameSuccessful": "Copy username successful",
+    "copyPasswordSuccessful": "Copy password successful"
   }
 }

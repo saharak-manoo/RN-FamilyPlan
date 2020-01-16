@@ -17,33 +17,31 @@ import {styles} from '../../components/styles';
 import I18n from '../../components/i18n';
 import Modalize from 'react-native-modalize';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import PTRView from 'react-native-pull-to-refresh';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
-import Loader from 'react-native-easy-content-loader';
+import UserAvatar from 'react-native-user-avatar';
+import {showMessage, hideMessage} from 'react-native-flash-message';
 
 // View
 import NewGroupView from '../Modal/NewGroupVew';
 import QrCodeView from '../Modal/QrCodeView';
 import JoinGroupView from '../Modal/JoinGroupView';
-import {array} from 'prop-types';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const IS_IOS = Platform.OS === 'ios';
 
 export default class HomeView extends Component<Props> {
   constructor(props) {
     super(props);
+    let params = this.props.navigation.state.params;
     this.state = {
+      localNotiId: null,
       search: '',
-      isDarkMode: true,
+      isDarkMode: params.isDarkMode || false,
       groupName: '',
       spinner: false,
       modalGroup: false,
@@ -55,12 +53,21 @@ export default class HomeView extends Component<Props> {
     };
   }
 
+  componentDidMount() {
+    this.messageListener = firebase.messaging().onMessage(message => {
+      this.realTimeData(message._data);
+    });
+  }
+
   componentWillMount = async () => {
     this.fcmCheckPermissions();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
-    this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
+    this.setState({
+      spinner: true,
+      isDarkMode: JSON.parse(isDarkMode),
+    });
 
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       this.setState({
@@ -74,33 +81,89 @@ export default class HomeView extends Component<Props> {
     }
   };
 
-  realTimeData(data) {
-    if (data.noti_type === 'group') {
-      if (!data.group) {
+  async realTimeData(data) {
+    let user = await GFun.user();
+    if (
+      data.noti_type === 'group' ||
+      data.noti_type.includes('request_join-')
+    ) {
+      let group_noti_id = JSON.parse(data.group_noti_id);
+      if (group_noti_id !== this.state.localNotiId) {
+        let resp = await Api.getNotificationById(
+          user.authentication_jwt,
+          group_noti_id,
+        );
         this.refreshGroup(false);
+        if (resp.success) {
+          await this.setState({localNotiId: group_noti_id});
+          let noti = resp.notification[0];
+          showMessage({
+            message: noti.name,
+            description: noti.message,
+            type: 'default',
+            backgroundColor: '#006FF6',
+            color: '#FFF',
+            duration: 5000,
+            onPress: () => {
+              this.goTo(noti);
+            },
+          });
+        }
+      }
+    } else if (data.noti_type === 'chat') {
+      let chatRoom = JSON.parse(data.chat_room);
+      let message = JSON.parse(data.message);
+      if (message.user._id !== user.id) {
+        showMessage({
+          message: chatRoom.name,
+          description: message.text,
+          type: 'default',
+          backgroundColor: '#006FF6',
+          color: '#FFF',
+          duration: 5000,
+          onPress: () => {
+            this.props.navigation.navigate('ChatRoom', {
+              isDarkMode: this.state.isDarkMode,
+              chatRoom: chatRoom,
+              isRequestJoin: false,
+            });
+          },
+        });
       }
     }
   }
 
-  componentDidMount() {
-    this.messageListener = firebase.messaging().onMessage(message => {
-      this.realTimeData(message._data);
-    });
-  }
+  goTo = notification => {
+    if (
+      notification.noti_type === 'chat' ||
+      notification.noti_type.includes('request_join-')
+    ) {
+      this.props.navigation.navigate('ChatRoom', {
+        isDarkMode: this.state.isDarkMode,
+        chatRoom: notification.data,
+        isRequestJoin: false,
+      });
+    } else if (notification.noti_type === 'group') {
+      this.props.navigation.navigate('Group', {
+        isDarkMode: this.state.isDarkMode,
+        group: notification.data,
+      });
+    }
+  };
 
-  fcmCheckPermissions() {
+  async fcmCheckPermissions() {
     firebase
       .messaging()
       .hasPermission()
       .then(enabled => {
         if (enabled) {
-          // user has permissions
+          this.triggerTurnOnNotification();
         } else {
           firebase
             .messaging()
             .requestPermission()
             .then(() => {
-              // User has authorised
+              this.triggerTurnOnNotification();
             })
             .catch(error => {
               // User has rejected permissions
@@ -114,7 +177,7 @@ export default class HomeView extends Component<Props> {
       .getToken()
       .then(async fcmToken => {
         if (fcmToken) {
-          let user = await GFunction.user();
+          let user = await GFun.user();
           let resp = await Api.createFcmToken(
             user.authentication_jwt,
             user.id,
@@ -125,6 +188,47 @@ export default class HomeView extends Component<Props> {
           }
         }
       });
+  }
+
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
+
+    this.notificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(async opened => {
+        let data = opened.notification._data;
+        if (data.noti_type === 'group') {
+          let group = JSON.parse(data.group);
+          this.props.navigation.navigate('Group', {
+            isDarkMode: this.state.isDarkMode,
+            group: group,
+          });
+        } else if (
+          data.noti_type === 'chat' ||
+          data.noti_type.includes('request_join-')
+        ) {
+          let chatRoom = JSON.parse(data.chat_room);
+          this.props.navigation.navigate('ChatRoom', {
+            isDarkMode: this.state.isDarkMode,
+            chatRoom: chatRoom,
+            isRequestJoin: false,
+          });
+        }
+      });
+
+    const notificationOpen = await firebase
+      .notifications()
+      .getInitialNotification();
+  }
+
+  componentWillUnmount() {
+    this.messageListener();
+    this.notificationOpenedListener();
+    this.notificationListener();
   }
 
   newGroupModal = React.createRef();
@@ -173,6 +277,7 @@ export default class HomeView extends Component<Props> {
           modal={this.newGroupModal}
           services={this.state.services}
           myGroups={this.state.myGroups}
+          isDarkMode={this.state.isDarkMode}
           onSetAndGoToModalGroup={this.setAndGoToModalGroup}
         />
       </Modalize>
@@ -203,7 +308,10 @@ export default class HomeView extends Component<Props> {
           spring: {speed: 10, bounciness: 10},
         }}
         withReactModal>
-        <QrCodeView modal={this.scanQrCodeModal} />
+        <QrCodeView
+          modal={this.scanQrCodeModal}
+          isDarkMode={this.state.isDarkMode}
+        />
       </Modalize>
     );
   }
@@ -237,6 +345,7 @@ export default class HomeView extends Component<Props> {
         <JoinGroupView
           modal={this.joinGroupModal}
           group={group}
+          isDarkMode={this.state.isDarkMode}
           onGoToRequestJoinGroup={this.goToRequestJoinGroup}
         />
       </Modalize>
@@ -245,7 +354,7 @@ export default class HomeView extends Component<Props> {
 
   refreshGroup = async (reload = true) => {
     await this.setState({refreshing: reload});
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       await this.setState({
@@ -273,8 +382,8 @@ export default class HomeView extends Component<Props> {
               style={{
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
-                margin: 10,
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+                margin: GFun.hp(1),
                 borderRadius: 20,
                 width: width / 3,
                 height: height / 5,
@@ -282,18 +391,41 @@ export default class HomeView extends Component<Props> {
               onPress={() => this.goToGroup(item)}>
               <View style={{flex: 1}}>
                 <View
-                  style={[styles.headerCard, {backgroundColor: item.color}]}>
-                  <Text numberOfLines={1} style={styles.textHeadCard}>
-                    {item.serviceName}
-                  </Text>
+                  style={{
+                    flex: 0.5,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignSelf: 'center',
+                    paddingTop: GFun.hp(1),
+                  }}>
+                  <UserAvatar
+                    size={GFun.hp(6)}
+                    name={item.service_initial}
+                    color={item.color}
+                  />
                 </View>
                 <View style={{flex: 0.4}}>
-                  <Text numberOfLines={1} style={styles.textNameCard}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontFamily: 'Kanit-Light',
+                      fontSize: 20,
+                      alignSelf: 'center',
+                      padding: GFun.hp(1),
+                    }}>
                     {item.name}
                   </Text>
                 </View>
                 <View style={{flex: 0.3}}>
-                  <Text numberOfLines={1} style={styles.totalMembersCard}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontFamily: 'Kanit-Light',
+                      fontSize: 13,
+                      alignSelf: 'center',
+                      justifyContent: 'flex-end',
+                      padding: GFun.hp(1),
+                    }}>
                     {I18n.t('placeholder.members')} : {item.members.length}/
                     {item.max_member}
                   </Text>
@@ -323,8 +455,8 @@ export default class HomeView extends Component<Props> {
               style={{
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
-                margin: 10,
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+                margin: GFun.hp(1),
                 borderRadius: 20,
                 width: width / 3,
                 height: height / 5,
@@ -332,10 +464,18 @@ export default class HomeView extends Component<Props> {
               onPress={() => this.showJoinGroupModal(item)}>
               <View style={{flex: 1}}>
                 <View
-                  style={[styles.headerCard, {backgroundColor: item.color}]}>
-                  <Text numberOfLines={1} style={styles.textHeadCard}>
-                    {item.serviceName}
-                  </Text>
+                  style={{
+                    flex: 0.5,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignSelf: 'center',
+                    paddingTop: GFun.hp(1),
+                  }}>
+                  <UserAvatar
+                    size={GFun.hp(6)}
+                    name={item.service_initial}
+                    color={item.color}
+                  />
                 </View>
                 <View style={{flex: 0.4}}>
                   <Text
@@ -356,7 +496,7 @@ export default class HomeView extends Component<Props> {
                       fontSize: 13,
                       alignSelf: 'center',
                       justifyContent: 'flex-end',
-                      padding: 10,
+                      padding: GFun.hp(1),
                       fontFamily: 'Kanit-Light',
                     }}>
                     {I18n.t('placeholder.members')} : {item.members.length}/
@@ -374,12 +514,14 @@ export default class HomeView extends Component<Props> {
 
   goToRequestJoinGroup = chatRoom => {
     this.props.navigation.navigate('ChatRoom', {
+      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
     });
   };
 
   goToGroup = group => {
     this.props.navigation.navigate('Group', {
+      isDarkMode: this.state.isDarkMode,
       group: group,
       onLeaveGroup: () => this.refreshGroup(),
     });
@@ -388,6 +530,7 @@ export default class HomeView extends Component<Props> {
   setAndGoToModalGroup = async myGroups => {
     await this.setState({myGroups: myGroups});
     this.props.navigation.navigate('Group', {
+      isDarkMode: this.state.isDarkMode,
       group: myGroups[0],
       onLeaveGroup: () => this.refreshGroup(),
     });
@@ -411,7 +554,7 @@ export default class HomeView extends Component<Props> {
         myGroups = myGroups.filter(
           group =>
             group.name.toLowerCase().includes(search) ||
-            group.serviceName.toLowerCase().includes(search),
+            group.service_name.toLowerCase().includes(search),
         );
 
         await this.setState({myGroups: myGroups});
@@ -420,7 +563,7 @@ export default class HomeView extends Component<Props> {
         publicGroups = publicGroups.filter(
           group =>
             group.name.toLowerCase().includes(search) ||
-            group.serviceName.toLowerCase().includes(search),
+            group.service_name.toLowerCase().includes(search),
         );
 
         await this.setState({publicGroups: publicGroups});
@@ -444,16 +587,36 @@ export default class HomeView extends Component<Props> {
               style={{
                 fontFamily: 'Kanit-Light',
                 flex: 0.7,
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
-                margin: 10,
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+                margin: GFun.hp(1),
                 borderRadius: 20,
                 width: width / 3,
                 height: height / 5,
               }}>
-              <ContentLoader height={height / 5} width={width / 3}>
-                <Circle x={35} y={-50} cx={34} cy={65} r={70} />
-                <Rect x="25" y="110" width={width / 5} height="25" />
-                <Rect x="15" y="150" width={width / 3.8} height="15" />
+              <ContentLoader
+                height={height / 5}
+                width={width / 3}
+                primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
+                <Circle
+                  x={GFun.wp(8)}
+                  y={GFun.wp(-6)}
+                  cx={34}
+                  cy={65}
+                  r={GFun.wp(9)}
+                />
+                <Rect
+                  x={GFun.wp(6)}
+                  y={GFun.hp(12)}
+                  width={width / 5}
+                  height={GFun.hp(2)}
+                />
+                <Rect
+                  x={GFun.wp(4)}
+                  y={GFun.hp(16)}
+                  width={width / 3.8}
+                  height={GFun.hp(1)}
+                />
               </ContentLoader>
             </TouchableOpacity>
           );
@@ -468,10 +631,12 @@ export default class HomeView extends Component<Props> {
       <View
         style={[
           styles.defaultView,
-          {backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE'},
+          {
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+          },
         ]}>
         {this.AppHerder()}
-        <View style={{padding: 10}}>
+        <View style={{padding: 15}}>
           <Searchbar
             style={{
               backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
@@ -489,6 +654,7 @@ export default class HomeView extends Component<Props> {
         </View>
 
         <ScrollView
+          scrollEnabled={!this.state.spinner}
           refreshControl={
             <RefreshControl
               tintColor={this.state.isDarkMode ? '#FFF' : '#000'}
@@ -496,7 +662,12 @@ export default class HomeView extends Component<Props> {
               onRefresh={this.refreshGroup}
             />
           }>
-          <View style={{flex: 1, padding: 15, paddingTop: 35}}>
+          <View
+            style={{
+              flex: 1,
+              padding: GFun.hp(2),
+              paddingTop: GFun.hp(3),
+            }}>
             <View style={{flex: 1}}>
               <View style={styles.listCard}>
                 <Text style={styles.textCardList}>
@@ -504,9 +675,21 @@ export default class HomeView extends Component<Props> {
                 </Text>
               </View>
               {this.state.spinner ? (
-                <View style={styles.listCards}>{this.renderLoadingCard()}</View>
+                <View
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    flex: 0.4,
+                    flexDirection: 'row',
+                  }}>
+                  {this.renderLoadingCard()}
+                </View>
               ) : (
-                <View style={styles.listCards}>
+                <View
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    flex: 0.4,
+                    flexDirection: 'row',
+                  }}>
                   {this.state.myGroups.length !== 0 ? (
                     this.listMyGroup(this.state.myGroups)
                   ) : (
@@ -516,17 +699,25 @@ export default class HomeView extends Component<Props> {
                           fontFamily: 'Kanit-Light',
                           flex: 0.7,
                           backgroundColor: this.state.isDarkMode
-                            ? '#202020'
+                            ? '#363636'
                             : '#FFF',
-                          margin: 10,
+                          margin: GFun.hp(1),
                           borderRadius: 20,
                           width: width / 3,
                           height: height / 5,
                         }}
                         onPress={this.showNewGroupModal}>
                         <View style={{flex: 1}}>
-                          <View style={styles.headerCardNewGroup}>
+                          <View
+                            style={{
+                              flex: 0.5,
+                              justifyContent: 'center',
+                              alignContent: 'center',
+                              alignSelf: 'center',
+                              paddingTop: GFun.hp(1),
+                            }}>
                             <Icon
+                              size={GFun.hp(3.5)}
                               reverse
                               name="add"
                               type="mat-icon"
@@ -538,9 +729,8 @@ export default class HomeView extends Component<Props> {
                               numberOfLines={1}
                               style={{
                                 fontSize: 20,
-                                color: '#000',
                                 alignSelf: 'center',
-                                padding: 15,
+                                padding: GFun.hp(1),
                                 fontFamily: 'Kanit-Light',
                               }}>
                               {I18n.t('placeholder.newGroup')}
@@ -551,10 +741,9 @@ export default class HomeView extends Component<Props> {
                               numberOfLines={1}
                               style={{
                                 fontSize: 13,
-                                color: '#000',
                                 alignSelf: 'center',
                                 justifyContent: 'flex-end',
-                                padding: 10,
+                                padding: GFun.hp(1),
                                 fontFamily: 'Kanit-Light',
                               }}>
                               {I18n.t('placeholder.clickNewGroup')}
@@ -568,16 +757,28 @@ export default class HomeView extends Component<Props> {
               )}
             </View>
 
-            <View style={{flex: 1, paddingTop: 40}}>
+            <View style={{flex: 1, paddingTop: GFun.hp(3)}}>
               <View style={styles.listPublicCard}>
                 <Text style={styles.textCardList}>
                   {I18n.t('placeholder.publicGroup')}
                 </Text>
               </View>
               {this.state.spinner ? (
-                <View style={styles.listCards}>{this.renderLoadingCard()}</View>
+                <View
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    flex: 0.4,
+                    flexDirection: 'row',
+                  }}>
+                  {this.renderLoadingCard()}
+                </View>
               ) : (
-                <View style={styles.listCards}>
+                <View
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    flex: 0.4,
+                    flexDirection: 'row',
+                  }}>
                   {this.listPublicGroup(this.state.publicGroups)}
                 </View>
               )}
@@ -588,22 +789,17 @@ export default class HomeView extends Component<Props> {
         {this.popUpModalJoinGroup(this.state.group)}
         {this.popUpModalNewGroup()}
         {this.popUpModalScanQrCode()}
-        <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item
-            buttonColor="#03C8A1"
-            title={I18n.t('placeholder.newGroup')}
-            textStyle={{fontFamily: 'Kanit-Light'}}
-            onPress={this.showNewGroupModal}>
-            <MatIcon name="group-add" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item
-            buttonColor="#3D71FB"
-            title={I18n.t('placeholder.qrCode')}
-            textStyle={{fontFamily: 'Kanit-Light'}}
-            onPress={this.showScanQrCodeModal}>
-            <FAIcon name="qrcode" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton>
+        {!this.state.spinner && (
+          <ActionButton buttonColor="rgba(231,76,60,1)">
+            <ActionButton.Item
+              buttonColor="#03C8A1"
+              title={I18n.t('placeholder.newGroup')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showNewGroupModal}>
+              <MatIcon name="group-add" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+          </ActionButton>
+        )}
       </View>
     );
   }

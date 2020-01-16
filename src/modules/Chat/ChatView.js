@@ -13,9 +13,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
-import {ListItem, Icon, SearchBar} from 'react-native-elements';
-import TouchableScale from 'react-native-touchable-scale';
-import Swipeout from 'react-native-swipeout';
 import * as Api from '../../util/Api';
 import * as GFun from '../../util/GlobalFunction';
 import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
@@ -28,8 +25,9 @@ const IS_IOS = Platform.OS === 'ios';
 export default class ChatView extends Component<Props> {
   constructor(props) {
     super(props);
+    let params = this.props.navigation.state.params;
     this.state = {
-      isDarkMode: true,
+      isDarkMode: params.isDarkMode,
       user: [],
       spinner: false,
       chatRoom: this.props.navigation.state.params.chatRoom,
@@ -60,23 +58,39 @@ export default class ChatView extends Component<Props> {
     );
   }
 
+  async componentWillMount() {
+    this.triggerTurnOnNotification();
+    // get user
+    let user = await GFun.user();
+    await this.setState({
+      user: user,
+      messages: this.state.chatRoom.messages,
+    });
+  }
+
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
-      if (!data.message) {
-        let message = JSON.parse(data.message);
-        if (this.state.user.id !== message.user._id) {
-          let messageIndex = this.state.messages.findIndex(
-            m => m.id === message.id,
-          );
+      let message = JSON.parse(data.message);
+      if (this.state.user.id !== message.user._id) {
+        let messageIndex = this.state.messages.findIndex(
+          m => m._id === message._id,
+        );
 
-          if (messageIndex !== -1) {
-            this.setState(previousState => ({
-              messages: GiftedChat.append(previousState.messages, message),
-            }));
-          }
+        if (messageIndex === -1) {
+          this.setState(previousState => ({
+            messages: GiftedChat.append(previousState.messages, message),
+          }));
         }
       }
     }
+  }
+
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
   }
 
   componentDidMount() {
@@ -85,15 +99,9 @@ export default class ChatView extends Component<Props> {
     });
   }
 
-  async componentWillMount() {
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
-    this.setState({isDarkMode: JSON.parse(isDarkMode)});
-    // get user
-    let user = await GFun.user();
-    await this.setState({
-      user: user,
-      messages: this.state.chatRoom.messages,
-    });
+  componentWillUnmount() {
+    this.messageListener();
+    this.notificationListener();
   }
 
   dialogAddMemberToGroup(requestUserId, requestUserFullName) {
@@ -108,14 +116,15 @@ export default class ChatView extends Component<Props> {
         },
         {
           text: 'Yes',
-          onPress: () => this.addMemberToGroup(requestUserId),
+          onPress: () =>
+            this.addMemberToGroup(requestUserId, requestUserFullName),
         },
       ],
       {cancelable: false},
     );
   }
 
-  async addMemberToGroup(requestUserId) {
+  async addMemberToGroup(requestUserId, requestUserFullName) {
     let user = await GFun.user();
     let response = await Api.joinGroup(
       user.authentication_jwt,
@@ -131,9 +140,20 @@ export default class ChatView extends Component<Props> {
     } else {
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
+        errors.splice(
+          i,
+          0,
+          I18n.t(`message.${GFun.camelize(error)}`, {
+            name: requestUserFullName,
+          }),
+        );
       });
-      GFun.errorMessage(I18n.t('message.error'), errors.join('\n'));
+      GFun.errorMessage(
+        I18n.t('message.error', {
+          name: requestUserFullName,
+        }),
+        errors.join('\n'),
+      );
     }
   }
 
@@ -166,7 +186,7 @@ export default class ChatView extends Component<Props> {
             style={{
               borderRadius: 22,
               padding: 10,
-              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#EAEAEA',
               height: 40,
               color: this.state.isDarkMode ? '#FFF' : '#000',
             }}
@@ -251,7 +271,15 @@ export default class ChatView extends Component<Props> {
     return (
       <Bubble
         {...props}
+        textStyle={{
+          left: {
+            color: this.state.isDarkMode ? '#FFF' : '#000',
+          },
+        }}
         wrapperStyle={{
+          left: {
+            backgroundColor: this.state.isDarkMode ? '#383838' : '#DADADA',
+          },
           right: {
             backgroundColor: this.state.chatRoom.group.color || '#0084ff',
           },
@@ -282,7 +310,9 @@ export default class ChatView extends Component<Props> {
       <View
         style={[
           styles.chatView,
-          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
+          {
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+          },
         ]}>
         {this.AppHerder()}
         <View style={{flex: 1}}>

@@ -6,7 +6,7 @@ import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
@@ -16,6 +16,7 @@ export default class NewGroupView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isDarkMode: this.props.isDarkMode,
       groupName: '',
       services: this.props.services.map(function(s) {
         return {
@@ -38,19 +39,18 @@ export default class NewGroupView extends Component<Props> {
   }
 
   async createGroup() {
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       name: this.state.groupName,
       service_id: this.state.serviceId,
     };
 
     let response = await Api.createGroup(user.authentication_jwt, params);
-    console.log(response);
 
     if (response.success) {
       this.props.myGroups.unshift(response.group);
       this.loadingCreateGroup.showLoading(false);
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.createGroupSuccessful'),
       );
@@ -60,43 +60,63 @@ export default class NewGroupView extends Component<Props> {
       this.loadingCreateGroup.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
   render() {
     return (
-      <View style={{flex: 1, padding: 30}}>
+      <View
+        style={{
+          flex: 1,
+          padding: 30,
+          backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}>
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.newGroup')}
         </Text>
-        <View style={{paddingTop: 15}}>
+        <View style={{paddingTop: GFun.hp(2)}}>
           <TextInput
-            style={{backgroundColor: '#FFF', fontFamily: 'Kanit-Light'}}
-            label={I18n.t('placeholder.name')}
+            keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+            style={{
+              paddingBottom: 6,
+              fontFamily: 'Kanit-Light',
+              height: 50,
+              textAlign: 'center',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+            }}
+            mode="outlined"
+            placeholder={I18n.t('placeholder.name')}
             value={this.state.groupName}
             onChangeText={groupName => this.setState({groupName: groupName})}
           />
         </View>
 
-        <View style={{paddingTop: 20}}>
+        <View style={{paddingTop: GFun.hp(2)}}>
           <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
             {I18n.t('placeholder.chooseService')}
           </Text>
           <View style={{flex: 1}}>
             <Dropdown
               label={
-                <Text style={{color: '#6d6b6b', fontFamily: 'Kanit-Light'}}>
+                <Text
+                  style={{
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
+                    fontFamily: 'Kanit-Light',
+                  }}>
                   {I18n.t('placeholder.service')}
                 </Text>
               }
+              style={{color: this.state.isDarkMode ? '#FFF' : '#000'}}
               labelFontSize={Platform.isPad ? 22 : 12}
               fontSize={Platform.isPad ? 25 : 16}
               data={this.state.services}
-              baseColor="#2d2c2c"
-              selectedItemColor="#222"
+              baseColor="#363636"
+              selectedItemColor="#000"
               titleFontFamily={'Kanit-Light'}
               dropdownPosition={4}
               value={this.state.serviceName}

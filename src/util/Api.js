@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import * as GFunction from './GlobalFunction';
+import * as GFun from './GlobalFunction';
 
 const HOSTS = [
   'https://family-plan.herokuapp.com',
@@ -48,7 +48,7 @@ function joinUrl(host, path) {
 
 export async function refreshToken() {
   try {
-    let user = await GFunction.user();
+    let user = await GFun.user();
     const resp = await fetch(joinUrl(HOST, REFRESH_TOKEN), {
       method: 'POST',
       headers: {

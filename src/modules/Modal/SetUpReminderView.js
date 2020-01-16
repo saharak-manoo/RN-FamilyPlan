@@ -6,7 +6,7 @@ import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 import DatePicker from 'react-native-date-picker';
 
@@ -17,13 +17,14 @@ export default class SetUpReminderView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      dueDate: GFunction.strToDate(this.props.group.due_date) || new Date(),
+      isDarkMode: this.props.isDarkMode,
+      dueDate: GFun.strToDate(this.props.group.due_date) || new Date(),
     };
   }
 
   async clickSettingDueDate() {
     this.loadingSettingDueDate.showLoading(true);
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       due_date: this.state.dueDate,
     };
@@ -36,26 +37,33 @@ export default class SetUpReminderView extends Component<Props> {
 
     if (response.success) {
       this.loadingSettingDueDate.showLoading(false);
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.settingDueDateSuccessful'),
       );
       this.props.modal.current.close();
-      this.props.group.due_date = GFunction.dateToStr(this.state.dueDate);
+      this.props.group.due_date = GFun.dateToStr(this.state.dueDate);
       this.props.onSetNewData(this.props.group);
     } else {
       this.loadingSettingDueDate.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
   render() {
     return (
-      <View style={{flex: 1, padding: 30}}>
+      <View
+        style={{
+          flex: 1,
+          padding: 30,
+          backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}>
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.setUpAReminder')}
         </Text>

@@ -33,7 +33,7 @@ export default class ChatListView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isDarkMode: true,
+      isDarkMode: false,
       user: [],
       spinner: false,
       search: '',
@@ -59,6 +59,7 @@ export default class ChatListView extends Component<Props> {
   }
 
   componentWillMount = async () => {
+    this.triggerTurnOnNotification();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFun.user();
@@ -82,34 +83,45 @@ export default class ChatListView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
-      if (!data.chat_room) {
-        let chatRoom = JSON.parse(data.chat_room);
-        let chatRoomIndex = this.state.chatRooms.findIndex(
-          c => c.id === chatRoom.id,
-        );
+      let chatRoom = JSON.parse(data.chat_room);
+      let chatRoomIndex = this.state.chatRooms.findIndex(
+        c => c.id === chatRoom.id,
+      );
 
-        if (chatRoomIndex === -1) {
-          this.setState({
-            chatRooms: GFun.sortByDate([chatRoom].concat(this.state.chatRooms)),
-            tempChatRooms: GFun.sortByDate(
-              [chatRoom].concat(this.state.chatRooms),
-            ),
-          });
-        } else {
-          this.state.chatRooms[chatRoomIndex] = chatRoom;
-          this.setState({
-            chatRooms: GFun.sortByDate(this.state.chatRooms),
-            tempChatRooms: GFun.sortByDate(this.state.chatRooms),
-          });
-        }
+      if (chatRoomIndex === -1) {
+        this.setState({
+          chatRooms: GFun.sortByDate([chatRoom].concat(this.state.chatRooms)),
+          tempChatRooms: GFun.sortByDate(
+            [chatRoom].concat(this.state.chatRooms),
+          ),
+        });
+      } else {
+        this.state.chatRooms[chatRoomIndex] = chatRoom;
+        this.setState({
+          chatRooms: GFun.sortByDate(this.state.chatRooms),
+          tempChatRooms: GFun.sortByDate(this.state.chatRooms),
+        });
       }
     }
+  }
+
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
   }
 
   componentDidMount() {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
+  }
+
+  componentWillUnmount() {
+    this.messageListener();
+    this.notificationListener();
   }
 
   refreshChatRoom = async () => {
@@ -138,7 +150,7 @@ export default class ChatListView extends Component<Props> {
                   text: 'Delete',
                   type: 'delete',
                   onPress: () => {
-                    this.alertRemoveChatMember(item.id, index);
+                    this.alertRemoveChatRoom(item.id, index);
                   },
                 },
               ]}
@@ -181,7 +193,7 @@ export default class ChatListView extends Component<Props> {
     );
   };
 
-  alertRemoveChatMember(id, index) {
+  alertRemoveChatRoom(id, index) {
     Alert.alert(
       '',
       'Are your sure tou want to delete this chat ?',
@@ -192,7 +204,7 @@ export default class ChatListView extends Component<Props> {
         },
         {
           text: 'Delete',
-          onPress: () => this.state(id, index),
+          onPress: () => this.removeChat(id, index),
           style: 'destructive',
         },
       ],
@@ -202,7 +214,7 @@ export default class ChatListView extends Component<Props> {
 
   async removeChat(id, index) {
     this.state.chatRooms.splice(index, 1);
-    await this.setState({chatRooms: this.state.chat_rooms});
+    await this.setState({chatRooms: this.state.chatRooms});
     GFun.successMessage(
       I18n.t('message.success'),
       I18n.t('message.removeChatSuccessful'),
@@ -211,6 +223,7 @@ export default class ChatListView extends Component<Props> {
 
   goToChatRoom(chatRoom) {
     this.props.navigation.navigate('ChatRoom', {
+      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
       isRequestJoin: false,
     });
@@ -294,24 +307,48 @@ export default class ChatListView extends Component<Props> {
               tension={100}
               activeScale={0.95}
               leftAvatar={() => (
-                <ContentLoader height={45} width={50}>
+                <ContentLoader
+                  height={45}
+                  width={50}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Circle r={18} x={22} y={25} />
                 </ContentLoader>
               )}
               title={() => (
-                <ContentLoader height={30} width={width / 2}>
+                <ContentLoader
+                  height={30}
+                  width={width / 2}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="5" y="10" width={width / 1} height={15} />
                 </ContentLoader>
               )}
               titleStyle={{fontFamily: 'Kanit-Light'}}
               subtitle={() => (
-                <ContentLoader height={20} width={width / 1.8}>
+                <ContentLoader
+                  height={20}
+                  width={width / 1.8}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="5" y="10" width={width / 1.8} height={9} />
                 </ContentLoader>
               )}
               subtitleStyle={{fontFamily: 'Kanit-Light'}}
               rightSubtitle={() => (
-                <ContentLoader height={20} width={width / 5}>
+                <ContentLoader
+                  height={20}
+                  width={width / 5}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="40" y="10" width={width / 5} height={15} />
                 </ContentLoader>
               )}
@@ -329,7 +366,7 @@ export default class ChatListView extends Component<Props> {
       <View
         style={[
           styles.chatView,
-          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
+          {backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF'},
         ]}>
         {this.AppHerder()}
         <View style={{padding: 15}}>

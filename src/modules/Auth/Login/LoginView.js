@@ -14,7 +14,7 @@ import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import * as Api from '../../../util/Api';
-import * as GFunction from '../../../util/GlobalFunction';
+import * as GFun from '../../../util/GlobalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 import appleAuth, {
   AppleButton,
@@ -33,16 +33,13 @@ const IS_IOS = Platform.OS === 'ios';
 export default class LoginView extends Component<Props> {
   constructor(props) {
     super(props);
+    let params = this.props.navigation.state.params;
     this.state = {
+      isDarkMode: params.isDarkMode,
       email: '',
       password: '',
     };
   }
-
-  componentDidMount = async () => {
-    // set dark mode
-    await AsyncStorage.setItem('isDarkMode', JSON.stringify(true));
-  };
 
   appHerder() {
     return (
@@ -72,14 +69,16 @@ export default class LoginView extends Component<Props> {
     if (response.success) {
       this.loadingLogin.showLoading(false);
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.signInSuccessful'),
       );
-      this.props.navigation.navigate('Home');
+      this.props.navigation.navigate('Home', {
+        isDarkMode: this.state.isDarkMode,
+      });
     } else {
       this.loadingLogin.showLoading(false);
-      GFunction.errorMessage(
+      GFun.errorMessage(
         I18n.t('message.notValidate'),
         I18n.t('message.EmailOrPasswordMismatch'),
       );
@@ -90,7 +89,9 @@ export default class LoginView extends Component<Props> {
     this.loadingGoToSignUp.showLoading(true);
     setTimeout(() => {
       this.loadingGoToSignUp.showLoading(false);
-      this.props.navigation.navigate('Register');
+      this.props.navigation.navigate('Register', {
+        isDarkMode: this.state.isDarkMode,
+      });
     }, 500);
   }
 
@@ -113,6 +114,7 @@ export default class LoginView extends Component<Props> {
 
     if (user.apple_id_uid == '' || user.apple_id_uid == null) {
       this.props.navigation.navigate('Register', {
+        isDarkMode: this.state.isDarkMode,
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.email,
@@ -123,13 +125,16 @@ export default class LoginView extends Component<Props> {
       let response = await Api.signInWith(user);
       if (response.success) {
         await AsyncStorage.setItem('user', JSON.stringify(response.user));
-        GFunction.successMessage(
+        GFun.successMessage(
           I18n.t('message.success'),
           I18n.t('message.signInSuccessful'),
         );
-        this.props.navigation.navigate('Home');
+        this.props.navigation.navigate('Home', {
+          isDarkMode: this.state.isDarkMode,
+        });
       } else {
         this.props.navigation.navigate('Register', {
+          isDarkMode: this.state.isDarkMode,
           firstName: user.first_name,
           lastName: user.last_name,
           email: user.email,
@@ -142,49 +147,158 @@ export default class LoginView extends Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+        }}>
         {this.appHerder()}
         <ScrollView>
-          <View style={{padding: 45, alignSelf: 'center'}}>
-            <Text
-              style={{
-                alignSelf: 'center',
-                fontSize: 38,
-                fontFamily: 'Kanit-Light',
-              }}>
-              {I18n.t('button.signIn')}
-            </Text>
+          <View
+            style={{
+              justifyContent: 'center',
+              paddingTop: GFun.hp(2),
+              padding: GFun.hp(2),
+            }}>
+            {appleAuth.isSupported && (
+              <View style={{justifyContent: 'center', paddingTop: 2}}>
+                <TouchableOpacity
+                  style={[
+                    styles.buttonLoginWith,
+                    {
+                      marginTop: GFun.hp(2),
+                      backgroundColor: '#000',
+                      flexDirection: 'row',
+                      borderRadius: 28,
+                      height: 50,
+                    },
+                  ]}
+                  onPress={() => this.signInWithAppleId()}>
+                  <View style={{flex: 0.1, paddingLeft: 10}}>
+                    <FontAwesomeIcon
+                      name="apple"
+                      size={26}
+                      color={'#FFF'}></FontAwesomeIcon>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#FFF',
+                        fontSize: 19,
+                        fontFamily: 'Kanit-Light',
+                      }}>
+                      {`${I18n.t('button.signinWith')} Apple`}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <View style={{justifyContent: 'center', paddingTop: 2}}>
+              <TouchableOpacity
+                style={[
+                  styles.buttonLoginWith,
+                  {
+                    marginTop: GFun.hp(2),
+                    backgroundColor: '#4267be',
+                    flexDirection: 'row',
+                    borderRadius: 28,
+                    height: 50,
+                  },
+                ]}
+                onPress={() => this.signInWithAppleId()}>
+                <View style={{flex: 0.1, paddingLeft: 10}}>
+                  <FontAwesomeIcon
+                    name="facebook-square"
+                    size={26}
+                    color={'#FFF'}></FontAwesomeIcon>
+                </View>
+                <View style={{flex: 1, alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      color: '#FFF',
+                      fontSize: 19,
+                      fontFamily: 'Kanit-Light',
+                    }}>
+                    {`${I18n.t('button.signinWith')} Facebook`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{justifyContent: 'center', paddingTop: 2}}>
+              <TouchableOpacity
+                style={[
+                  styles.buttonLoginWith,
+                  {
+                    marginTop: GFun.hp(2),
+                    backgroundColor: '#18C464',
+                    flexDirection: 'row',
+                    borderRadius: 28,
+                    height: 50,
+                  },
+                ]}
+                onPress={() => this.signInWithAppleId()}>
+                <View style={{flex: 0.1, paddingLeft: 10}}>
+                  <Image
+                    source={require('../../../img/line.png')}
+                    style={{width: 26, height: 26, marginRight: 20}}
+                  />
+                </View>
+                <View style={{flex: 1, alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      color: '#FFF',
+                      fontSize: 19,
+                      fontFamily: 'Kanit-Light',
+                    }}>
+                    {`${I18n.t('button.signinWith')} LINE`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={{padding: 15}}>
             <TextInput
-              style={{paddingBottom: 6, fontFamily: 'Kanit-Light'}}
-              label={I18n.t('placeholder.email')}
+              keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+              style={{
+                paddingBottom: 6,
+                fontFamily: 'Kanit-Light',
+                height: 50,
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+              }}
+              placeholder={I18n.t('placeholder.email')}
               mode="outlined"
               value={this.state.email}
               onChangeText={email => this.setState({email: email})}
             />
             <HelperText
-              style={{fontFamily: 'Kanit-Light'}}
+              style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validateEmail(this.state.email)}>
+              visible={GFun.validateEmail(this.state.email)}>
               {I18n.t('message.emailIsInvalid')}
             </HelperText>
 
             <TextInput
+              keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+              style={{
+                paddingBottom: 6,
+                fontFamily: 'Kanit-Light',
+                height: 50,
+                textAlign: 'center',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+              }}
               secureTextEntry
               autoCorrect={false}
-              style={{paddingBottom: 6, fontFamily: 'Kanit-Light'}}
-              label={I18n.t('placeholder.password')}
+              placeholder={I18n.t('placeholder.password')}
               mode="outlined"
               value={this.state.password}
               onChangeText={password => this.setState({password: password})}
             />
             <HelperText
-              style={{fontFamily: 'Kanit-Light'}}
+              style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validatePasswordLessThanSix(
-                this.state.password,
-              )}>
+              visible={GFun.validatePasswordLessThanSix(this.state.password)}>
               {I18n.t('message.passwordLessThanSix')}
             </HelperText>
 
@@ -196,153 +310,26 @@ export default class LoginView extends Component<Props> {
                 title={I18n.t('button.signIn')}
                 titleFontSize={18}
                 titleFontFamily={'Kanit-Light'}
-                titleColor="#FFF"
+                titleColor={'#FFF'}
                 backgroundColor="#1C83F7"
                 borderRadius={25}
                 onPress={this.clickSignIn.bind(this)}
               />
 
-              {appleAuth.isSupported && (
-                <View style={{justifyContent: 'center', paddingTop: 2}}>
-                  <TouchableOpacity
-                    style={[
-                      styles.buttonLoginWith,
-                      {
-                        marginTop: 20,
-                        backgroundColor: '#000',
-                        flexDirection: 'row',
-                        borderRadius: 28,
-                        height: 50,
-                      },
-                    ]}
-                    onPress={() => this.signInWithAppleId()}>
-                    <View style={{flex: 0.1, paddingLeft: 10}}>
-                      <FontAwesomeIcon
-                        name="apple"
-                        size={26}
-                        color="#FFF"></FontAwesomeIcon>
-                    </View>
-                    <View style={{flex: 1, alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          color: '#FFF',
-                          fontSize: 19,
-                          fontFamily: 'Kanit-Light',
-                        }}>
-                        {`${I18n.t('button.signinWith')} Apple`}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              )}
-
-              <View style={{justifyContent: 'center', paddingTop: 2}}>
-                <TouchableOpacity
-                  style={[
-                    styles.buttonLoginWith,
-                    {
-                      marginTop: 20,
-                      backgroundColor: '#4267be',
-                      flexDirection: 'row',
-                      borderRadius: 28,
-                      height: 50,
-                    },
-                  ]}
-                  onPress={() => this.signInWithAppleId()}>
-                  <View style={{flex: 0.1, paddingLeft: 10}}>
-                    <FontAwesomeIcon
-                      name="facebook-square"
-                      size={26}
-                      color="#FFF"></FontAwesomeIcon>
-                  </View>
-                  <View style={{flex: 1, alignItems: 'center'}}>
-                    <Text
-                      style={{
-                        color: '#FFF',
-                        fontSize: 19,
-                        fontFamily: 'Kanit-Light',
-                      }}>
-                      {`${I18n.t('button.signinWith')} Facebook`}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{justifyContent: 'center', paddingTop: 2}}>
-                <TouchableOpacity
-                  style={[
-                    styles.buttonLoginWith,
-                    {
-                      marginTop: 20,
-                      backgroundColor: '#18C464',
-                      flexDirection: 'row',
-                      borderRadius: 28,
-                      height: 50,
-                    },
-                  ]}
-                  onPress={() => this.signInWithAppleId()}>
-                  <View style={{flex: 0.1, paddingLeft: 10}}>
-                    <Image
-                      source={require('../../../img/line.png')}
-                      style={{width: 26, height: 26, marginRight: 20}}
-                    />
-                  </View>
-                  <View style={{flex: 1, alignItems: 'center'}}>
-                    <Text
-                      style={{
-                        color: '#FFF',
-                        fontSize: 19,
-                        fontFamily: 'Kanit-Light',
-                      }}>
-                      {`${I18n.t('button.signinWith')} LINE`}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{justifyContent: 'center', paddingTop: 2}}>
-                <TouchableOpacity
-                  style={[
-                    styles.buttonLoginWith,
-                    {
-                      marginTop: 20,
-                      backgroundColor: '#0079C2',
-                      flexDirection: 'row',
-                      borderRadius: 28,
-                      height: 50,
-                    },
-                  ]}
-                  onPress={() => this.signInWithAppleId()}>
-                  <View style={{flex: 0.1, paddingLeft: 10}}>
-                    <FontAwesomeIcon
-                      name="google"
-                      size={26}
-                      color="#FFF"></FontAwesomeIcon>
-                  </View>
-                  <View style={{flex: 1, alignItems: 'center'}}>
-                    <Text
-                      style={{
-                        color: '#FFF',
-                        fontSize: 19,
-                        fontFamily: 'Kanit-Light',
-                      }}>
-                      {`${I18n.t('button.signinWith')} Google`}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-
               <TouchableOpacity
                 style={{
-                  padding: 20,
-                  paddingTop: 15,
+                  padding: GFun.hp(2),
+                  paddingTop: GFun.hp(2),
                   alignItems: 'center',
                 }}
                 onPress={() =>
-                  this.props.navigation.navigate('ForgotPassword')
+                  this.props.navigation.navigate('ForgotPassword', {
+                    isDarkMode: this.state.isDarkMode,
+                  })
                 }>
                 <Text
                   style={{
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
                     fontSize: 15,
                     textDecorationLine: 'underline',
                     fontFamily: 'Kanit-Light',
@@ -358,7 +345,7 @@ export default class LoginView extends Component<Props> {
                 title={I18n.t('button.signUp')}
                 titleFontFamily={'Kanit-Light'}
                 titleFontSize={18}
-                titleColor="#FFF"
+                titleColor={'#FFF'}
                 backgroundColor="#F71C58"
                 borderRadius={25}
                 onPress={this.goToSignUp.bind(this)}
