@@ -1,23 +1,27 @@
 import React, {Component} from 'react';
-import firebase from 'react-native-firebase';
+import {connect} from 'react-redux';
+import {setScreenBadge} from '../actions';
 
 // View
 import NavigatorStack from './navigator';
 
-export default class NavigatorView extends Component {
+class NavigatorView extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      unreadMessagesCount: 4,
-      unreadNotificationsCount: 28,
-    };
+    this.state = {};
   }
 
   render() {
-    return (
-      <NavigatorStack
-        screenProps={{unreadMessagesCount: 8, unreadNotificationsCount: 28}}
-      />
-    );
+    return <NavigatorStack screenProps={this.props.screenBadge} />;
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+});
+
+const mapDispatchToProps = {
+  setScreenBadge,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavigatorView);
