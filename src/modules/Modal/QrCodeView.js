@@ -6,7 +6,7 @@ import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
 import * as GFun from '../../util/GlobalFunction';
 
-export default class QrCodeView extends Component<Props> {
+export default class QrCodeView extends Component {
   constructor(props) {
     super(props);
     this.state = {isDarkMode: this.props.isDarkMode};

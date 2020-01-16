@@ -30,7 +30,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class LoginView extends Component<Props> {
+export default class LoginView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;

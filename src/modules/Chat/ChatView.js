@@ -22,7 +22,7 @@ import firebase from 'react-native-firebase';
 import QuickReplies from 'react-native-gifted-chat/lib/QuickReplies';
 
 const IS_IOS = Platform.OS === 'ios';
-export default class ChatView extends Component<Props> {
+export default class ChatView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
@@ -278,7 +278,7 @@ export default class ChatView extends Component<Props> {
         }}
         wrapperStyle={{
           left: {
-            backgroundColor: this.state.isDarkMode ? '#383838' : '#DADADA',
+            backgroundColor: this.state.isDarkMode ? '#383838' : '#EEEEEE',
           },
           right: {
             backgroundColor: this.state.chatRoom.group.color || '#0084ff',
@@ -311,7 +311,7 @@ export default class ChatView extends Component<Props> {
         style={[
           styles.chatView,
           {
-            backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFFFFF',
           },
         ]}>
         {this.AppHerder()}

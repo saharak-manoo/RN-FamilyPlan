@@ -36,7 +36,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class GroupView extends Component<Props> {
+export default class GroupView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;

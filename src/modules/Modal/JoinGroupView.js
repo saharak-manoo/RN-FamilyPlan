@@ -11,7 +11,7 @@ import * as GFun from '../../util/GlobalFunction';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class JoinGroupView extends Component<Props> {
+export default class JoinGroupView extends Component {
   constructor(props) {
     super(props);
     this.state = {

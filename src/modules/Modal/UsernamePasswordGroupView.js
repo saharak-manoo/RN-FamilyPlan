@@ -10,7 +10,7 @@ import {Icon} from 'react-native-elements';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class UsernamePasswordGroupView extends Component<Props> {
+export default class UsernamePasswordGroupView extends Component {
   constructor(props) {
     super(props);
     this.state = {
