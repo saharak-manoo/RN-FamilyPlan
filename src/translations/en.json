@@ -28,7 +28,9 @@
     "disneyPlus": "Disney plus",
     "netflix": "Netflix",
     "spotify": "Spotify",
-    "notiGroupPayment": "%{day} of every month"
+    "notiGroupPayment": "%{day} of every month",
+    "authenticationRequired": "Authentication Required",
+    "showPasscode": "Show Passcode"
   },
   "placeholder": {
     "prefix": "Prefix",
@@ -125,6 +127,8 @@
     "removeChatSuccessful": "Remove chat successful",
     "removeNotiSuccessful": "Remove notification successful",
     "copyUserNameSuccessful": "Copy username successful",
-    "copyPasswordSuccessful": "Copy password successful"
+    "copyPasswordSuccessful": "Copy password successful",
+    "authenticateFailed": "Authenticate failed",
+    "requestToOpenUsernamePasswordGroup": "Request to open username password group %{name}"
   }
 }

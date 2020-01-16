@@ -245,9 +245,19 @@ export default class GroupView extends Component {
 
   showModalUsernamePassword = async () => {
     if (this.usernamePasswordModal.current) {
-      let isPassed = await Authenticate.open();
+      let {isPassed, error} = await Authenticate.open(
+        I18n.t('message.requestToOpenUsernamePasswordGroup', {
+          name: this.state.group.name,
+        }),
+      );
       if (isPassed) {
-        this.usernamePasswordModal.current.open(); 
+        this.usernamePasswordModal.current.open();
+      } else {
+        console.log(error)
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.authenticateFailed'),
+        );
       }
     }
   };
