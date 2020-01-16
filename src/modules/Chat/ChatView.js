@@ -15,11 +15,7 @@ import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
 import * as Api from '../actions/api';
 import * as GFun from '../../helpers/globalFunction';
-import {
-  GiftedChat,
-  Bubble,
-  Composer,
-} from 'react-native-gifted-chat';
+import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';

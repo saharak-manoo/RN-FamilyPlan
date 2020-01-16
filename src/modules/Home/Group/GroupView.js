@@ -20,11 +20,12 @@ import {ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
-import * as Api from '../../actions';
+import * as Api from '../../actions/api';
 import * as GFun from '../../../helpers/globalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
+import * as Authenticate from '../../../helpers/authenticate';
 
 // View
 import InviteMemberView from '../../modal/inviteMemberView';
@@ -242,9 +243,12 @@ export default class GroupView extends Component {
     await this.setState({group: group});
   };
 
-  showModalUsernamePassword = () => {
+  showModalUsernamePassword = async () => {
     if (this.usernamePasswordModal.current) {
-      this.usernamePasswordModal.current.open();
+      let isPassed = await Authenticate.open();
+      if (isPassed) {
+        this.usernamePasswordModal.current.open(); 
+      }
     }
   };
 
