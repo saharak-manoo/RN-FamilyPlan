@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setScreenBadge} from '../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
@@ -33,7 +35,7 @@ import JoinGroupView from '../modal/joinGroupView';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class HomeView extends Component {
+class HomeView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
@@ -59,6 +61,7 @@ export default class HomeView extends Component {
   }
 
   componentWillMount = async () => {
+    this.props.setScreenBadge(10, 20);
     this.fcmCheckPermissions();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({
@@ -799,3 +802,13 @@ export default class HomeView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+});
+
+const mapDispatchToProps = {
+  setScreenBadge,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeView);

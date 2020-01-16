@@ -20,7 +20,7 @@ import {ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
-import * as Api from '../../actions/actions';
+import * as Api from '../../actions';
 import * as GFun from '../../../helpers/globalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';

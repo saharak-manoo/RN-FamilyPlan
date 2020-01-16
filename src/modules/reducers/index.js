@@ -1,14 +1,4 @@
-const initialState = {
-  unreadMessagesCount: 0,
-  unreadNotificationsCount: 0,
-};
+import {combineReducers} from 'redux';
+import screenBadge from './screenBadge';
 
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case typeName:
-      return {...state};
-
-    default:
-      return state;
-  }
-};
+export default combineReducers({screenBadge});
