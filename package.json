@@ -21,6 +21,7 @@
     "@invertase/react-native-apple-authentication": "^0.1.1",
     "@react-native-community/async-storage": "^1.6.2",
     "@react-native-community/datetimepicker": "^2.1.0",
+    "@react-native-community/push-notification-ios": "^1.0.5",
     "d3-interpolate": "^1.4.0",
     "prop-types": "^15.7.2",
     "react": "16.9.0",

@@ -253,7 +253,7 @@ export default class GroupView extends Component {
       if (isPassed) {
         this.usernamePasswordModal.current.open();
       } else {
-        console.log(error)
+        console.log(error);
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.authenticateFailed'),
@@ -285,8 +285,8 @@ export default class GroupView extends Component {
           modal={this.usernamePasswordModal}
           isDarkMode={this.state.isDarkMode}
           isGroupLeader={this.state.userView.group_leader}
-          userName={'test'}
-          password={'password'}
+          group={this.state.group}
+          onSetNewData={this.setNewData}
         />
       </Modalize>
     );

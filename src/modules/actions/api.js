@@ -16,6 +16,7 @@ const SIGN_IN_PATH = '/api/v1/sessions/sign_in';
 const SIGN_OUT_PATH = '/api/v1/sessions/sign_out';
 const FORGOT_PASSWORD_PATH = '/api/v1/sessions/forgot_password';
 const PROFILE_PATH = '/api/v1/users/:user_id/profile';
+const UPDATE_PROFILE = '/api/v1/users/:id';
 const GROUP = '/api/v1/groups';
 const NEW_GROUP = '/api/v1/groups/new';
 const UPDATE_GROUP = '/api/v1/groups/:id';
@@ -32,6 +33,8 @@ const SIGN_IN_WITH_PATH = '/api/v1/sessions/sign_in_with';
 const FCM_TOKEN_PATH = '/api/v1/users/:user_id/fcm_token';
 const NOTIFICATION = '/api/v1/notifications';
 const SHOW_NOTIFICATION = '/api/v1/notifications/:id';
+const UNREAD_COUNT = '/api/v1/notifications/unread_count';
+const UPSERT_GROUP_ACCOUNT = '/api/v1/groups/:id/account';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -180,6 +183,30 @@ export async function getProfile(token, user_id) {
     let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
     if (status === 'reload') {
       return await this.getProfile(newTokenJwt, user_id);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function updateProfile(token, id, params) {
+  try {
+    const resp = await fetch(joinUrl(HOST, UPDATE_PROFILE.replace(':id', id)), {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({user: params}),
+    });
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
+    if (status === 'reload') {
+      return await this.updateProfile(newTokenJwt, id, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -517,7 +544,7 @@ export async function createFcmToken(token, user_id, fcmToken) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
     if (status === 'reload') {
-      return await this.getProfile(newTokenJwt, user_id);
+      return await this.createFcmToken(newTokenJwt, user_id, fcmToken);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -546,7 +573,7 @@ export async function getNotification(token, params) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return await this.getChatRoom(newTokenJwt);
+      return await this.getNotification(newTokenJwt, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
@@ -572,7 +599,57 @@ export async function getNotificationById(token, notification_id) {
 
     let {status, newTokenJwt} = await this.checkTokenExpire(resp);
     if (status === 'reload') {
-      return await this.getChatRoom(newTokenJwt);
+      return await this.getNotificationById(newTokenJwt, notification_id);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function getUnreadCount(token) {
+  try {
+    const resp = await fetch(joinUrl(HOST, UNREAD_COUNT), {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
+    if (status === 'reload') {
+      return await this.getUnreadCount(newTokenJwt);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function upsertGroupAccount(token, group_id, params) {
+  try {
+    const resp = await fetch(
+      joinUrl(HOST, UPSERT_GROUP_ACCOUNT.replace(':id', group_id)),
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({account: params}),
+      },
+    );
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
+    if (status === 'reload') {
+      return await this.upsertGroupAccount(newTokenJwt, group_id, params);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;

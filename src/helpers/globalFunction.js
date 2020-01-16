@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {Dimensions, PixelRatio} from 'react-native';
 import {showMessage, hideMessage} from 'react-native-flash-message';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -125,3 +126,9 @@ export const hp = heightPercent => {
 
   return PixelRatio.roundToNearestPixel((screenHeight * elemHeight) / 100);
 };
+
+export function setAppBadgeCountIos(count = 0) {
+  if (Platform.OS === 'ios') {
+    PushNotificationIOS.setApplicationIconBadgeNumber(count);
+  }
+}

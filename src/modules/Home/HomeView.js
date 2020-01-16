@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {setScreenBadge} from '../actions';
+import {setScreenBadge, setScreenBadgeNow} from '../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
@@ -61,7 +61,6 @@ class HomeView extends Component {
   }
 
   componentWillMount = async () => {
-    this.props.setScreenBadge(10, 20);
     this.fcmCheckPermissions();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({
@@ -70,6 +69,7 @@ class HomeView extends Component {
     });
 
     let user = await GFun.user();
+    this.props.setScreenBadge(user.authentication_jwt);
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       this.setState({
@@ -84,6 +84,8 @@ class HomeView extends Component {
   };
 
   async realTimeData(data) {
+    let {unread_messages_count, unread_notifications_count} = JSON.parse(data.unread);
+    this.props.setScreenBadgeNow(unread_messages_count, unread_notifications_count);
     let user = await GFun.user();
     if (
       data.noti_type === 'group' ||
@@ -809,6 +811,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setScreenBadge,
+  setScreenBadgeNow,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeView);

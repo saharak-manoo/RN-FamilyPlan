@@ -63,12 +63,6 @@ export default class ProfileView extends Component {
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
       this.setState({
         user: response.user,
-        prefix: response.user.prefix,
-        firstName: response.user.first_name,
-        lastName: response.user.last_name,
-        email: response.user.email,
-        phoneNumber: response.user.phone_number,
-        photo: response.user.photo,
         spinner: false,
       });
     } else {
@@ -95,8 +89,15 @@ export default class ProfileView extends Component {
     this.props.navigation.navigate('EditProfile', {
       isDarkMode: this.state.isDarkMode,
       user: this.state.user,
+      onUpdated: () => this.refreshUser(),
     });
     this.loadingEditProfile.showLoading(false);
+  }
+
+  async refreshUser() {
+    this.setState({
+      user: await GFun.user(),
+    });
   }
 
   clickSignOut() {
@@ -188,7 +189,7 @@ export default class ProfileView extends Component {
                 <View style={{alignSelf: 'center'}}>
                   <UserAvatar
                     size={GFun.wp(25)}
-                    name={this.state.firstName + ' ' + this.state.lastName}
+                    name={this.state.user.full_name}
                   />
                 </View>
                 <Text
@@ -198,7 +199,7 @@ export default class ProfileView extends Component {
                     alignSelf: 'center',
                     paddingTop: 22,
                   }}>
-                  {this.state.firstName + ' ' + this.state.lastName}
+                  {this.state.user.full_name}
                 </Text>
                 <Text
                   style={{
@@ -207,7 +208,7 @@ export default class ProfileView extends Component {
                     alignSelf: 'center',
                     paddingTop: GFun.hp(2),
                   }}>
-                  {this.state.email}
+                  {this.state.user.email}
                 </Text>
                 <Text
                   style={{
@@ -216,7 +217,7 @@ export default class ProfileView extends Component {
                     alignSelf: 'center',
                     paddingTop: GFun.hp(2),
                   }}>
-                  {this.state.phoneNumber}
+                  {this.state.user.phone_number}
                 </Text>
               </View>
             )}
