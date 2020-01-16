@@ -1,26 +1,24 @@
 import TouchID from 'react-native-touch-id';
+import I18n from '../components/i18n';
 
-const optionalConfigObject = {
-  title: 'Authentication Required',
-  imageColor: '#e00606',
-  imageErrorColor: '#ff0000',
-  sensorDescription: 'Touch sensor',
-  sensorErrorDescription: 'Failed',
-  cancelText: 'Cancel',
-  fallbackLabel: 'Show Passcode',
-  unifiedErrors: false,
-  passcodeFallback: true,
-};
+export function open(message, isOpenPasscode = true) {
+  let optionalConfigObject = {
+    title: I18n.t('text.authenticationRequired'),
+    imageColor: '#e00606',
+    imageErrorColor: '#ff0000',
+    sensorDescription: 'Touch sensor',
+    sensorErrorDescription: I18n.t('message.error'),
+    cancelText: I18n.t('button.cancel'),
+    fallbackLabel: I18n.t('text.showPasscode'),
+    unifiedErrors: true,
+    passcodeFallback: isOpenPasscode,
+  };
 
-export function open() {
-  return TouchID.authenticate(
-    'to demo this react-native component',
-    optionalConfigObject,
-  )
+  return TouchID.authenticate(message, optionalConfigObject)
     .then(success => {
-      return true;
+      return {isPassed: true, error: ''};
     })
     .catch(error => {
-      return false;
+      return {isPassed: false, error: error};
     });
 }

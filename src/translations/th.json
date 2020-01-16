@@ -24,7 +24,9 @@
     "miss": "นางสาว",
     "info": "ข้อมูล",
     "members": "สมาชิก",
-    "notiGroupPayment": "วันที่ %{day} ของทุกเดือน"
+    "notiGroupPayment": "วันที่ %{day} ของทุกเดือน",
+    "authenticationRequired": "ต้องมีการรับรองความถูกต้อง",
+    "showPasscode": "แสดงรหัสผ่าน"
   },
   "placeholder": {
     "prefix": "คำนำหน้า",
@@ -120,6 +122,8 @@
     "removeChatSuccessful": "ลบแชทสำเร็จ",
     "removeNotiSuccessful": "ลบแจ้งเตือนสำเร็จ",
     "copyUserNameSuccessful": "ก็อปชื่อผู้ใช้สำเร็จ",
-    "copyPasswordSuccessful": "ก็อปรหัสผ่านสำเร็จ"
+    "copyPasswordSuccessful": "ก็อปรหัสผ่านสำเร็จ",
+    "authenticateFailed": "รับรองความถูกต้องล้มเหลว",
+    "requestToOpenUsernamePasswordGroup": "ดูชื่อผู้ใช้และรหัสผ่านของกลุ่ม %{name}"
   }
 }
