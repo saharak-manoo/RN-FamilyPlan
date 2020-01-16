@@ -21,14 +21,16 @@ import TouchableScale from 'react-native-touchable-scale';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
 import * as Api from '../../../util/Api';
-import * as GFunction from '../../../util/GlobalFunction';
+import * as GFun from '../../../util/GlobalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
+import {showMessage, hideMessage} from 'react-native-flash-message';
 
 // View
 import InviteMemberView from '../../Modal/InviteMemberView';
 import SettingServiceChargeView from '../../Modal/SettingServiceChargeView';
+import UsernamePasswordGroupView from '../../Modal/UsernamePasswordGroupView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -37,9 +39,10 @@ const IS_IOS = Platform.OS === 'ios';
 export default class GroupView extends Component<Props> {
   constructor(props) {
     super(props);
-    let group = this.props.navigation.state.params.group;
+    let params = this.props.navigation.state.params;
+    let group = params.group;
     this.state = {
-      isDarkMode: true,
+      isDarkMode: params.isDarkMode,
       group: group,
       userView: [],
       selectedDay: null,
@@ -50,29 +53,36 @@ export default class GroupView extends Component<Props> {
 
   inviteMemberModal = React.createRef();
   settingServiceChargeModal = React.createRef();
+  usernamePasswordModal = React.createRef();
 
   async componentWillMount() {
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
-    this.setState({isDarkMode: JSON.parse(isDarkMode)});
-    let user = await GFunction.user();
+    this.triggerTurnOnNotification();
+    let user = await GFun.user();
     let userView = this.props.navigation.state.params.group.members.filter(
       m => m.id === user.id,
     )[0];
+
     await this.setState({
       group: this.props.navigation.state.params.group,
       userView: userView,
     });
   }
 
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
   realTimeData(data) {
     if (data.noti_type === 'group') {
-      if (!data.group) {
-        let group = JSON.parse(data.group);
-        if (this.state.group.id === group.id) {
-          this.setState({
-            group: group,
-          });
-        }
+      let group = JSON.parse(data.group);
+      if (this.state.group.id === group.id) {
+        this.setState({
+          group: group,
+        });
       }
     }
   }
@@ -81,6 +91,11 @@ export default class GroupView extends Component<Props> {
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
+  }
+
+  componentWillUnmount() {
+    this.messageListener();
+    this.notificationListener();
   }
 
   AppHerder() {
@@ -124,6 +139,7 @@ export default class GroupView extends Component<Props> {
         adjustToContentHeight>
         <InviteMemberView
           modal={this.inviteMemberModal}
+          isDarkMode={this.state.isDarkMode}
           group={this.state.group}
           onSetNewData={this.setNewData}
         />
@@ -147,9 +163,11 @@ export default class GroupView extends Component<Props> {
         confirmButton={I18n.t('button.save')}
         cancelButton={I18n.t('button.cancel')}
         onValueChange={(day, index) => {
+          this.state.group.noti_payment = day.toString();
           this.setState({
             notiPayment: day,
             selectedDay: index,
+            group: this.state.group,
           });
           this.updateNotiPayment();
         }}
@@ -158,7 +176,7 @@ export default class GroupView extends Component<Props> {
   }
 
   async updateNotiPayment() {
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       noti_payment: parseInt(this.state.notiPayment),
     };
@@ -170,16 +188,16 @@ export default class GroupView extends Component<Props> {
     );
 
     if (response.success) {
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.settingDueDateSuccessful'),
       );
     } else {
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
@@ -213,6 +231,7 @@ export default class GroupView extends Component<Props> {
         adjustToContentHeight>
         <SettingServiceChargeView
           modal={this.settingServiceChargeModal}
+          isDarkMode={this.state.isDarkMode}
           group={this.state.group}
           onSetNewData={this.setNewData}
         />
@@ -223,6 +242,42 @@ export default class GroupView extends Component<Props> {
   setNewData = async group => {
     await this.setState({group: group});
   };
+
+  showModalUsernamePassword = () => {
+    if (this.usernamePasswordModal.current) {
+      this.usernamePasswordModal.current.open();
+    }
+  };
+
+  popUpModalUsernamePassword() {
+    return (
+      <Modalize
+        ref={this.usernamePasswordModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <UsernamePasswordGroupView
+          modal={this.usernamePasswordModal}
+          isDarkMode={this.state.isDarkMode}
+          isGroupLeader={this.state.userView.group_leader}
+          userName={'test'}
+          password={'password'}
+        />
+      </Modalize>
+    );
+  }
 
   listInfo = () => {
     return (
@@ -235,6 +290,7 @@ export default class GroupView extends Component<Props> {
             fontFamily: 'Kanit-Light',
           }}>
           <Icon
+            size={height / 40}
             raised
             name="add-alert"
             type="mat-icon"
@@ -244,8 +300,8 @@ export default class GroupView extends Component<Props> {
           <Text
             style={{
               padding: IS_IOS ? 13 : 5,
-              paddingLeft: 35,
-              fontSize: 25,
+              paddingLeft: GFun.wp(8),
+              fontSize: GFun.hp(3),
               justifyContent: 'center',
               fontFamily: 'Kanit-Light',
             }}>
@@ -261,6 +317,7 @@ export default class GroupView extends Component<Props> {
             padding: IS_IOS ? 14 : 10,
           }}>
           <Icon
+            size={height / 40}
             raised
             name="dollar"
             type="font-awesome"
@@ -270,12 +327,12 @@ export default class GroupView extends Component<Props> {
           <Text
             style={{
               padding: IS_IOS ? 14 : 4,
-              paddingLeft: 35,
-              fontSize: 25,
+              paddingLeft: GFun.wp(8),
+              fontSize: GFun.hp(3),
               justifyContent: 'center',
               fontFamily: 'Kanit-Light',
             }}>
-            {this.state.group.service_charge}
+            {parseFloat(this.state.group.service_charge).toFixed(2)}
           </Text>
         </View>
       </View>
@@ -302,7 +359,7 @@ export default class GroupView extends Component<Props> {
                 },
               ]}
               style={{
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                 borderRadius: 15,
                 fontFamily: 'Kanit-Light',
               }}>
@@ -310,7 +367,7 @@ export default class GroupView extends Component<Props> {
                 key={index}
                 containerStyle={{
                   borderRadius: 15,
-                  backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                  backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                 }}
                 Component={TouchableScale}
                 friction={90}
@@ -346,7 +403,7 @@ export default class GroupView extends Component<Props> {
               key={index}
               containerStyle={{
                 borderRadius: 15,
-                backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
               }}
               Component={TouchableScale}
               friction={90}
@@ -416,7 +473,7 @@ export default class GroupView extends Component<Props> {
   }
 
   async removeMember(id, index) {
-    let user = await GFunction.user();
+    let user = await GFun.user();
 
     let response = await Api.leaveGroup(
       user.authentication_jwt,
@@ -428,14 +485,16 @@ export default class GroupView extends Component<Props> {
       this.state.group.members.splice(index, 1);
       await this.setState({group: this.state.group});
       if (id === user.id) {
-        GFunction.successMessage(
+        GFun.successMessage(
           I18n.t('message.success'),
           I18n.t('message.leaveGroupSuccessful'),
         );
         this.props.navigation.state.params.onLeaveGroup();
-        this.props.navigation.navigate('Home');
+        this.props.navigation.navigate('Home', {
+          isDarkMode: this.state.isDarkMode,
+        });
       } else {
-        GFunction.successMessage(
+        GFun.successMessage(
           I18n.t('message.success'),
           I18n.t('message.removeMemberSuccessful'),
         );
@@ -444,14 +503,15 @@ export default class GroupView extends Component<Props> {
       this.loadingJoinGroup.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.error'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.error'), errors.join('\n'));
     }
   }
 
   goToChatRoom(chatRoom) {
     this.props.navigation.navigate('ChatRoom', {
+      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
       isRequestJoin: false,
     });
@@ -463,12 +523,12 @@ export default class GroupView extends Component<Props> {
         style={{
           fontFamily: 'Kanit-Light',
           flex: 1,
-          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
         }}>
         {this.AppHerder()}
         <View style={{flex: 0.2, paddingLeft: 15, paddingTop: 22}}>
           <Text style={{fontSize: 34, fontFamily: 'Kanit-Light'}}>
-            {I18n.t('text.info')}
+            {this.state.group.service_name}
           </Text>
         </View>
         <View
@@ -476,7 +536,7 @@ export default class GroupView extends Component<Props> {
             fontFamily: 'Kanit-Light',
             flex: 0.6,
             margin: 10,
-            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+            backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
             borderRadius: 15,
           }}>
           {this.listInfo()}
@@ -492,7 +552,7 @@ export default class GroupView extends Component<Props> {
             fontFamily: 'Kanit-Light',
             flex: 1,
             margin: 10,
-            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+            backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
             borderRadius: 15,
           }}>
           {this.listMembers(this.state.group.members)}
@@ -501,6 +561,7 @@ export default class GroupView extends Component<Props> {
         {this.popUpModalInviteMember()}
         {this.popUpModalSettingServiceCharge()}
         {this.popUpModalSetUpReminder()}
+        {this.popUpModalUsernamePassword()}
 
         {this.state.userView.group_leader ? (
           <ActionButton buttonColor="rgba(231,76,60,1)">
@@ -525,6 +586,13 @@ export default class GroupView extends Component<Props> {
               onPress={this.showModalSetUpReminder}>
               <MatIcon name="add-alert" style={styles.actionButtonIcon} />
             </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="#ED5D00"
+              title={I18n.t('placeholder.usernameAndPassword')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalUsernamePassword}>
+              <MatIcon name="https" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
           </ActionButton>
         ) : (
           <ActionButton
@@ -536,6 +604,13 @@ export default class GroupView extends Component<Props> {
               textStyle={{fontFamily: 'Kanit-Light'}}
               onPress={() => this.goToChatRoom(this.state.group.chat_room)}>
               <MatIcon name="chat" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="#ED5D00"
+              title={I18n.t('placeholder.usernameAndPassword')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalUsernamePassword}>
+              <MatIcon name="https" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor="rgba(231,76,60,1)"

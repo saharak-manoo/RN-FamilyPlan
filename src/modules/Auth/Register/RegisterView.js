@@ -14,20 +14,19 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import {Dropdown} from 'react-native-material-dropdown';
 import * as Api from '../../../util/Api';
-import * as GFunction from '../../../util/GlobalFunction';
+import * as GFun from '../../../util/GlobalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
-const BAR_COLOR = IS_IOS ? '#1C83F7' : '#000';
 
 export default class RegisterView extends Component<Props> {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
-    console.log(params);
     this.state = {
+      isDarkMode: params.isDarkMode,
       prefixs: [
         {
           value: I18n.t('text.mr'),
@@ -78,14 +77,14 @@ export default class RegisterView extends Component<Props> {
   validate() {
     if (this.state.password && this.state.confirmPassword) {
       if (this.state.password.length < 6 || this.state.confirmPassword < 6) {
-        GFunction.errorMessage(
+        GFun.errorMessage(
           I18n.t('message.notValidate'),
           I18n.t('message.passwordLessThanSix'),
         );
         this.loadingSignUp.showLoading(false);
       } else {
         if (this.state.password !== this.state.confirmPassword) {
-          GFunction.errorMessage(
+          GFun.errorMessage(
             I18n.t('message.notValidate'),
             I18n.t('message.passwordNotMatch'),
           );
@@ -95,7 +94,7 @@ export default class RegisterView extends Component<Props> {
         }
       }
     } else {
-      GFunction.errorMessage(
+      GFun.errorMessage(
         I18n.t('message.notValidate'),
         I18n.t('message.pleaseInputAllValue'),
       );
@@ -131,18 +130,20 @@ export default class RegisterView extends Component<Props> {
     if (response.success) {
       this.loadingSignUp.showLoading(false);
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.signUpSuccessful'),
       );
-      this.props.navigation.navigate('Home');
+      this.props.navigation.navigate('Home', {
+        isDarkMode: this.state.isDarkMode,
+      });
     } else {
       this.loadingSignUp.showLoading(false);
       let errors = [];
       response.errors.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
@@ -150,90 +151,107 @@ export default class RegisterView extends Component<Props> {
     this.loadingGoToSignIn.showLoading(true);
     setTimeout(() => {
       this.loadingGoToSignIn.showLoading(false);
-      this.props.navigation.navigate('Login');
+      this.props.navigation.navigate('Login', {
+        isDarkMode: this.state.isDarkMode,
+      });
     }, 300);
   }
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+        }}>
         {this.appHerder()}
         <ScrollView style={{flex: 1}}>
-          <View style={{padding: 25, alignSelf: 'center'}}>
+          <View style={{padding: GFun.hp(2), alignSelf: 'center'}}>
             <Text
               style={{
                 alignSelf: 'center',
-                fontSize: 38,
+                fontSize: GFun.hp(6),
                 fontFamily: 'Kanit-Light',
               }}>
               {I18n.t('button.signUp')}
             </Text>
           </View>
-          <View style={{padding: 15}}>
-            <Dropdown
-              label={
-                <Text style={{color: '#6d6b6b', fontFamily: 'Kanit-Light'}}>
-                  {I18n.t('placeholder.prefix')}
-                </Text>
-              }
-              labelFontSize={Platform.isPad ? 22 : 12}
-              fontSize={Platform.isPad ? 25 : 16}
-              fontFamily={'Kanit-Light'}
-              data={this.state.prefixs}
-              baseColor="#2d2c2c"
-              selectedItemColor="#222"
-              dropdownPosition={0}
-              value={this.state.prefix}
-              onChangeText={prefix => this.setState({prefix: prefix})}
-            />
-
+          <View style={{padding: GFun.hp(2)}}>
             <TextInput
-              style={{paddingBottom: 6, paddingTop: 15}}
-              label={I18n.t('placeholder.firstName')}
+              keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+              style={{
+                paddingBottom: GFun.hp(1),
+                fontFamily: 'Kanit-Light',
+                height: 50,
+                textAlign: 'center',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+              }}
+              placeholder={I18n.t('placeholder.firstName')}
               mode="outlined"
               value={this.state.firstName}
               onChangeText={firstName => this.setState({firstName: firstName})}
             />
             <HelperText
-              style={{fontFamily: 'Kanit-Light'}}
+              style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validateBlank(this.state.firstName)}>
+              visible={GFun.validateBlank(this.state.firstName)}>
               {I18n.t('message.firstNameCannotBeBlank')}
             </HelperText>
 
             <TextInput
-              style={{paddingBottom: 6}}
-              label={I18n.t('placeholder.lastName')}
+              keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+              style={{
+                paddingBottom: GFun.hp(1),
+                fontFamily: 'Kanit-Light',
+                height: 50,
+                textAlign: 'center',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+              }}
+              placeholder={I18n.t('placeholder.lastName')}
               mode="outlined"
               value={this.state.lastName}
               onChangeText={lastName => this.setState({lastName: lastName})}
             />
             <HelperText
-              style={{fontFamily: 'Kanit-Light'}}
+              style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validateBlank(this.state.lastName)}>
+              visible={GFun.validateBlank(this.state.lastName)}>
               {I18n.t('message.lastNameCannotBeBlank')}
             </HelperText>
 
             <TextInput
-              style={{paddingBottom: 6}}
-              label={I18n.t('placeholder.email')}
+              keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+              style={{
+                paddingBottom: GFun.hp(1),
+                fontFamily: 'Kanit-Light',
+                height: 50,
+                textAlign: 'center',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+              }}
+              placeholder={I18n.t('placeholder.email')}
               mode="outlined"
               value={this.state.email}
               onChangeText={email => this.setState({email: email})}
             />
             <HelperText
-              style={{fontFamily: 'Kanit-Light'}}
+              style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validateEmail(this.state.email)}>
+              visible={GFun.validateEmail(this.state.email)}>
               {I18n.t('message.emailIsInvalid')}
             </HelperText>
 
             <TextInput
               keyboardType="numeric"
               maxLength={10}
-              style={{paddingBottom: 6}}
-              label={I18n.t('placeholder.phoneNumber')}
+              keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+              style={{
+                paddingBottom: GFun.hp(1),
+                fontFamily: 'Kanit-Light',
+                height: 50,
+                textAlign: 'center',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+              }}
+              placeholder={I18n.t('placeholder.phoneNumber')}
               mode="outlined"
               value={this.state.phoneNumber}
               onChangeText={phoneNumber =>
@@ -241,35 +259,47 @@ export default class RegisterView extends Component<Props> {
               }
             />
             <HelperText
-              style={{fontFamily: 'Kanit-Light'}}
+              style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validatePhoneNumber(this.state.phoneNumber)}>
+              visible={GFun.validatePhoneNumber(this.state.phoneNumber)}>
               {I18n.t('message.telephoneMustBeTen')}
             </HelperText>
 
             <TextInput
               secureTextEntry
               autoCorrect={false}
-              style={{paddingBottom: 6}}
-              label={I18n.t('placeholder.password')}
+              keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+              style={{
+                paddingBottom: GFun.hp(1),
+                fontFamily: 'Kanit-Light',
+                height: 50,
+                textAlign: 'center',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+              }}
+              placeholder={I18n.t('placeholder.password')}
               mode="outlined"
               value={this.state.password}
               onChangeText={password => this.setState({password: password})}
             />
             <HelperText
-              style={{fontFamily: 'Kanit-Light'}}
+              style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validatePasswordLessThanSix(
-                this.state.password,
-              )}>
+              visible={GFun.validatePasswordLessThanSix(this.state.password)}>
               {I18n.t('message.passwordLessThanSix')}
             </HelperText>
 
             <TextInput
               secureTextEntry
               autoCorrect={false}
-              style={{paddingBottom: 6}}
-              label={I18n.t('placeholder.confirmPassword')}
+              keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+              style={{
+                paddingBottom: GFun.hp(1),
+                fontFamily: 'Kanit-Light',
+                height: 50,
+                textAlign: 'center',
+                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+              }}
+              placeholder={I18n.t('placeholder.confirmPassword')}
               mode="outlined"
               value={this.state.confirmPassword}
               onChangeText={confirmPassword =>
@@ -277,16 +307,16 @@ export default class RegisterView extends Component<Props> {
               }
             />
             <HelperText
-              style={{fontFamily: 'Kanit-Light'}}
+              style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFunction.validatePasswordMatch(
+              visible={GFun.validatePasswordMatch(
                 this.state.password,
                 this.state.confirmPassword,
               )}>
               {I18n.t('message.passwordNotMatch')}
             </HelperText>
 
-            <View style={{justifyContent: 'center', paddingTop: 10}}>
+            <View style={{justifyContent: 'center', paddingTop: GFun.hp(1)}}>
               <AnimateLoadingButton
                 ref={load => (this.loadingSignUp = load)}
                 titleFontFamily={'Kanit-Light'}
@@ -301,12 +331,19 @@ export default class RegisterView extends Component<Props> {
               />
 
               <TouchableOpacity
-                style={{padding: 20, paddingTop: 15, alignItems: 'center'}}
+                style={{
+                  padding: GFun.hp(2),
+                  paddingTop: GFun.hp(2),
+                  alignItems: 'center',
+                }}
                 onPress={() =>
-                  this.props.navigation.navigate('ForgotPassword')
+                  this.props.navigation.navigate('ForgotPassword', {
+                    isDarkMode: this.state.isDarkMode,
+                  })
                 }>
                 <Text
                   style={{
+                    color: this.state.isDarkMode ? '#FFF' : '#000',
                     fontSize: 15,
                     textDecorationLine: 'underline',
                     fontFamily: 'Kanit-Light',

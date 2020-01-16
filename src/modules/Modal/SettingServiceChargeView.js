@@ -6,7 +6,7 @@ import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -15,13 +15,14 @@ export default class SettingServiceChargeView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
+      isDarkMode: this.props.isDarkMode,
       serviceCharge: this.props.group.service_charge.toString(),
     };
   }
 
   async clickSettingServiceCharge() {
     this.loadingSettingServiceCharge.showLoading(true);
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let params = {
       service_charge: this.state.serviceCharge,
     };
@@ -34,34 +35,49 @@ export default class SettingServiceChargeView extends Component<Props> {
 
     if (response.success) {
       this.loadingSettingServiceCharge.showLoading(false);
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.settingServiceChargeSuccessful'),
       );
       this.props.modal.current.close();
-      this.props.group.service_charge = this.state.serviceCharge;
+      this.props.group.service_charge = parseFloat(this.state.serviceCharge);
       this.props.onSetNewData(this.props.group);
     } else {
       this.loadingSettingServiceCharge.showLoading(false);
       let errors = [];
       response.error.map((error, i) => {
-        errors.splice(i, 0, I18n.t(`message.${GFunction.camelize(error)}`));
+        errors.splice(i, 0, I18n.t(`message.${GFun.camelize(error)}`));
       });
-      GFunction.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
+      GFun.errorMessage(I18n.t('message.notValidate'), errors.join('\n'));
     }
   }
 
   render() {
     return (
-      <View style={{flex: 1, padding: 30}}>
+      <View
+        style={{
+          flex: 1,
+          padding: 30,
+          backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}>
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.settingServiceCharge')}
         </Text>
-        <View style={{paddingTop: 15}}>
+        <View style={{paddingTop: GFun.hp(2)}}>
           <TextInput
-            style={{backgroundColor: '#FFF', fontFamily: 'Kanit-Light'}}
+            keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
+            style={{
+              paddingBottom: 6,
+              fontFamily: 'Kanit-Light',
+              height: 50,
+              textAlign: 'center',
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+            }}
+            mode="outlined"
             keyboardType="numeric"
-            label={I18n.t('placeholder.serviceCharge')}
+            placeholder={I18n.t('placeholder.serviceCharge')}
             value={this.state.serviceCharge}
             onChangeText={serviceCharge =>
               this.setState({
@@ -70,9 +86,9 @@ export default class SettingServiceChargeView extends Component<Props> {
             }
           />
           <HelperText
-            style={{fontFamily: 'Kanit-Light'}}
+            style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
             type="error"
-            visible={GFunction.validateBlank(this.state.serviceCharge)}>
+            visible={GFun.validateBlank(this.state.serviceCharge)}>
             {I18n.t('message.valueCannotBeBlank')}
           </HelperText>
         </View>

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {Dimensions, Image, Platform, StatusBar, View} from 'react-native';
+import {Dimensions, Image, Platform, ScrollView, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Switch} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../components/i18n';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 import {styles} from '../../components/styles';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {ListItem} from 'react-native-elements';
@@ -25,7 +25,7 @@ export default class ProfileView extends Component<Props> {
       spinner: true,
       user: null,
       isLanguageTH: false,
-      isDarkMode: true,
+      isDarkMode: false,
     };
     this.getProfile();
   }
@@ -36,7 +36,7 @@ export default class ProfileView extends Component<Props> {
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
 
     this.setState({
-      user: await GFunction.user(),
+      user: await GFun.user(),
       isLanguageTH: locale === 'th',
       isDarkMode: JSON.parse(isDarkMode),
     });
@@ -58,11 +58,12 @@ export default class ProfileView extends Component<Props> {
 
   getProfile = async () => {
     this.setState({spinner: true});
-    let user = await GFunction.user();
+    let user = await GFun.user();
     let response = await Api.getProfile(user.authentication_jwt, user.id);
     if (response.success) {
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
       this.setState({
+        user: response.user,
         prefix: response.user.prefix,
         firstName: response.user.first_name,
         lastName: response.user.last_name,
@@ -73,10 +74,7 @@ export default class ProfileView extends Component<Props> {
       });
     } else {
       this.loadingSignOut.showLoading(false);
-      GFunction.errorMessage(
-        I18n.t('message.error'),
-        I18n.t('message.loadFail'),
-      );
+      GFun.errorMessage(I18n.t('message.error'), I18n.t('message.loadFail'));
     }
   };
 
@@ -95,6 +93,11 @@ export default class ProfileView extends Component<Props> {
 
   clickEditProfile() {
     this.loadingEditProfile.showLoading(true);
+    this.props.navigation.navigate('EditProfile', {
+      isDarkMode: this.state.isDarkMode,
+      user: this.state.user,
+    });
+    this.loadingEditProfile.showLoading(false);
   }
 
   clickSignOut() {
@@ -108,18 +111,17 @@ export default class ProfileView extends Component<Props> {
       this.loadingSignOut.showLoading(false);
       await AsyncStorage.removeItem('user');
 
-      GFunction.successMessage(
+      GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.signOutSuccessful'),
       );
 
-      this.props.navigation.navigate('Login');
+      this.props.navigation.navigate('Login', {
+        isDarkMode: this.state.isDarkMode,
+      });
     } else {
       this.loadingSignOut.showLoading(false);
-      GFunction.errorMessage(
-        I18n.t('message.error'),
-        I18n.t('message.signOutFail'),
-      );
+      GFun.errorMessage(I18n.t('message.error'), I18n.t('message.signOutFail'));
     }
   }
 
@@ -129,7 +131,7 @@ export default class ProfileView extends Component<Props> {
         style={{
           fontFamily: 'Kanit-Light',
           flex: 1,
-          backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE',
+          backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
         }}>
         {this.AppHerder()}
 
@@ -138,42 +140,89 @@ export default class ProfileView extends Component<Props> {
             style={{
               fontFamily: 'Kanit-Light',
               flex: 1.4,
-              margin: 10,
-              backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              margin: GFun.hp(1),
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
               borderRadius: 10,
             }}>
             {this.state.spinner ? (
-              <ContentLoader height={height} width={width / 0.5}>
-                <Circle cx="200" cy="65" r="60" />
-                <Rect x="10" y="180" width={width / 1.12} height="50" />
-                <Rect x="75" y="250" width={width / 1.75} height="20" />
-                <Rect x="90" y="290" width={width / 2} height="20" />
+              <ContentLoader
+                height={height}
+                width={width / 0.5}
+                primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
+                <Circle
+                  x={GFun.wp(40)}
+                  y={GFun.wp(-1)}
+                  cx={34}
+                  cy={65}
+                  r={GFun.wp(13.5)}
+                />
                 <Rect
-                  x="55"
-                  y="360"
+                  x={GFun.wp(20)}
+                  y={GFun.hp(22)}
+                  width={width / 1.65}
+                  height={GFun.hp(4)}
+                />
+                <Rect
+                  x={GFun.wp(22)}
+                  y={GFun.hp(30)}
+                  width={width / 1.75}
+                  height={GFun.hp(3)}
+                />
+                <Rect
+                  x={GFun.wp(25)}
+                  y={GFun.hp(36)}
+                  width={width / 2}
+                  height={GFun.hp(2)}
+                />
+                <Rect
+                  x={GFun.wp(16)}
+                  y={GFun.hp(42)}
                   rx={20}
                   ry={20}
                   width={width / 1.5}
-                  height="40"
+                  height={GFun.hp(5)}
                 />
               </ContentLoader>
             ) : (
               <View style={styles.profile}>
                 <View style={{alignSelf: 'center'}}>
                   <UserAvatar
-                    size="120"
+                    size={GFun.wp(25)}
                     name={this.state.firstName + ' ' + this.state.lastName}
                   />
                 </View>
-                <Text style={styles.profileName}>
+                <Text
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    fontSize: GFun.hp(4),
+                    alignSelf: 'center',
+                    paddingTop: 22,
+                  }}>
                   {this.state.firstName + ' ' + this.state.lastName}
                 </Text>
-                <Text style={styles.profileText}>{this.state.email}</Text>
-                <Text style={styles.profileText}>{this.state.phoneNumber}</Text>
+                <Text
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    fontSize: GFun.hp(3),
+                    alignSelf: 'center',
+                    paddingTop: GFun.hp(2),
+                  }}>
+                  {this.state.email}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'Kanit-Light',
+                    fontSize: GFun.hp(3),
+                    alignSelf: 'center',
+                    paddingTop: GFun.hp(2),
+                  }}>
+                  {this.state.phoneNumber}
+                </Text>
               </View>
             )}
 
-            <View style={{paddingBottom: 15}}>
+            <View style={{paddingBottom: GFun.hp(2)}}>
               <AnimateLoadingButton
                 ref={load => (this.loadingEditProfile = load)}
                 width={width - 125}
@@ -192,34 +241,48 @@ export default class ProfileView extends Component<Props> {
           <View
             style={{
               fontFamily: 'Kanit-Light',
-              flex: 0.5,
-              margin: 10,
-              backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+              flex: 0.4,
+              margin: GFun.hp(1),
+              backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
               borderRadius: 10,
             }}>
             {this.state.spinner ? (
-              <ContentLoader height={height} width={width / 0.5}>
-                <Rect x="10" y="20" width={width / 2} height="20" />
-                <Rect x="340" y="20" width={width / 10} height="20" />
-                <Rect x="10" y="70" width={width / 2} height="20" />
-                <Rect x="340" y="70" width={width / 10} height="20" />
-                <Rect x="10" y="120" width={width / 2} height="20" />
-                <Rect x="340" y="120" width={width / 10} height="20" />
+              <ContentLoader
+                height={height}
+                width={width / 0.5}
+                primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Rect
-                  x="55"
-                  y="360"
-                  rx={20}
-                  ry={20}
-                  width={width / 1.5}
-                  height="40"
+                  x={GFun.wp(2)}
+                  y={GFun.hp(4)}
+                  width={width / 2}
+                  height={GFun.hp(2)}
+                />
+                <Rect
+                  x={GFun.wp(80)}
+                  y={GFun.hp(4)}
+                  width={width / 10}
+                  height={GFun.hp(2)}
+                />
+                <Rect
+                  x={GFun.wp(2)}
+                  y={GFun.hp(10)}
+                  width={width / 2}
+                  height={GFun.hp(2)}
+                />
+                <Rect
+                  x={GFun.wp(80)}
+                  y={GFun.hp(10)}
+                  width={width / 10}
+                  height={GFun.hp(2)}
                 />
               </ContentLoader>
             ) : (
-              <View>
+              <ScrollView style={{borderRadius: 10}}>
                 <ListItem
                   containerStyle={{
                     borderRadius: 10,
-                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                    backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                   }}
                   title={I18n.t('placeholder.th')}
                   titleStyle={{
@@ -238,7 +301,7 @@ export default class ProfileView extends Component<Props> {
                 <ListItem
                   containerStyle={{
                     borderRadius: 10,
-                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                    backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                   }}
                   title={I18n.t('placeholder.darkMode')}
                   titleStyle={{
@@ -257,7 +320,7 @@ export default class ProfileView extends Component<Props> {
                 <ListItem
                   containerStyle={{
                     borderRadius: 10,
-                    backgroundColor: this.state.isDarkMode ? '#202020' : '#FFF',
+                    backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
                   }}
                   title={I18n.t('placeholder.appVersion')}
                   titleStyle={{
@@ -266,7 +329,7 @@ export default class ProfileView extends Component<Props> {
                   }}
                   chevron={<Text>0.0.1</Text>}
                 />
-              </View>
+              </ScrollView>
             )}
           </View>
 
@@ -275,14 +338,15 @@ export default class ProfileView extends Component<Props> {
               <ContentLoader
                 height={height}
                 width={width / 0.9}
-                primaryColor={'#E7E7E7'}>
+                primaryColor={this.state.isDarkMode ? '#333' : '#E7E7E7'}
+                secondaryColor={this.state.isDarkMode ? '#202020' : '#ecebeb'}>
                 <Rect
-                  x={15}
-                  y={840}
+                  x={GFun.wp(3.5)}
+                  y={GFun.hp(94)}
                   rx={25}
                   ry={25}
                   width={width / 1.07}
-                  height="50"
+                  height={GFun.hp(6)}
                 />
               </ContentLoader>
             ) : (

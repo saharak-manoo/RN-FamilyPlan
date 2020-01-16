@@ -4,17 +4,24 @@ import {Appbar, Text, TextInput} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {Icon} from 'react-native-elements';
 import * as Api from '../../util/Api';
-import * as GFunction from '../../util/GlobalFunction';
+import * as GFun from '../../util/GlobalFunction';
 
 export default class QrCodeView extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {isDarkMode: this.props.isDarkMode};
   }
 
   render() {
     return (
-      <View style={{padding: 30}}>
+      <View
+        style={{
+          flex: 1,
+          height: 200,
+          padding: 30,
+          backgroundColor: this.state.isDarkMode ? '#363636' : '#FFF',
+          borderRadius: 10,
+        }}>
         <Text style={{fontSize: 30, fontFamily: 'Kanit-Light'}}>
           {I18n.t('placeholder.qrCode')}
         </Text>

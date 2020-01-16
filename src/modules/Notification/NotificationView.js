@@ -33,11 +33,11 @@ export default class NotificationView extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isDarkMode: true,
+      isDarkMode: false,
       spinner: false,
       refreshing: false,
       isLoading: false,
-      limit: 150,
+      limit: 20,
       offset: 0,
       notifications: [],
     };
@@ -57,6 +57,7 @@ export default class NotificationView extends Component<Props> {
   }
 
   componentWillMount = async () => {
+    this.triggerTurnOnNotification();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFun.user();
@@ -73,19 +74,31 @@ export default class NotificationView extends Component<Props> {
     }
   };
 
+  async triggerTurnOnNotification() {
+    this.notificationListener = firebase
+      .notifications()
+      .onNotification(async notification => {
+        this.realTimeData(notification._data);
+      });
+  }
+
   async realTimeData(data) {
     if (
       data.noti_type === 'group' ||
       data.noti_type.includes('request_join-')
     ) {
-      if (!data.group_noti_id) {
-        let group_noti_id = JSON.parse(data.group_noti_id);
-        let user = await GFun.user();
-        let resp = await Api.getNotificationById(
-          user.authentication_jwt,
-          group_noti_id,
+      let group_noti_id = JSON.parse(data.group_noti_id);
+      let user = await GFun.user();
+      let resp = await Api.getNotificationById(
+        user.authentication_jwt,
+        group_noti_id,
+      );
+      if (resp.success) {
+        let notiIndex = this.state.notifications.findIndex(
+          noti => noti.id === group_noti_id,
         );
-        if (resp.success) {
+
+        if (notiIndex === -1) {
           this.setState({
             notifications: GFun.sortByDate(
               GFun.uniq(resp.notification.concat(this.state.notifications)),
@@ -102,17 +115,24 @@ export default class NotificationView extends Component<Props> {
     });
   }
 
+  componentWillUnmount() {
+    this.messageListener();
+    this.notificationListener();
+  }
+
   goTo = notification => {
     if (
       notification.noti_type === 'chat' ||
       notification.noti_type.includes('request_join-')
     ) {
       this.props.navigation.navigate('ChatRoom', {
+        isDarkMode: this.state.isDarkMode,
         chatRoom: notification.data,
         isRequestJoin: false,
       });
     } else if (notification.noti_type === 'group') {
       this.props.navigation.navigate('Group', {
+        isDarkMode: this.state.isDarkMode,
         group: notification.data,
       });
     }
@@ -135,7 +155,7 @@ export default class NotificationView extends Component<Props> {
                   text: 'Delete',
                   type: 'delete',
                   onPress: () => {
-                    this.alertRemoveChatMember(item.id, index);
+                    this.alertRemoveNotification(item.id, index);
                   },
                 },
               ]}
@@ -181,7 +201,7 @@ export default class NotificationView extends Component<Props> {
   alertRemoveNotification(id, index) {
     Alert.alert(
       '',
-      'Are your sure tou want to delete this chat ?',
+      'Are your sure tou want to delete this notifications ?',
       [
         {
           text: 'Cancel',
@@ -199,10 +219,10 @@ export default class NotificationView extends Component<Props> {
 
   async removeChatNotification(id, index) {
     this.state.notifications.splice(index, 1);
-    await this.setState({group: this.state.notifications});
+    await this.setState({notifications: this.state.notifications});
     GFun.successMessage(
       I18n.t('message.success'),
-      I18n.t('message.removeChatSuccessful'),
+      I18n.t('message.removeNotiSuccessful'),
     );
   }
 
@@ -278,24 +298,48 @@ export default class NotificationView extends Component<Props> {
               tension={100}
               activeScale={0.95}
               leftAvatar={() => (
-                <ContentLoader height={45} width={50}>
+                <ContentLoader
+                  height={45}
+                  width={50}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Circle r={18} x={22} y={25} />
                 </ContentLoader>
               )}
               title={() => (
-                <ContentLoader height={30} width={width / 2}>
+                <ContentLoader
+                  height={30}
+                  width={width / 2}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="5" y="5" width={width / 1} height={10} />
                 </ContentLoader>
               )}
               subtitle={() => (
-                <ContentLoader height={20} width={width / 1.8}>
+                <ContentLoader
+                  height={20}
+                  width={width / 1.8}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="5" y="5" width={width / 1.8} height={5} />
                   <Rect x="5" y="15" width={width / 1.8} height={5} />
                   <Rect x="5" y="30" width={width / 1.8} height={5} />
                 </ContentLoader>
               )}
               rightSubtitle={() => (
-                <ContentLoader height={20} width={width / 5}>
+                <ContentLoader
+                  height={20}
+                  width={width / 5}
+                  primaryColor={this.state.isDarkMode ? '#333' : '#f3f3f3'}
+                  secondaryColor={
+                    this.state.isDarkMode ? '#202020' : '#ecebeb'
+                  }>
                   <Rect x="40" y="10" width={width / 5} height={15} />
                 </ContentLoader>
               )}
@@ -312,7 +356,7 @@ export default class NotificationView extends Component<Props> {
       <View
         style={[
           styles.defaultView,
-          {backgroundColor: this.state.isDarkMode ? '#000000' : '#EEEEEE'},
+          {backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE'},
         ]}>
         {this.AppHerder()}
         {this.state.spinner ? (
