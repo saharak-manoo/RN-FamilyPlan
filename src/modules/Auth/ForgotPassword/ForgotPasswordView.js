@@ -19,7 +19,7 @@ const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 const BAR_COLOR = IS_IOS ? '#0144A4' : '#000';
 
-export default class ForgotPasswordView extends Component<Props> {
+export default class ForgotPasswordView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;

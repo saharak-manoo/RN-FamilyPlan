@@ -12,7 +12,7 @@ import UserAvatar from 'react-native-user-avatar';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class EditProfileView extends Component<Props> {
+export default class EditProfileView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;

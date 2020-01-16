@@ -17,7 +17,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class LogoView extends Component<Props> {
+export default class LogoView extends Component {
   constructor(props) {
     super(props);
     this.state = {

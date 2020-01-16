@@ -18,7 +18,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class ProfileView extends Component<Props> {
+export default class ProfileView extends Component {
   constructor(props) {
     super(props);
     this.state = {

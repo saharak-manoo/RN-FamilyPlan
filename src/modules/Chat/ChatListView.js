@@ -29,7 +29,7 @@ const IS_IOS = Platform.OS === 'ios';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class ChatListView extends Component<Props> {
+export default class ChatListView extends Component {
   constructor(props) {
     super(props);
     this.state = {

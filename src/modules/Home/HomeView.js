@@ -34,7 +34,7 @@ import JoinGroupView from '../Modal/JoinGroupView';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class HomeView extends Component<Props> {
+export default class HomeView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
@@ -536,10 +536,6 @@ export default class HomeView extends Component<Props> {
     });
   };
 
-  // setNewData = async (myGroups, publicGroups) => {
-  //   await this.setState({myGroups: myGroups, publicGroups: publicGroups});
-  // };
-
   async searchGroup(search) {
     await this.setState({
       search: search,
@@ -606,7 +602,7 @@ export default class HomeView extends Component<Props> {
                   r={GFun.wp(9)}
                 />
                 <Rect
-                  x={GFun.wp(6)}
+                  x={GFun.wp(7)}
                   y={GFun.hp(12)}
                   width={width / 5}
                   height={GFun.hp(2)}

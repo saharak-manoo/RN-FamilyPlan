@@ -16,7 +16,7 @@ import UserAvatar from 'react-native-user-avatar';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class InviteMemberView extends Component<Props> {
+export default class InviteMemberView extends Component {
   constructor(props) {
     super(props);
     this.state = {
