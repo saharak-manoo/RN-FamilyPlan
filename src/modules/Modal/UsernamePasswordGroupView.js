@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
 import {Dimensions, Clipboard, StatusBar, View} from 'react-native';
-import {Appbar, Text, TextInput, HelperText} from 'react-native-paper';
+import {
+  Appbar,
+  Text,
+  TextInput,
+  HelperText,
+} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import {Icon} from 'react-native-elements';
 
 const width = Dimensions.get('window').width;

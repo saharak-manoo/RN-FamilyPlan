@@ -7,7 +7,6 @@ import {
   RefreshControl,
   ScrollView,
   TouchableOpacity,
-  StatusBar,
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -16,20 +15,20 @@ import ActionButton from 'react-native-action-button';
 import {styles} from '../../components/styles';
 import I18n from '../../components/i18n';
 import Modalize from 'react-native-modalize';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
 import UserAvatar from 'react-native-user-avatar';
-import {showMessage, hideMessage} from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 // View
-import NewGroupView from '../Modal/NewGroupVew';
-import QrCodeView from '../Modal/QrCodeView';
-import JoinGroupView from '../Modal/JoinGroupView';
+import NewGroupView from '../modal/newGroupVew';
+import QrCodeView from '../modal/qrCodeView';
+import JoinGroupView from '../modal/joinGroupView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;

@@ -1,15 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Alert,
-  View,
-  Platform,
-  Dimensions,
-  TouchableOpacity,
-  Text,
-  Modal,
-  StatusBar,
-  Image,
-} from 'react-native';
+import {Alert, View, Platform, Dimensions, Image} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import I18n from '../../components/i18n';
 

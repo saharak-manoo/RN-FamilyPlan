@@ -1,11 +1,16 @@
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
+import {
+  Appbar,
+  Text,
+  HelperText,
+  TextInput,
+} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../components/i18n';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import {styles} from '../../components/styles';
 import UserAvatar from 'react-native-user-avatar';
 
