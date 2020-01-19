@@ -1,6 +1,7 @@
 import {
   UNREAD_MESSAGES_COUNT,
   UNREAD_NOTIFICATIONS_COUNT,
+  RESET,
 } from '../actions/constants';
 
 const initialState = {
@@ -15,6 +16,9 @@ export default (state = initialState, action) => {
 
     case UNREAD_NOTIFICATIONS_COUNT:
       return {...state, unreadNotificationsCount: action.payload};
+
+    case RESET:
+      return initialState;
 
     default:
       return state;

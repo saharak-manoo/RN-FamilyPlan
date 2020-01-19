@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {setScreenBadge, setScreenBadgeNow} from '../actions';
 import {Dimensions, Image, Platform, ScrollView, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Switch} from 'react-native-paper';
@@ -17,7 +19,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class ProfileView extends Component {
+class ProfileView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -101,6 +103,7 @@ export default class ProfileView extends Component {
   }
 
   clickSignOut() {
+    this.props.setScreenBadgeNow(0, 0);
     this.loadingSignOut.showLoading(true);
     this.signOut();
   }
@@ -369,3 +372,14 @@ export default class ProfileView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+});
+
+const mapDispatchToProps = {
+  setScreenBadge,
+  setScreenBadgeNow,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileView);
