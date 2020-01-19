@@ -31,6 +31,7 @@ import * as Authenticate from '../../../helpers/authenticate';
 import InviteMemberView from '../../modal/inviteMemberView';
 import SettingServiceChargeView from '../../modal/settingServiceChargeView';
 import UsernamePasswordGroupView from '../../modal/usernamePasswordGroupView';
+import ScbPaymentView from '../../modal/scbPaymentView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -54,6 +55,7 @@ export default class GroupView extends Component {
   inviteMemberModal = React.createRef();
   settingServiceChargeModal = React.createRef();
   usernamePasswordModal = React.createRef();
+  scbPaymentModal = React.createRef();
 
   async componentWillMount() {
     this.triggerTurnOnNotification();
@@ -81,10 +83,7 @@ export default class GroupView extends Component {
     if (data.noti_type === 'group') {
       let group = JSON.parse(data.group);
       if (this.state.group.id === group.id) {
-        let resp = await Api.getGroupById(
-          user.authentication_jwt,
-          group.id,
-        );
+        let resp = await Api.getGroupById(user.authentication_jwt, group.id);
         if (resp.success) {
           this.setState({
             group: resp.group,
@@ -297,6 +296,58 @@ export default class GroupView extends Component {
         />
       </Modalize>
     );
+  }
+
+  showModalSCBPayment = async () => {
+    if (this.scbPaymentModal.current) {
+      let {isPassed, error} = await Authenticate.open(
+        I18n.t('message.requestToOpenUsernamePasswordGroup', {
+          name: this.state.group.name,
+        }),
+      );
+      if (isPassed) {
+        this.scbPaymentModal.current.open();
+      } else {
+        console.log(error);
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.authenticateFailed'),
+        );
+      }
+    }
+  };
+
+  popUpModalSCBPayment() {
+    return (
+      <Modalize
+        ref={this.scbPaymentModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <ScbPaymentView
+          modal={this.scbPaymentModal}
+          isDarkMode={this.state.isDarkMode}
+          group={this.state.group}
+          onPaymentDone={this.paymentDone}
+        />
+      </Modalize>
+    );
+  }
+
+  paymentDone() {
+    console.log('payment Done.......');
   }
 
   listInfo = () => {
@@ -582,6 +633,7 @@ export default class GroupView extends Component {
         {this.popUpModalSettingServiceCharge()}
         {this.popUpModalSetUpReminder()}
         {this.popUpModalUsernamePassword()}
+        {this.popUpModalSCBPayment()}
 
         {this.state.userView.group_leader ? (
           <ActionButton buttonColor="rgba(231,76,60,1)">
@@ -615,9 +667,7 @@ export default class GroupView extends Component {
             </ActionButton.Item>
           </ActionButton>
         ) : (
-          <ActionButton
-            buttonColor="#03C8A1"
-            icon={<MatIcon name="menu" style={styles.actionButtonIcon} />}>
+          <ActionButton buttonColor="#FE8536">
             <ActionButton.Item
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.chat')}
@@ -631,6 +681,13 @@ export default class GroupView extends Component {
               textStyle={{fontFamily: 'Kanit-Light'}}
               onPress={this.showModalUsernamePassword}>
               <MatIcon name="https" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="#6161FF"
+              title={I18n.t('placeholder.payment')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalSCBPayment}>
+              <MatIcon name="attach-money" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor="rgba(231,76,60,1)"
