@@ -13,15 +13,15 @@ import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import {Dropdown} from 'react-native-material-dropdown';
-import * as Api from '../../../util/Api';
-import * as GFun from '../../../util/GlobalFunction';
+import * as Api from '../../actions/api';
+import * as GFun from '../../../helpers/globalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class RegisterView extends Component<Props> {
+export default class RegisterView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;

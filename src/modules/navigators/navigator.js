@@ -9,17 +9,17 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Badge} from 'react-native-elements';
 
 // View
-import HomeView from '../Home/HomeView';
-import ChatListView from '../Chat/ChatListView';
-import ChatView from '../Chat/ChatView';
-import NotificationView from '../Notification/NotificationView';
-import ProfileView from '../Profile/ProfileView';
-import LoginView from '../Auth/Login/LoginView';
-import RegisterView from '../Auth/Register/RegisterView';
-import ForgotPasswordView from '../Auth/ForgotPassword/ForgotPasswordView';
-import LogoView from '../Logo/LogoView';
-import GroupView from '../Home/Group/GroupView';
-import EditProfileView from '../Profile/EditProfileView';
+import HomeView from '../home/homeView';
+import ChatListView from '../chat/chatListView';
+import ChatView from '../chat/chatView';
+import NotificationView from '../notification/notificationView';
+import ProfileView from '../profile/profileView';
+import LoginView from '../auth/login/loginView';
+import RegisterView from '../auth/register/registerView';
+import ForgotPasswordView from '../auth/forgotPassword/forgotPasswordView';
+import LogoView from '../logo/logoView';
+import GroupView from '../home/group/groupView';
+import EditProfileView from '../profile/editProfileView';
 
 const HomeStack = createStackNavigator(
   {
@@ -66,23 +66,36 @@ const MainNavigator = createMaterialBottomTabNavigator(
   {
     Home: {
       screen: HomeStack,
-      navigationOptions: {
-        tabBarLabel: (
-          <Text
-            style={{textAlign: 'center', flex: 1, fontFamily: 'Kanit-Light'}}>
-            {I18n.t('placeholder.home')}
-          </Text>
-        ),
-        tabBarColor: '#2370E6',
-        tabBarIcon: () => <MatIcon size={26} name="home" color="#FFF" />,
+      navigationOptions: ({navigation, screenProps}) => {
+        return {
+          tabBarLabel: (
+            <Text
+              style={{textAlign: 'center', flex: 1, fontFamily: 'Kanit-Light'}}>
+              {I18n.t('placeholder.home')}
+            </Text>
+          ),
+          tabBarColor: '#2370E6',
+          tabBarIcon: active => {
+            return (
+              <MatIcon
+                size={26}
+                name="home"
+                color={active.focused ? '#FFF' : '#D6D6D6'}
+              />
+            );
+          },
+        };
       },
     },
     Chat: {
       screen: ChatStack,
-      navigationOptions: ({navigation}) => {
+      navigationOptions: ({navigation, screenProps}) => {
+        let {unreadMessagesCount} = screenProps;
         let last = navigation.state.routes.length - 1;
         let visible = navigation.state.routes[last].routeName !== 'ChatRoom';
+
         return {
+          tabBarBadge: unreadMessagesCount || false,
           tabBarVisible: visible,
           tabBarLabel: (
             <Text
@@ -91,23 +104,42 @@ const MainNavigator = createMaterialBottomTabNavigator(
             </Text>
           ),
           tabBarColor: '#09A650',
-          tabBarIcon: () => <MatIcon size={26} name="chat" color="#FFF" />,
+          tabBarIcon: active => {
+            isActive = active.focused;
+            return (
+              <MatIcon
+                size={26}
+                name="chat"
+                color={active.focused ? '#FFF' : '#D6D6D6'}
+              />
+            );
+          },
         };
       },
     },
     Notification: {
       screen: NotificationView,
-      navigationOptions: {
-        tabBarLabel: (
-          <Text
-            style={{textAlign: 'center', flex: 1, fontFamily: 'Kanit-Light'}}>
-            {I18n.t('placeholder.notifications')}
-          </Text>
-        ),
-        tabBarColor: '#F93636',
-        tabBarIcon: () => (
-          <MatIcon size={26} name="notifications" color="#FFF" />
-        ),
+      navigationOptions: ({navigation, screenProps}) => {
+        let {unreadNotificationsCount} = screenProps;
+        return {
+          tabBarBadge: unreadNotificationsCount || false,
+          tabBarLabel: (
+            <Text
+              style={{textAlign: 'center', flex: 1, fontFamily: 'Kanit-Light'}}>
+              {I18n.t('placeholder.notifications')}
+            </Text>
+          ),
+          tabBarColor: '#F93636',
+          tabBarIcon: active => {
+            return (
+              <MatIcon
+                size={26}
+                name="notifications"
+                color={active.focused ? '#FFF' : '#D6D6D6'}
+              />
+            );
+          },
+        };
       },
     },
     Profile: {
@@ -120,7 +152,15 @@ const MainNavigator = createMaterialBottomTabNavigator(
           </Text>
         ),
         tabBarColor: '#6D06F9',
-        tabBarIcon: () => <MatIcon size={26} name="account-box" color="#FFF" />,
+        tabBarIcon: active => {
+          return (
+            <MatIcon
+              size={26}
+              name="account-box"
+              color={active.focused ? '#FFF' : '#D6D6D6'}
+            />
+          );
+        },
       },
     },
   },
@@ -129,6 +169,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
     activeColor: '#f0edf6',
     inactiveColor: '#3e2465',
     barStyle: {backgroundColor: '#2370E6'},
+    labeled: false,
   },
 );
 

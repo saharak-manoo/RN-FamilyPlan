@@ -6,8 +6,8 @@ import I18n from '../../components/i18n';
 import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import {Icon} from 'react-native-elements';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import {ListItem} from 'react-native-elements';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import TouchableScale from 'react-native-touchable-scale';
@@ -16,7 +16,7 @@ import UserAvatar from 'react-native-user-avatar';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class InviteMemberView extends Component<Props> {
+export default class InviteMemberView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -138,7 +138,7 @@ export default class InviteMemberView extends Component<Props> {
                 color: this.state.isDarkMode ? '#FFF' : '#000',
               }}
               containerStyle={{
-                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
                 borderRadius: 20,
                 fontFamily: 'Kanit-Light',
               }}

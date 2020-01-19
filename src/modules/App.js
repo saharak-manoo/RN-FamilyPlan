@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
-import NavigatorView from './Navigator/NavigatorView';
+import NavigatorView from './navigators/navigatorView';
 import FlashMessage from 'react-native-flash-message';
 import AsyncStorage from '@react-native-community/async-storage';
 import I18n from '../components/i18n';
+import {Provider} from 'react-redux';
+import ConfigureStore from './configureStore';
 
 const theme = {
   ...DefaultTheme,
@@ -20,7 +22,7 @@ const theme = {
   dark: false,
 };
 
-export default class App extends Component<Props> {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,14 +50,16 @@ export default class App extends Component<Props> {
 
   render() {
     return (
-      <PaperProvider theme={theme}>
-        <NavigatorView />
-        <FlashMessage
-          position="top"
-          textStyle={{fontFamily: 'Kanit-Light'}}
-          titleStyle={{fontFamily: 'Kanit-Light', fontSize: 15}}
-        />
-      </PaperProvider>
+      <Provider store={ConfigureStore()}>
+        <PaperProvider theme={theme}>
+          <NavigatorView />
+          <FlashMessage
+            position="top"
+            textStyle={{fontFamily: 'Kanit-Light'}}
+            titleStyle={{fontFamily: 'Kanit-Light', fontSize: 15}}
+          />
+        </PaperProvider>
+      </Provider>
     );
   }
 }

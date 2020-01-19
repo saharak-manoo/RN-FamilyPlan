@@ -10,11 +10,13 @@ import {
   StatusBar,
   ScrollView,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setScreenBadgeNow} from '../../actions';
 import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
-import * as Api from '../../../util/Api';
-import * as GFun from '../../../util/GlobalFunction';
+import * as Api from '../../actions/api';
+import * as GFun from '../../../helpers/globalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
 import appleAuth, {
   AppleButton,
@@ -30,7 +32,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class LoginView extends Component<Props> {
+class LoginView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
@@ -39,6 +41,10 @@ export default class LoginView extends Component<Props> {
       email: '',
       password: '',
     };
+  }
+
+  async componentDidMount() {
+    this.props.setScreenBadgeNow(0, 0);
   }
 
   appHerder() {
@@ -357,3 +363,13 @@ export default class LoginView extends Component<Props> {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+});
+
+const mapDispatchToProps = {
+  setScreenBadgeNow,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginView);

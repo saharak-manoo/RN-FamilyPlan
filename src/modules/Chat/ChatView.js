@@ -13,8 +13,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {styles} from '../../components/styles';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import {GiftedChat, Bubble, Composer} from 'react-native-gifted-chat';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -22,7 +22,7 @@ import firebase from 'react-native-firebase';
 import QuickReplies from 'react-native-gifted-chat/lib/QuickReplies';
 
 const IS_IOS = Platform.OS === 'ios';
-export default class ChatView extends Component<Props> {
+export default class ChatView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
@@ -70,16 +70,20 @@ export default class ChatView extends Component<Props> {
 
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
+      let chatRoom = JSON.parse(data.chat_room);
       let message = JSON.parse(data.message);
-      if (this.state.user.id !== message.user._id) {
-        let messageIndex = this.state.messages.findIndex(
-          m => m._id === message._id,
-        );
 
-        if (messageIndex === -1) {
-          this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, message),
-          }));
+      if (chatRoom.id === this.state.chatRoom.id) {
+        if (this.state.user.id !== message.user._id) {
+          let messageIndex = this.state.messages.findIndex(
+            m => m._id === message._id,
+          );
+
+          if (messageIndex === -1) {
+            this.setState(previousState => ({
+              messages: GiftedChat.append(previousState.messages, message),
+            }));
+          }
         }
       }
     }
@@ -278,7 +282,7 @@ export default class ChatView extends Component<Props> {
         }}
         wrapperStyle={{
           left: {
-            backgroundColor: this.state.isDarkMode ? '#383838' : '#DADADA',
+            backgroundColor: this.state.isDarkMode ? '#383838' : '#EEEEEE',
           },
           right: {
             backgroundColor: this.state.chatRoom.group.color || '#0084ff',
@@ -311,7 +315,7 @@ export default class ChatView extends Component<Props> {
         style={[
           styles.chatView,
           {
-            backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+            backgroundColor: this.state.isDarkMode ? '#202020' : '#FFFFFF',
           },
         ]}>
         {this.AppHerder()}
