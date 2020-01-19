@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {setScreenBadge, setScreenBadgeNow} from '../actions';
 import {Dimensions, Image, Platform, ScrollView, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Switch} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../components/i18n';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import {styles} from '../../components/styles';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {ListItem} from 'react-native-elements';
 import RNRestart from 'react-native-restart';
 import UserAvatar from 'react-native-user-avatar';
@@ -18,7 +19,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class ProfileView extends Component<Props> {
+class ProfileView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -64,12 +65,6 @@ export default class ProfileView extends Component<Props> {
       await AsyncStorage.setItem('user', JSON.stringify(response.user));
       this.setState({
         user: response.user,
-        prefix: response.user.prefix,
-        firstName: response.user.first_name,
-        lastName: response.user.last_name,
-        email: response.user.email,
-        phoneNumber: response.user.phone_number,
-        photo: response.user.photo,
         spinner: false,
       });
     } else {
@@ -96,11 +91,19 @@ export default class ProfileView extends Component<Props> {
     this.props.navigation.navigate('EditProfile', {
       isDarkMode: this.state.isDarkMode,
       user: this.state.user,
+      onUpdated: () => this.refreshUser(),
     });
     this.loadingEditProfile.showLoading(false);
   }
 
+  async refreshUser() {
+    this.setState({
+      user: await GFun.user(),
+    });
+  }
+
   clickSignOut() {
+    this.props.setScreenBadgeNow(0, 0);
     this.loadingSignOut.showLoading(true);
     this.signOut();
   }
@@ -189,7 +192,7 @@ export default class ProfileView extends Component<Props> {
                 <View style={{alignSelf: 'center'}}>
                   <UserAvatar
                     size={GFun.wp(25)}
-                    name={this.state.firstName + ' ' + this.state.lastName}
+                    name={this.state.user.full_name}
                   />
                 </View>
                 <Text
@@ -199,7 +202,7 @@ export default class ProfileView extends Component<Props> {
                     alignSelf: 'center',
                     paddingTop: 22,
                   }}>
-                  {this.state.firstName + ' ' + this.state.lastName}
+                  {this.state.user.full_name}
                 </Text>
                 <Text
                   style={{
@@ -208,7 +211,7 @@ export default class ProfileView extends Component<Props> {
                     alignSelf: 'center',
                     paddingTop: GFun.hp(2),
                   }}>
-                  {this.state.email}
+                  {this.state.user.email}
                 </Text>
                 <Text
                   style={{
@@ -217,7 +220,7 @@ export default class ProfileView extends Component<Props> {
                     alignSelf: 'center',
                     paddingTop: GFun.hp(2),
                   }}>
-                  {this.state.phoneNumber}
+                  {this.state.user.phone_number}
                 </Text>
               </View>
             )}
@@ -369,3 +372,14 @@ export default class ProfileView extends Component<Props> {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+});
+
+const mapDispatchToProps = {
+  setScreenBadge,
+  setScreenBadgeNow,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileView);

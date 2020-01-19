@@ -14,6 +14,7 @@
 #import <Firebase.h>
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
+#import <React/RCTLinkingManager.h>
 
 @implementation AppDelegate
 
@@ -60,6 +61,13 @@ fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHand
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (BOOL)application:(UIApplication *)application
+   openURL:(NSURL *)url
+   options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [RCTLinkingManager application:application openURL:url options:options];
 }
 
 @end

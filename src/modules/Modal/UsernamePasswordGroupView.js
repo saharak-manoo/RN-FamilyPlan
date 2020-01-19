@@ -3,21 +3,24 @@ import {Dimensions, Clipboard, StatusBar, View} from 'react-native';
 import {Appbar, Text, TextInput, HelperText} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import {Icon} from 'react-native-elements';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class UsernamePasswordGroupView extends Component<Props> {
+export default class UsernamePasswordGroupView extends Component {
   constructor(props) {
     super(props);
+    let group = this.props.group;
+    let account = this.props.group.account;
     this.state = {
       isDarkMode: this.props.isDarkMode,
-      isGroupLeader: !this.props.isGroupLeader || false,
-      userName: this.props.userName || '',
-      password: this.props.password || '',
+      isGroupLeader: this.props.isGroupLeader || false,
+      group: group,
+      username: account === null ? null : account.username,
+      password: account === null ? null : account.password,
     };
   }
 
@@ -25,11 +28,11 @@ export default class UsernamePasswordGroupView extends Component<Props> {
     this.loadingSettingUsernamePassword.showLoading(true);
     let user = await GFun.user();
     let params = {
-      user_name: this.state.userName,
+      username: this.state.username,
       password: this.state.password,
     };
 
-    let response = await Api.updateGroup(
+    let response = await Api.upsertGroupAccount(
       user.authentication_jwt,
       this.props.group.id,
       params,
@@ -42,6 +45,7 @@ export default class UsernamePasswordGroupView extends Component<Props> {
         I18n.t('message.settingUsernamePasswordSuccessful'),
       );
       this.props.modal.current.close();
+      this.props.onSetNewData(response.group);
     } else {
       this.loadingSettingUsernamePassword.showLoading(false);
       let errors = [];
@@ -84,17 +88,17 @@ export default class UsernamePasswordGroupView extends Component<Props> {
               }}
               mode="outlined"
               placeholder={I18n.t('placeholder.username')}
-              value={this.state.userName}
-              onChangeText={userName =>
+              value={this.state.username}
+              onChangeText={username =>
                 this.setState({
-                  userName: userName,
+                  username: username,
                 })
               }
             />
             <HelperText
               style={{fontFamily: 'Kanit-Light', color: '#FF3260'}}
               type="error"
-              visible={GFun.validateBlank(this.state.userName)}>
+              visible={GFun.validateBlank(this.state.username)}>
               {I18n.t('message.valueCannotBeBlank')}
             </HelperText>
           </View>
@@ -111,10 +115,10 @@ export default class UsernamePasswordGroupView extends Component<Props> {
               type="font-awesome"
               color="#006CED"
               onPress={() => {
-                Clipboard.setString(this.state.userName);
+                Clipboard.setString(this.state.username);
                 GFun.successMessage(
                   I18n.t('message.success'),
-                  I18n.t('message.copyUserNameSuccessful'),
+                  I18n.t('message.copyUsernameSuccessful'),
                 );
               }}
             />

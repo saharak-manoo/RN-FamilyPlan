@@ -2,11 +2,8 @@ import React, {Component} from 'react';
 import {Linking, StatusBar, View} from 'react-native';
 import {Appbar, Text, TextInput} from 'react-native-paper';
 import I18n from '../../components/i18n';
-import {Icon} from 'react-native-elements';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
 
-export default class QrCodeView extends Component<Props> {
+export default class QrCodeView extends Component {
   constructor(props) {
     super(props);
     this.state = {isDarkMode: this.props.isDarkMode};

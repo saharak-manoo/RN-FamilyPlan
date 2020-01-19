@@ -7,34 +7,36 @@ import {
   RefreshControl,
   ScrollView,
   TouchableOpacity,
-  StatusBar,
+  Linking,
   View,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setScreenBadge, setScreenBadgeNow} from '../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import {styles} from '../../components/styles';
 import I18n from '../../components/i18n';
 import Modalize from 'react-native-modalize';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import {Icon} from 'react-native-elements';
 import firebase from 'react-native-firebase';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
 import UserAvatar from 'react-native-user-avatar';
-import {showMessage, hideMessage} from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 // View
-import NewGroupView from '../Modal/NewGroupVew';
-import QrCodeView from '../Modal/QrCodeView';
-import JoinGroupView from '../Modal/JoinGroupView';
+import NewGroupView from '../modal/newGroupVew';
+import QrCodeView from '../modal/qrCodeView';
+import JoinGroupView from '../modal/joinGroupView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class HomeView extends Component<Props> {
+class HomeView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
@@ -53,14 +55,30 @@ export default class HomeView extends Component<Props> {
     };
   }
 
+  _handleOpenURL(event) {
+    if (event.url.includes('payment-result?status=success')) {
+      GFun.successMessage(
+        I18n.t('message.success'),
+        I18n.t('message.paymentSuccess'),
+      );
+    } else if (event.url.includes('payment-result?status=failed')) {
+      GFun.errorMessage(
+        I18n.t('message.error'),
+        I18n.t('message.paymentFailed'),
+      );
+    }
+  }
+
   componentDidMount() {
+    Linking.addEventListener('url', this._handleOpenURL);
+    this.checkPermission();
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
   }
 
   componentWillMount = async () => {
-    this.fcmCheckPermissions();
+    this.triggerTurnOnNotification();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({
       spinner: true,
@@ -68,6 +86,7 @@ export default class HomeView extends Component<Props> {
     });
 
     let user = await GFun.user();
+    this.props.setScreenBadge(user.authentication_jwt);
     let resp = await Api.getGroup(user.authentication_jwt);
     if (resp.success) {
       this.setState({
@@ -83,6 +102,14 @@ export default class HomeView extends Component<Props> {
 
   async realTimeData(data) {
     let user = await GFun.user();
+
+    let {unread_messages_count, unread_notifications_count} = JSON.parse(
+      data.unread,
+    );
+    this.props.setScreenBadgeNow(
+      unread_messages_count,
+      unread_notifications_count,
+    );
     if (
       data.noti_type === 'group' ||
       data.noti_type.includes('request_join-')
@@ -112,23 +139,29 @@ export default class HomeView extends Component<Props> {
       }
     } else if (data.noti_type === 'chat') {
       let chatRoom = JSON.parse(data.chat_room);
-      let message = JSON.parse(data.message);
-      if (message.user._id !== user.id) {
-        showMessage({
-          message: chatRoom.name,
-          description: message.text,
-          type: 'default',
-          backgroundColor: '#006FF6',
-          color: '#FFF',
-          duration: 5000,
-          onPress: () => {
-            this.props.navigation.navigate('ChatRoom', {
-              isDarkMode: this.state.isDarkMode,
-              chatRoom: chatRoom,
-              isRequestJoin: false,
-            });
-          },
-        });
+      let resp = await Api.getChatRoomById(
+        user.authentication_jwt,
+        chatRoom.id,
+      );
+      if (resp.success) {
+        let message = JSON.parse(data.message);
+        if (message.user._id !== user.id) {
+          showMessage({
+            message: chatRoom.name,
+            description: message.text,
+            type: 'default',
+            backgroundColor: '#006FF6',
+            color: '#FFF',
+            duration: 5000,
+            onPress: () => {
+              this.props.navigation.navigate('ChatRoom', {
+                isDarkMode: this.state.isDarkMode,
+                chatRoom: resp.chat_room,
+                isRequestJoin: false,
+              });
+            },
+          });
+        }
       }
     }
   }
@@ -151,43 +184,48 @@ export default class HomeView extends Component<Props> {
     }
   };
 
-  async fcmCheckPermissions() {
-    firebase
-      .messaging()
-      .hasPermission()
-      .then(enabled => {
-        if (enabled) {
-          this.triggerTurnOnNotification();
-        } else {
-          firebase
-            .messaging()
-            .requestPermission()
-            .then(() => {
-              this.triggerTurnOnNotification();
-            })
-            .catch(error => {
-              // User has rejected permissions
-            });
-        }
-      });
+  async checkPermission() {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+      this.getToken();
+    } else {
+      this.requestPermission();
+    }
+  }
 
-    // get FCM Token
-    firebase
-      .messaging()
-      .getToken()
-      .then(async fcmToken => {
-        if (fcmToken) {
-          let user = await GFun.user();
-          let resp = await Api.createFcmToken(
-            user.authentication_jwt,
-            user.id,
-            fcmToken,
-          );
-          if (resp.success) {
-            console.log('created fcmToken => : ', fcmToken);
-          }
+  async requestPermission() {
+    try {
+      await firebase.messaging().requestPermission();
+      this.getToken();
+    } catch (error) {
+      // User has rejected permissions
+      console.log('permission rejected');
+    }
+  }
+
+  async getToken() {
+    try {
+      const enabled = await firebase.messaging().hasPermission();
+      if (!enabled) {
+        await firebase.messaging().requestPermission();
+      }
+
+      const fcmToken = await firebase.messaging().getToken();
+      if (fcmToken) {
+        console.log('fcm token:', fcmToken); //-->use this token from the console to send a post request via postman
+        let user = await GFun.user();
+        let resp = await Api.createFcmToken(
+          user.authentication_jwt,
+          user.id,
+          fcmToken,
+        );
+        if (resp.success) {
+          console.log('created fcmToken => : ', fcmToken);
         }
-      });
+      }
+    } catch (error) {
+      console.warn('notification token error', error);
+    }
   }
 
   async triggerTurnOnNotification() {
@@ -200,23 +238,35 @@ export default class HomeView extends Component<Props> {
     this.notificationOpenedListener = firebase
       .notifications()
       .onNotificationOpened(async opened => {
+        let user = await GFun.user();
+
         let data = opened.notification._data;
         if (data.noti_type === 'group') {
           let group = JSON.parse(data.group);
-          this.props.navigation.navigate('Group', {
-            isDarkMode: this.state.isDarkMode,
-            group: group,
-          });
+          let resp = await Api.getGroupById(user.authentication_jwt, group.id);
+          console.log('resp', resp);
+          if (resp.success) {
+            this.props.navigation.navigate('Group', {
+              isDarkMode: this.state.isDarkMode,
+              group: resp.group,
+            });
+          }
         } else if (
           data.noti_type === 'chat' ||
           data.noti_type.includes('request_join-')
         ) {
           let chatRoom = JSON.parse(data.chat_room);
-          this.props.navigation.navigate('ChatRoom', {
-            isDarkMode: this.state.isDarkMode,
-            chatRoom: chatRoom,
-            isRequestJoin: false,
-          });
+          let resp = await Api.getChatRoomById(
+            user.authentication_jwt,
+            chatRoom.id,
+          );
+          if (resp.success) {
+            this.props.navigation.navigate('ChatRoom', {
+              isDarkMode: this.state.isDarkMode,
+              chatRoom: resp.chat_room,
+              isRequestJoin: false,
+            });
+          }
         }
       });
 
@@ -226,6 +276,7 @@ export default class HomeView extends Component<Props> {
   }
 
   componentWillUnmount() {
+    Linking.removeEventListener('url', this._handleOpenURL);
     this.messageListener();
     this.notificationOpenedListener();
     this.notificationListener();
@@ -536,10 +587,6 @@ export default class HomeView extends Component<Props> {
     });
   };
 
-  // setNewData = async (myGroups, publicGroups) => {
-  //   await this.setState({myGroups: myGroups, publicGroups: publicGroups});
-  // };
-
   async searchGroup(search) {
     await this.setState({
       search: search,
@@ -606,7 +653,7 @@ export default class HomeView extends Component<Props> {
                   r={GFun.wp(9)}
                 />
                 <Rect
-                  x={GFun.wp(6)}
+                  x={GFun.wp(7)}
                   y={GFun.hp(12)}
                   width={width / 5}
                   height={GFun.hp(2)}
@@ -804,3 +851,14 @@ export default class HomeView extends Component<Props> {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+});
+
+const mapDispatchToProps = {
+  setScreenBadge,
+  setScreenBadgeNow,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeView);

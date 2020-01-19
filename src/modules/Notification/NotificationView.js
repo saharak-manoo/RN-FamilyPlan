@@ -17,8 +17,8 @@ import {styles} from '../../components/styles';
 import {Badge, ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import Swipeout from 'react-native-swipeout';
-import * as Api from '../../util/Api';
-import * as GFun from '../../util/GlobalFunction';
+import * as Api from '../actions/api';
+import * as GFun from '../../helpers/globalFunction';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
@@ -29,7 +29,7 @@ const IS_IOS = Platform.OS === 'ios';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class NotificationView extends Component<Props> {
+export default class NotificationView extends Component {
   constructor(props) {
     super(props);
     this.state = {

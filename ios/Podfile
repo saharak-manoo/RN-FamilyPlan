@@ -74,6 +74,10 @@ target 'FamilyPlan' do
 
   pod 'ReactNativeDarkMode', :path => '../node_modules/react-native-dark-mode'
 
+  pod 'TouchID', :path => '../node_modules/react-native-touch-id'
+
+  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

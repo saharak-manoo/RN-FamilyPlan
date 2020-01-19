@@ -307,6 +307,8 @@ PODS:
     - React
   - RNCAsyncStorage (1.6.2):
     - React
+  - RNCPushNotificationIOS (1.0.5):
+    - React
   - RNDateTimePicker (2.1.0):
     - React
   - RNFirebase (5.6.0):
@@ -333,6 +335,8 @@ PODS:
   - RNTextGradientView (0.1.7):
     - React
   - RNVectorIcons (6.6.0):
+    - React
+  - TouchID (4.4.1):
     - React
   - Yoga (1.14.0)
 
@@ -375,6 +379,7 @@ DEPENDENCIES:
   - ReactNativeDarkMode (from `../node_modules/react-native-dark-mode`)
   - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNFirebase (from `../node_modules/react-native-firebase/ios`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -385,6 +390,7 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNTextGradientView (from `../node_modules/react-native-text-gradient`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - TouchID (from `../node_modules/react-native-touch-id`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -470,6 +476,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@invertase/react-native-apple-authentication"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNCPushNotificationIOS:
+    :path: "../node_modules/@react-native-community/push-notification-ios"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNFirebase:
@@ -490,6 +498,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-text-gradient"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  TouchID:
+    :path: "../node_modules/react-native-touch-id"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -540,6 +550,7 @@ SPEC CHECKSUMS:
   ReactNativeDarkMode: 0e6e7bdbd387eb949fa7ff238a48f6d6431a428d
   RNAppleAuthentication: 9cca53676f5f010ffbf33eb99604383bfe0eb020
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
+  RNCPushNotificationIOS: 4a5c5d92ce51227f8c3409b0b7542382c0b5f008
   RNDateTimePicker: 9db00606d689f5653f08aa601c81b9d3266a0a19
   RNFirebase: 37daa9a346d070f9f6ee1f3b4aaf4c8e3b1d5d1c
   RNGestureHandler: 4cb47a93019c1a201df2644413a0a1569a51c8aa
@@ -550,8 +561,9 @@ SPEC CHECKSUMS:
   RNSVG: 9d45f03136ecc9b5497e12f6f20838b568acb9f4
   RNTextGradientView: 3eb4744303f801546fad35ac47a53cc82257cb25
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
+  TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: d284a6cb25648b0e2acf97155619375b473d9a3f
+PODFILE CHECKSUM: 4dce4a44a5e60d6400d7b4240d29c445086b4939
 
 COCOAPODS: 1.8.4

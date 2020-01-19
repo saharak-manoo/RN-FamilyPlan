@@ -11,15 +11,15 @@ import {
 import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
-import * as Api from '../../../util/Api';
-import * as GFun from '../../../util/GlobalFunction';
+import * as Api from '../../actions/api';
+import * as GFun from '../../../helpers/globalFunction';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 const BAR_COLOR = IS_IOS ? '#0144A4' : '#000';
 
-export default class ForgotPasswordView extends Component<Props> {
+export default class ForgotPasswordView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;

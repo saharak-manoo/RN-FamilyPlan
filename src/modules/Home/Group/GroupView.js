@@ -20,23 +20,24 @@ import {ListItem, Icon} from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeout from 'react-native-swipeout';
-import * as Api from '../../../util/Api';
-import * as GFun from '../../../util/GlobalFunction';
+import * as Api from '../../actions/api';
+import * as GFun from '../../../helpers/globalFunction';
 import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
-import {showMessage, hideMessage} from 'react-native-flash-message';
+import * as Authenticate from '../../../helpers/authenticate';
 
 // View
-import InviteMemberView from '../../Modal/InviteMemberView';
-import SettingServiceChargeView from '../../Modal/SettingServiceChargeView';
-import UsernamePasswordGroupView from '../../Modal/UsernamePasswordGroupView';
+import InviteMemberView from '../../modal/inviteMemberView';
+import SettingServiceChargeView from '../../modal/settingServiceChargeView';
+import UsernamePasswordGroupView from '../../modal/usernamePasswordGroupView';
+import ScbPaymentView from '../../modal/scbPaymentView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class GroupView extends Component<Props> {
+export default class GroupView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
@@ -54,6 +55,7 @@ export default class GroupView extends Component<Props> {
   inviteMemberModal = React.createRef();
   settingServiceChargeModal = React.createRef();
   usernamePasswordModal = React.createRef();
+  scbPaymentModal = React.createRef();
 
   async componentWillMount() {
     this.triggerTurnOnNotification();
@@ -76,13 +78,17 @@ export default class GroupView extends Component<Props> {
       });
   }
 
-  realTimeData(data) {
+  async realTimeData(data) {
+    let user = await GFun.user();
     if (data.noti_type === 'group') {
       let group = JSON.parse(data.group);
       if (this.state.group.id === group.id) {
-        this.setState({
-          group: group,
-        });
+        let resp = await Api.getGroupById(user.authentication_jwt, group.id);
+        if (resp.success) {
+          this.setState({
+            group: resp.group,
+          });
+        }
       }
     }
   }
@@ -201,12 +207,27 @@ export default class GroupView extends Component<Props> {
     }
   }
 
-  showSettingServiceChargeModal = () => {
+  showSettingServiceChargeModal = async () => {
     if (
       this.settingServiceChargeModal.current &&
       this.state.userView.group_leader
     ) {
       this.settingServiceChargeModal.current.open();
+    } else if (this.scbPaymentModal.current) {
+      let { isPassed, error } = await Authenticate.open(
+        I18n.t('message.requestToOpenUsernamePasswordGroup', {
+          name: this.state.group.name,
+        }),
+      );
+      if (isPassed) {
+        this.scbPaymentModal.current.open();
+      } else {
+        console.log(error);
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.authenticateFailed'),
+        );
+      }
     }
   };
 
@@ -243,9 +264,22 @@ export default class GroupView extends Component<Props> {
     await this.setState({group: group});
   };
 
-  showModalUsernamePassword = () => {
+  showModalUsernamePassword = async () => {
     if (this.usernamePasswordModal.current) {
-      this.usernamePasswordModal.current.open();
+      let {isPassed, error} = await Authenticate.open(
+        I18n.t('message.requestToOpenUsernamePasswordGroup', {
+          name: this.state.group.name,
+        }),
+      );
+      if (isPassed) {
+        this.usernamePasswordModal.current.open();
+      } else {
+        console.log(error);
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.authenticateFailed'),
+        );
+      }
     }
   };
 
@@ -272,11 +306,63 @@ export default class GroupView extends Component<Props> {
           modal={this.usernamePasswordModal}
           isDarkMode={this.state.isDarkMode}
           isGroupLeader={this.state.userView.group_leader}
-          userName={'test'}
-          password={'password'}
+          group={this.state.group}
+          onSetNewData={this.setNewData}
         />
       </Modalize>
     );
+  }
+
+  showModalSCBPayment = async () => {
+    if (this.scbPaymentModal.current) {
+      let {isPassed, error} = await Authenticate.open(
+        I18n.t('message.requestToOpenUsernamePasswordGroup', {
+          name: this.state.group.name,
+        }),
+      );
+      if (isPassed) {
+        this.scbPaymentModal.current.open();
+      } else {
+        console.log(error);
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.authenticateFailed'),
+        );
+      }
+    }
+  };
+
+  popUpModalSCBPayment() {
+    return (
+      <Modalize
+        ref={this.scbPaymentModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <ScbPaymentView
+          modal={this.scbPaymentModal}
+          isDarkMode={this.state.isDarkMode}
+          group={this.state.group}
+          onPaymentDone={this.paymentDone}
+        />
+      </Modalize>
+    );
+  }
+
+  paymentDone() {
+    console.log('payment Done.......');
   }
 
   listInfo = () => {
@@ -332,7 +418,9 @@ export default class GroupView extends Component<Props> {
               justifyContent: 'center',
               fontFamily: 'Kanit-Light',
             }}>
-            {parseFloat(this.state.group.service_charge).toFixed(2)}
+            {parseFloat(
+              this.state.group.service_charge / this.state.group.members.length,
+            ).toFixed(2)}
           </Text>
         </View>
       </View>
@@ -562,6 +650,7 @@ export default class GroupView extends Component<Props> {
         {this.popUpModalSettingServiceCharge()}
         {this.popUpModalSetUpReminder()}
         {this.popUpModalUsernamePassword()}
+        {this.popUpModalSCBPayment()}
 
         {this.state.userView.group_leader ? (
           <ActionButton buttonColor="rgba(231,76,60,1)">
@@ -595,9 +684,7 @@ export default class GroupView extends Component<Props> {
             </ActionButton.Item>
           </ActionButton>
         ) : (
-          <ActionButton
-            buttonColor="#03C8A1"
-            icon={<MatIcon name="menu" style={styles.actionButtonIcon} />}>
+          <ActionButton buttonColor="#FE8536">
             <ActionButton.Item
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.chat')}
@@ -611,6 +698,13 @@ export default class GroupView extends Component<Props> {
               textStyle={{fontFamily: 'Kanit-Light'}}
               onPress={this.showModalUsernamePassword}>
               <MatIcon name="https" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="#6161FF"
+              title={I18n.t('placeholder.payment')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalSCBPayment}>
+              <MatIcon name="attach-money" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor="rgba(231,76,60,1)"
