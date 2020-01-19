@@ -16,7 +16,8 @@
     "joinGroup": "เข้าร่วมกลุ่ม",
     "invite": "ส่งคำเชิญ",
     "search": "ค้นหา",
-    "close": "ปิด"
+    "close": "ปิด",
+    "pay": "จ่าย"
   },
   "text": {
     "mr": "นาย",
@@ -72,7 +73,8 @@
     "darkMode": "โหมดมืด",
     "usernameAndPassword": "ชื่อผู้ใช้และรหัสผ่าน",
     "username": "ชื่อผู้ใช้",
-    "editProfile": "แก้ไขโปรไฟล์"
+    "editProfile": "แก้ไขโปรไฟล์",
+    "payment": "ชำระเงิน"
   },
   "message": {
     "success": "สำเร็จ",
@@ -125,6 +127,8 @@
     "copyPasswordSuccessful": "ก็อปรหัสผ่านสำเร็จ",
     "authenticateFailed": "รับรองความถูกต้องล้มเหลว",
     "requestToOpenUsernamePasswordGroup": "ดูชื่อผู้ใช้และรหัสผ่านของกลุ่ม %{name}",
-    "settingUsernamePasswordSuccessful": "แก้ไขผู้ใช้และรหัสผ่านของกลุ่มสำเร็จ"
+    "settingUsernamePasswordSuccessful": "แก้ไขผู้ใช้และรหัสผ่านของกลุ่มสำเร็จ",
+    "paymentToGroup": "ชำระเงินให้กลุ่ม %{name}",
+    "totalPayment": "ยอดเงินที่ต้องชำระ %{price} Bath"
   }
 }

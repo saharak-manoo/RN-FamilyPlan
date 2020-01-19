@@ -16,7 +16,8 @@
     "joinGroup": "Join Group",
     "invite": "Invite",
     "search": "Search",
-    "close": "Close"
+    "close": "Close",
+    "pay": "Pay"
   },
   "text": {
     "mr": "Mr",
@@ -76,7 +77,8 @@
     "darkMode": "Dark Mode",
     "usernameAndPassword": "Username password",
     "username": "Username",
-    "editProfile": "Edit profile"
+    "editProfile": "Edit profile",
+    "payment": "Payment"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -130,6 +132,8 @@
     "copyPasswordSuccessful": "Copy password successful",
     "authenticateFailed": "Authenticate failed",
     "requestToOpenUsernamePasswordGroup": "Request to open username password group %{name}",
-    "settingUsernamePasswordSuccessful": "Updated username password successful"
+    "settingUsernamePasswordSuccessful": "Updated username password successful",
+    "paymentToGroup": "Payment to group %{name}",
+    "totalPayment": "Total payment %{price} Bath"
   }
 }
