@@ -81,6 +81,7 @@ export default class ChatListView extends Component {
   };
 
   realTimeData(data) {
+    console.log('data chat', data);
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
       let chatRoom = JSON.parse(data.chat_room);
       let chatRoomIndex = this.state.chatRooms.findIndex(

@@ -55,13 +55,14 @@ class HomeView extends Component {
   }
 
   componentDidMount() {
+    this.checkPermission();
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
   }
 
   componentWillMount = async () => {
-    this.fcmCheckPermissions();
+    this.triggerTurnOnNotification();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({
       spinner: true,
@@ -84,8 +85,13 @@ class HomeView extends Component {
   };
 
   async realTimeData(data) {
-    let {unread_messages_count, unread_notifications_count} = JSON.parse(data.unread);
-    this.props.setScreenBadgeNow(unread_messages_count, unread_notifications_count);
+    let {unread_messages_count, unread_notifications_count} = JSON.parse(
+      data.unread,
+    );
+    this.props.setScreenBadgeNow(
+      unread_messages_count,
+      unread_notifications_count,
+    );
     let user = await GFun.user();
     if (
       data.noti_type === 'group' ||
@@ -155,43 +161,49 @@ class HomeView extends Component {
     }
   };
 
-  async fcmCheckPermissions() {
-    firebase
-      .messaging()
-      .hasPermission()
-      .then(enabled => {
-        if (enabled) {
-          this.triggerTurnOnNotification();
-        } else {
-          firebase
-            .messaging()
-            .requestPermission()
-            .then(() => {
-              this.triggerTurnOnNotification();
-            })
-            .catch(error => {
-              // User has rejected permissions
-            });
-        }
-      });
+  async checkPermission() {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+      this.getToken();
+    } else {
+      this.requestPermission();
+    }
+  }
 
-    // get FCM Token
-    firebase
-      .messaging()
-      .getToken()
-      .then(async fcmToken => {
-        if (fcmToken) {
-          let user = await GFun.user();
-          let resp = await Api.createFcmToken(
-            user.authentication_jwt,
-            user.id,
-            fcmToken,
-          );
-          if (resp.success) {
-            console.log('created fcmToken => : ', fcmToken);
-          }
+  async requestPermission() {
+    try {
+      await firebase.messaging().requestPermission();
+      this.getToken();
+    } catch (error) {
+      // User has rejected permissions
+      console.log('permission rejected');
+    }
+  }
+
+  async getToken() {
+    try {
+      const enabled = await firebase.messaging().hasPermission();
+      if (!enabled) {
+        await firebase.messaging().requestPermission();
+      }
+
+      const fcmToken = await firebase.messaging().getToken();
+      if (fcmToken) {
+        console.log('got token');
+        console.log('fcm token:', fcmToken); //-->use this token from the console to send a post request via postman
+        let user = await GFun.user();
+        let resp = await Api.createFcmToken(
+          user.authentication_jwt,
+          user.id,
+          fcmToken,
+        );
+        if (resp.success) {
+          console.log('created fcmToken => : ', fcmToken);
         }
-      });
+      }
+    } catch (error) {
+      console.warn('notification token error', error);
+    }
   }
 
   async triggerTurnOnNotification() {

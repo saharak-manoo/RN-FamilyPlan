@@ -1,12 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
 import {Dimensions, Platform, StatusBar, View} from 'react-native';
-import {
-  Appbar,
-  Text,
-  TextInput,
-  HelperText,
-} from 'react-native-paper';
+import {Appbar, Text, TextInput, HelperText} from 'react-native-paper';
 import I18n from '../../components/i18n';
 import {Dropdown} from 'react-native-material-dropdown';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
@@ -143,7 +138,7 @@ export default class InviteMemberView extends Component {
                 color: this.state.isDarkMode ? '#FFF' : '#000',
               }}
               containerStyle={{
-                backgroundColor: this.state.isDarkMode ? '#363636' : '#EEEEEE',
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
                 borderRadius: 20,
                 fontFamily: 'Kanit-Light',
               }}
