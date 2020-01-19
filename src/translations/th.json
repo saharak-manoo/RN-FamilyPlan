@@ -17,7 +17,8 @@
     "invite": "ส่งคำเชิญ",
     "search": "ค้นหา",
     "close": "ปิด",
-    "pay": "จ่าย"
+    "pay": "จ่าย",
+    "payWithSCBEasy": "จ่ายด้วย SCB Easy"
   },
   "text": {
     "mr": "นาย",
@@ -129,6 +130,8 @@
     "requestToOpenUsernamePasswordGroup": "ดูชื่อผู้ใช้และรหัสผ่านของกลุ่ม %{name}",
     "settingUsernamePasswordSuccessful": "แก้ไขผู้ใช้และรหัสผ่านของกลุ่มสำเร็จ",
     "paymentToGroup": "ชำระเงินให้กลุ่ม %{name}",
-    "totalPayment": "ยอดเงินที่ต้องชำระ %{price} Bath"
+    "totalPayment": "ยอดเงินที่ต้องชำระ %{price} Bath",
+    "paymentFailed": "การชำระเงินล้มเหลว",
+    "paymentSuccess": "การชำระเงินสำเร็จ"
   }
 }

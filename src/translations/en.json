@@ -17,7 +17,8 @@
     "invite": "Invite",
     "search": "Search",
     "close": "Close",
-    "pay": "Pay"
+    "pay": "Pay",
+    "payWithSCBEasy": "Pay with SCB Easy"
   },
   "text": {
     "mr": "Mr",
@@ -134,6 +135,8 @@
     "requestToOpenUsernamePasswordGroup": "Request to open username password group %{name}",
     "settingUsernamePasswordSuccessful": "Updated username password successful",
     "paymentToGroup": "Payment to group %{name}",
-    "totalPayment": "Total payment %{price} Bath"
+    "totalPayment": "Price %{price} Bath",
+    "paymentFailed": "Payment failed",
+    "paymentSuccess": "Payment successful"
   }
 }

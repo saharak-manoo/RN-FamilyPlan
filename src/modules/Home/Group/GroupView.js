@@ -207,12 +207,27 @@ export default class GroupView extends Component {
     }
   }
 
-  showSettingServiceChargeModal = () => {
+  showSettingServiceChargeModal = async () => {
     if (
       this.settingServiceChargeModal.current &&
       this.state.userView.group_leader
     ) {
       this.settingServiceChargeModal.current.open();
+    } else if (this.scbPaymentModal.current) {
+      let { isPassed, error } = await Authenticate.open(
+        I18n.t('message.requestToOpenUsernamePasswordGroup', {
+          name: this.state.group.name,
+        }),
+      );
+      if (isPassed) {
+        this.scbPaymentModal.current.open();
+      } else {
+        console.log(error);
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.authenticateFailed'),
+        );
+      }
     }
   };
 
@@ -403,7 +418,9 @@ export default class GroupView extends Component {
               justifyContent: 'center',
               fontFamily: 'Kanit-Light',
             }}>
-            {parseFloat(this.state.group.service_charge).toFixed(2)}
+            {parseFloat(
+              this.state.group.service_charge / this.state.group.members.length,
+            ).toFixed(2)}
           </Text>
         </View>
       </View>
