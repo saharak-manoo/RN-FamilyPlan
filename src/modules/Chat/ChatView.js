@@ -70,16 +70,20 @@ export default class ChatView extends Component {
 
   realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
+      let chatRoom = JSON.parse(data.chat_room);
       let message = JSON.parse(data.message);
-      if (this.state.user.id !== message.user._id) {
-        let messageIndex = this.state.messages.findIndex(
-          m => m._id === message._id,
-        );
 
-        if (messageIndex === -1) {
-          this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, message),
-          }));
+      if (chatRoom.id === this.state.chatRoom.id) {
+        if (this.state.user.id !== message.user._id) {
+          let messageIndex = this.state.messages.findIndex(
+            m => m._id === message._id,
+          );
+
+          if (messageIndex === -1) {
+            this.setState(previousState => ({
+              messages: GiftedChat.append(previousState.messages, message),
+            }));
+          }
         }
       }
     }
