@@ -58,7 +58,6 @@ export default class ChatListView extends Component {
   }
 
   componentWillMount = async () => {
-    this.triggerTurnOnNotification();
     let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
     let user = await GFun.user();
@@ -80,27 +79,34 @@ export default class ChatListView extends Component {
     }
   };
 
-  realTimeData(data) {
-    console.log('data chat', data);
+  async realTimeData(data) {
     if (data.noti_type === 'chat' || data.noti_type.includes('request_join-')) {
       let chatRoom = JSON.parse(data.chat_room);
       let chatRoomIndex = this.state.chatRooms.findIndex(
         c => c.id === chatRoom.id,
       );
 
-      if (chatRoomIndex === -1) {
-        this.setState({
-          chatRooms: GFun.sortByDate([chatRoom].concat(this.state.chatRooms)),
-          tempChatRooms: GFun.sortByDate(
-            [chatRoom].concat(this.state.chatRooms),
-          ),
-        });
-      } else {
-        this.state.chatRooms[chatRoomIndex] = chatRoom;
-        this.setState({
-          chatRooms: GFun.sortByDate(this.state.chatRooms),
-          tempChatRooms: GFun.sortByDate(this.state.chatRooms),
-        });
+      let resp = await Api.getChatRoomById(
+        this.state.user.authentication_jwt,
+        chatRoom.id,
+      );
+      if (resp.success) {
+        if (chatRoomIndex === -1) {
+          this.setState({
+            chatRooms: GFun.sortByDate(
+              [resp.chat_room].concat(this.state.chatRooms),
+            ),
+            tempChatRooms: GFun.sortByDate(
+              [resp.chat_room].concat(this.state.chatRooms),
+            ),
+          });
+        } else {
+          this.state.chatRooms[chatRoomIndex] = resp.chat_room;
+          this.setState({
+            chatRooms: GFun.sortByDate(this.state.chatRooms),
+            tempChatRooms: GFun.sortByDate(this.state.chatRooms),
+          });
+        }
       }
     }
   }
@@ -114,6 +120,7 @@ export default class ChatListView extends Component {
   }
 
   componentDidMount() {
+    this.triggerTurnOnNotification();
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
     });
@@ -173,13 +180,13 @@ export default class ChatListView extends Component {
                   fontFamily: 'Kanit-Light',
                   color: this.state.isDarkMode ? '#FFF' : '#000',
                 }}
-                subtitle={item.last_messags}
+                subtitle={item.last_messages}
                 subtitleStyle={{
                   fontFamily: 'Kanit-Light',
                   color: this.state.isDarkMode ? '#FFF' : '#000',
                 }}
                 onPress={() => this.goToChatRoom(item)}
-                rightSubtitle={item.last_messags_time}
+                rightSubtitle={item.last_messages_time}
                 rightSubtitleStyle={{
                   fontFamily: 'Kanit-Light',
                   color: this.state.isDarkMode ? '#FFF' : '#000',
@@ -241,8 +248,8 @@ export default class ChatListView extends Component {
         chatRooms = chatRooms.filter(
           chatRoom =>
             chatRoom.name.toLowerCase().includes(search) ||
-            chatRoom.last_messags.toLowerCase().includes(search) ||
-            chatRoom.last_messags.toLowerCase().includes(search),
+            chatRoom.last_messages.toLowerCase().includes(search) ||
+            chatRoom.last_messages.toLowerCase().includes(search),
         );
 
         await this.setState({chatRooms: chatRooms});

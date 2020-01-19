@@ -85,6 +85,8 @@ class HomeView extends Component {
   };
 
   async realTimeData(data) {
+    let user = await GFun.user();
+
     let {unread_messages_count, unread_notifications_count} = JSON.parse(
       data.unread,
     );
@@ -92,7 +94,6 @@ class HomeView extends Component {
       unread_messages_count,
       unread_notifications_count,
     );
-    let user = await GFun.user();
     if (
       data.noti_type === 'group' ||
       data.noti_type.includes('request_join-')
@@ -122,23 +123,29 @@ class HomeView extends Component {
       }
     } else if (data.noti_type === 'chat') {
       let chatRoom = JSON.parse(data.chat_room);
-      let message = JSON.parse(data.message);
-      if (message.user._id !== user.id) {
-        showMessage({
-          message: chatRoom.name,
-          description: message.text,
-          type: 'default',
-          backgroundColor: '#006FF6',
-          color: '#FFF',
-          duration: 5000,
-          onPress: () => {
-            this.props.navigation.navigate('ChatRoom', {
-              isDarkMode: this.state.isDarkMode,
-              chatRoom: chatRoom,
-              isRequestJoin: false,
-            });
-          },
-        });
+      let resp = await Api.getChatRoomById(
+        user.authentication_jwt,
+        chatRoom.id,
+      );
+      if (resp.success) {
+        let message = JSON.parse(data.message);
+        if (message.user._id !== user.id) {
+          showMessage({
+            message: chatRoom.name,
+            description: message.text,
+            type: 'default',
+            backgroundColor: '#006FF6',
+            color: '#FFF',
+            duration: 5000,
+            onPress: () => {
+              this.props.navigation.navigate('ChatRoom', {
+                isDarkMode: this.state.isDarkMode,
+                chatRoom: resp.chat_room,
+                isRequestJoin: false,
+              });
+            },
+          });
+        }
       }
     }
   }
@@ -189,7 +196,6 @@ class HomeView extends Component {
 
       const fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        console.log('got token');
         console.log('fcm token:', fcmToken); //-->use this token from the console to send a post request via postman
         let user = await GFun.user();
         let resp = await Api.createFcmToken(
@@ -216,23 +222,35 @@ class HomeView extends Component {
     this.notificationOpenedListener = firebase
       .notifications()
       .onNotificationOpened(async opened => {
+        let user = await GFun.user();
+
         let data = opened.notification._data;
         if (data.noti_type === 'group') {
           let group = JSON.parse(data.group);
-          this.props.navigation.navigate('Group', {
-            isDarkMode: this.state.isDarkMode,
-            group: group,
-          });
+          let resp = await Api.getGroupById(user.authentication_jwt, group.id);
+          console.log('resp', resp)
+          if (resp.success) {
+            this.props.navigation.navigate('Group', {
+              isDarkMode: this.state.isDarkMode,
+              group: resp.group,
+            });
+          }
         } else if (
           data.noti_type === 'chat' ||
           data.noti_type.includes('request_join-')
         ) {
           let chatRoom = JSON.parse(data.chat_room);
-          this.props.navigation.navigate('ChatRoom', {
-            isDarkMode: this.state.isDarkMode,
-            chatRoom: chatRoom,
-            isRequestJoin: false,
-          });
+          let resp = await Api.getChatRoomById(
+            user.authentication_jwt,
+            chatRoom.id,
+          );
+          if (resp.success) {
+            this.props.navigation.navigate('ChatRoom', {
+              isDarkMode: this.state.isDarkMode,
+              chatRoom: resp.chat_room,
+              isRequestJoin: false,
+            });
+          }
         }
       });
 

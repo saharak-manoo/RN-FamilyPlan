@@ -1,10 +1,21 @@
 import {
   UNREAD_MESSAGES_COUNT,
   UNREAD_NOTIFICATIONS_COUNT,
+  RESET,
 } from '../actions/constants';
 import * as Api from './api';
 import {Platform} from 'react-native';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+
+export const resetRedux = () => ({
+  type: RESET,
+});
+
+export const resetReduxNow = () => {
+  return dispatch => {
+    dispatch(resetRedux());
+  };
+};
 
 export const setUnreadMsgCount = payload => ({
   type: UNREAD_MESSAGES_COUNT,

@@ -76,13 +76,20 @@ export default class GroupView extends Component {
       });
   }
 
-  realTimeData(data) {
+  async realTimeData(data) {
+    let user = await GFun.user();
     if (data.noti_type === 'group') {
       let group = JSON.parse(data.group);
       if (this.state.group.id === group.id) {
-        this.setState({
-          group: group,
-        });
+        let resp = await Api.getGroupById(
+          user.authentication_jwt,
+          group.id,
+        );
+        if (resp.success) {
+          this.setState({
+            group: resp.group,
+          });
+        }
       }
     }
   }

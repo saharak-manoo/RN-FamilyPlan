@@ -286,6 +286,29 @@ export async function createGroup(token, params) {
   }
 }
 
+export async function getGroupById(token, id) {
+  try {
+    const resp = await fetch(joinUrl(HOST, UPDATE_GROUP.replace(':id', id)), {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp);
+    if (status === 'reload') {
+      return await this.getGroupById(newTokenJwt, id);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
 export async function updateGroup(token, id, params) {
   try {
     const resp = await fetch(joinUrl(HOST, UPDATE_GROUP.replace(':id', id)), {
@@ -432,7 +455,7 @@ export async function getChatRoom(token, params) {
   }
 }
 
-export async function getChatMessage(token, id, params) {
+export async function getChatRoomById(token, id, params) {
   try {
     const resp = await fetch(
       joinUrl(
