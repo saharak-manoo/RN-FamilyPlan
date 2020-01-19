@@ -7,6 +7,7 @@ import {
   RefreshControl,
   ScrollView,
   TouchableOpacity,
+  Linking,
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -54,7 +55,22 @@ class HomeView extends Component {
     };
   }
 
+  _handleOpenURL(event) {
+    if (event.url.includes('payment-result?status=success')) {
+      GFun.successMessage(
+        I18n.t('message.success'),
+        I18n.t('message.paymentSuccess'),
+      );
+    } else if (event.url.includes('payment-result?status=failed')) {
+      GFun.errorMessage(
+        I18n.t('message.error'),
+        I18n.t('message.paymentFailed'),
+      );
+    }
+  }
+
   componentDidMount() {
+    Linking.addEventListener('url', this._handleOpenURL);
     this.checkPermission();
     this.messageListener = firebase.messaging().onMessage(message => {
       this.realTimeData(message._data);
@@ -228,7 +244,7 @@ class HomeView extends Component {
         if (data.noti_type === 'group') {
           let group = JSON.parse(data.group);
           let resp = await Api.getGroupById(user.authentication_jwt, group.id);
-          console.log('resp', resp)
+          console.log('resp', resp);
           if (resp.success) {
             this.props.navigation.navigate('Group', {
               isDarkMode: this.state.isDarkMode,
@@ -260,6 +276,7 @@ class HomeView extends Component {
   }
 
   componentWillUnmount() {
+    Linking.removeEventListener('url', this._handleOpenURL);
     this.messageListener();
     this.notificationOpenedListener();
     this.notificationListener();

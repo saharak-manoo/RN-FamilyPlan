@@ -22,6 +22,7 @@ export default class scbPaymentView extends Component {
     this.state = {
       isDarkMode: this.props.isDarkMode,
       group: this.props.group,
+      isPaymentSuccess: false,
     };
   }
 
@@ -31,21 +32,16 @@ export default class scbPaymentView extends Component {
     let response = await Api.createSCBPayment(
       user.authentication_jwt,
       this.state.group.id,
-      parseFloat(this.state.group.service_charge).toFixed(2),
+      parseFloat(
+        this.state.group.service_charge / this.state.group.members.length,
+      ).toFixed(2),
     );
 
     if (response.success) {
       this.loadingScbPayment.showLoading(false);
       let scbLink = response.scb_deep_link;
-      Linking.canOpenURL(scbLink)
-        .then(supported => {
-          if (!supported) {
-            console.log("Can't handle url: " + scbLink);
-          } else {
-            return Linking.openURL(scbLink);
-          }
-        })
-        .catch(err => console.error('An error occurred', err));
+      Linking.openURL(scbLink);
+      this.props.modal.current.close();
     } else {
       this.loadingScbPayment.showLoading(false);
       let errors = [];
@@ -70,45 +66,50 @@ export default class scbPaymentView extends Component {
           {I18n.t('placeholder.payment')}
         </Text>
         <View style={{paddingTop: GFun.hp(2)}}>
-          <ListItem
-            ref={c => (this.loadingScbPayment = c)}
-            onPress={this.scbPayment.bind(this)}
-            Component={TouchableScale}
-            friction={90}
-            tension={100}
-            activeScale={0.85}
-            leftAvatar={() => (
-              <UserAvatar size="40" name={this.state.group.name} />
-            )}
-            title={I18n.t('message.totalPayment', {
-              price: parseFloat(this.state.group.service_charge).toFixed(2),
-            })}
-            titleStyle={{
-              fontFamily: 'Kanit-Light',
-              color: this.state.isDarkMode ? '#FFF' : '#000',
-            }}
-            subtitle={I18n.t('message.paymentToGroup', {
-              name: this.state.group.name,
-            })}
-            subtitleStyle={{
-              fontFamily: 'Kanit-Light',
-              color: this.state.isDarkMode ? '#FFF' : '#000',
-            }}
-            containerStyle={{
-              backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
-              borderRadius: 20,
-              fontFamily: 'Kanit-Light',
-            }}
-            chevron={
-              <MatIcon
-                name="payment"
-                size={35}
-                style={{
-                  color: '#00D657',
-                }}
-              />
-            }
-          />
+          {!this.state.isPaymentSuccess ? (
+            <ListItem
+              ref={c => (this.loadingScbPayment = c)}
+              onPress={this.scbPayment.bind(this)}
+              Component={TouchableScale}
+              friction={90}
+              tension={100}
+              activeScale={0.85}
+              leftAvatar={() => (
+                <UserAvatar size="40" name={this.state.group.name} />
+              )}
+              title={I18n.t('message.totalPayment', {
+                price: parseFloat(
+                  this.state.group.service_charge /
+                    this.state.group.members.length,
+                ).toFixed(2),
+              })}
+              titleStyle={{
+                fontFamily: 'Kanit-Light',
+                color: this.state.isDarkMode ? '#FFF' : '#000',
+              }}
+              subtitle={I18n.t('message.paymentToGroup', {
+                name: this.state.group.name,
+              })}
+              subtitleStyle={{
+                fontFamily: 'Kanit-Light',
+                color: this.state.isDarkMode ? '#FFF' : '#000',
+              }}
+              containerStyle={{
+                backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
+                borderRadius: 20,
+                fontFamily: 'Kanit-Light',
+              }}
+              chevron={
+                <MatIcon
+                  name="payment"
+                  size={35}
+                  style={{
+                    color: '#3F4DFC',
+                  }}
+                />
+              }
+            />
+          ) : null}
         </View>
 
         <View style={{paddingTop: 35}}>
@@ -116,11 +117,11 @@ export default class scbPaymentView extends Component {
             ref={c => (this.loadingScbPayment = c)}
             width={width - 25}
             height={50}
-            title={I18n.t('button.pay')}
+            title={I18n.t('button.payWithSCBEasy')}
             titleFontFamily={'Kanit-Light'}
             titleFontSize={18}
             titleColor="#FFF"
-            backgroundColor="#03C8A1"
+            backgroundColor="#3F4DFC"
             borderRadius={25}
             onPress={this.scbPayment.bind(this)}
           />
