@@ -66,7 +66,7 @@ class HomeView extends Component {
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{ backgroundColor: this.props.setting.appColor}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.Content
             title={I18n.t('placeholder.appName')}
             titleStyle={{fontFamily: 'Kanit-Light'}}
@@ -174,7 +174,6 @@ class HomeView extends Component {
             duration: 5000,
             onPress: () => {
               this.props.navigation.navigate('ChatRoom', {
-                isDarkMode: this.state.isDarkMode,
                 chatRoom: resp.chat_room,
                 isRequestJoin: false,
               });
@@ -191,13 +190,11 @@ class HomeView extends Component {
       notification.noti_type.includes('request_join-')
     ) {
       this.props.navigation.navigate('ChatRoom', {
-        isDarkMode: this.state.isDarkMode,
         chatRoom: notification.data,
         isRequestJoin: false,
       });
     } else if (notification.noti_type === 'group') {
       this.props.navigation.navigate('Group', {
-        isDarkMode: this.state.isDarkMode,
         group: notification.data,
       });
     }
@@ -567,14 +564,12 @@ class HomeView extends Component {
 
   goToRequestJoinGroup = chatRoom => {
     this.props.navigation.navigate('ChatRoom', {
-      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
     });
   };
 
   goToGroup = group => {
     this.props.navigation.navigate('Group', {
-      isDarkMode: this.state.isDarkMode,
       group: group,
       onLeaveGroup: () => this.refreshGroup(),
     });
@@ -583,7 +578,6 @@ class HomeView extends Component {
   setAndGoToModalGroup = async myGroups => {
     await this.setState({myGroups: myGroups});
     this.props.navigation.navigate('Group', {
-      isDarkMode: this.state.isDarkMode,
       group: myGroups[0],
       onLeaveGroup: () => this.refreshGroup(),
     });

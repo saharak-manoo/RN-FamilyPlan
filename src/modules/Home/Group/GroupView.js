@@ -226,7 +226,6 @@ class GroupView extends Component {
       if (isPassed) {
         this.scbPaymentModal.current.open();
       } else {
-        console.log(error);
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.authenticateFailed'),
@@ -278,7 +277,6 @@ class GroupView extends Component {
       if (isPassed) {
         this.usernamePasswordModal.current.open();
       } else {
-        console.log(error);
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.authenticateFailed'),
@@ -651,7 +649,6 @@ class GroupView extends Component {
 
   goToChatRoom(chatRoom) {
     this.props.navigation.navigate('ChatRoom', {
-      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
       isRequestJoin: false,
     });

@@ -57,14 +57,12 @@ class ProfileView extends Component {
     I18n.locale = locale;
     await AsyncStorage.setItem('locale', locale);
     this.setState({isLanguageTH: isLanguageTH});
-    this.props.setLanguage(locale);
     RNRestart.Restart();
   };
 
   onSwitchDarkMode = async isDarkMode => {
     await AsyncStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
     this.setState({isDarkMode: isDarkMode});
-    this.props.setDarkMode(isDarkMode);
     RNRestart.Restart();
   };
 
@@ -126,9 +124,7 @@ class ProfileView extends Component {
         I18n.t('message.signOutSuccessful'),
       );
 
-      this.props.navigation.navigate('Login', {
-        isDarkMode: this.state.isDarkMode,
-      });
+      this.props.navigation.navigate('Login');
     } else {
       this.loadingSignOut.showLoading(false);
       GFun.errorMessage(I18n.t('message.error'), I18n.t('message.signOutFail'));

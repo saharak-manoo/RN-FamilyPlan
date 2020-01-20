@@ -79,7 +79,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
               <MatIcon
                 size={26}
                 name="home"
-                color={active.focused ? '#3FFC89' : '#D6D6D6'}
+                color={active.focused ? '#02EC5D' : '#D6D6D6'}
               />
             );
           },
@@ -110,7 +110,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
               <MatIcon
                 size={26}
                 name="chat"
-                color={active.focused ? '#3FFC89' : '#D6D6D6'}
+                color={active.focused ? '#02EC5D' : '#D6D6D6'}
               />
             );
           },
@@ -136,7 +136,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
               <MatIcon
                 size={26}
                 name="notifications"
-                color={active.focused ? '#3FFC89' : '#D6D6D6'}
+                color={active.focused ? '#02EC5D' : '#D6D6D6'}
               />
             );
           },
@@ -160,7 +160,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
               <MatIcon
                 size={26}
                 name="account-box"
-                color={active.focused ? '#3FFC89' : '#D6D6D6'}
+                color={active.focused ? '#02EC5D' : '#D6D6D6'}
               />
             );
           },
