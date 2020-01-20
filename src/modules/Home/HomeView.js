@@ -245,6 +245,8 @@ class HomeView extends Component {
   }
 
   async triggerTurnOnNotification() {
+    let user = await GFun.user();
+
     this.notificationListener = firebase
       .notifications()
       .onNotification(async notification => {
@@ -254,13 +256,10 @@ class HomeView extends Component {
     this.notificationOpenedListener = firebase
       .notifications()
       .onNotificationOpened(async opened => {
-        let user = await GFun.user();
-
         let data = opened.notification._data;
         if (data.noti_type === 'group') {
           let group = JSON.parse(data.group);
           let resp = await Api.getGroupById(user.authentication_jwt, group.id);
-          console.log('resp', resp);
           if (resp.success) {
             this.props.navigation.navigate('Group', {
               isDarkMode: this.state.isDarkMode,
@@ -289,6 +288,37 @@ class HomeView extends Component {
     const notificationOpen = await firebase
       .notifications()
       .getInitialNotification();
+    if (notificationOpen) {
+      let notification = notificationOpen.notification;
+      let data = notification.notification._data;
+
+      if (data.noti_type === 'group') {
+        let group = JSON.parse(data.group);
+        let resp = await Api.getGroupById(user.authentication_jwt, group.id);
+        if (resp.success) {
+          this.props.navigation.navigate('Group', {
+            isDarkMode: this.state.isDarkMode,
+            group: resp.group,
+          });
+        }
+      } else if (
+        data.noti_type === 'chat' ||
+        data.noti_type.includes('request_join-')
+      ) {
+        let chatRoom = JSON.parse(data.chat_room);
+        let resp = await Api.getChatRoomById(
+          user.authentication_jwt,
+          chatRoom.id,
+        );
+        if (resp.success) {
+          this.props.navigation.navigate('ChatRoom', {
+            isDarkMode: this.state.isDarkMode,
+            chatRoom: resp.chat_room,
+            isRequestJoin: false,
+          });
+        }
+      }
+    }
   }
 
   componentWillUnmount() {
