@@ -198,6 +198,7 @@ class GroupView extends Component {
     );
 
     if (response.success) {
+      this.setState({group: response.group});
       GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.settingDueDateSuccessful'),
