@@ -76,13 +76,25 @@ class HomeView extends Component {
     );
   }
 
-  _handleOpenURL(event) {
-    if (event.url.includes('payment-result?status=success')) {
-      GFun.successMessage(
-        I18n.t('message.success'),
-        I18n.t('message.paymentSuccess'),
-      );
-    } else if (event.url.includes('payment-result?status=failed')) {
+  async _handleOpenURL(event) {
+    let url = event.url;
+
+    if (url.includes('payment-result?status=success')) {
+      let user_id = url
+        .match(/(user_id=\S+)&group_id/gi)[0]
+        .replace(/(user_id=\S+)&group_id/gi, '$1')
+        .replace('user_id=', '');
+      let group_id = url
+        .match(/(group_id=\S+)&amount/gi)[0]
+        .replace(/(group_id=\S+)&amount/gi, '$1')
+        .replace('group_id=', '');
+      let amount = url
+        .match(/(amount=\S+)&payment-result/gi)[0]
+        .replace(/(amount=\S+)&payment-result/gi, '$1')
+        .replace('amount=', '');
+
+      await Api.createNotificationSCBPayment(user_id, group_id, amount);
+    } else if (url.includes('payment-result?status=failed')) {
       GFun.errorMessage(
         I18n.t('message.error'),
         I18n.t('message.paymentFailed'),
