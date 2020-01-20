@@ -19,7 +19,6 @@ import RegisterView from '../auth/register/registerView';
 import ForgotPasswordView from '../auth/forgotPassword/forgotPasswordView';
 import LogoView from '../logo/logoView';
 import GroupView from '../home/group/groupView';
-import EditProfileView from '../profile/editProfileView';
 
 const HomeStack = createStackNavigator(
   {
@@ -55,7 +54,6 @@ const AuthStack = createStackNavigator(
 const ProfileStack = createStackNavigator(
   {
     Profile: {screen: ProfileView},
-    EditProfile: {screen: EditProfileView},
   },
   {
     headerMode: 'none',

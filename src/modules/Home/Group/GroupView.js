@@ -32,6 +32,7 @@ import InviteMemberView from '../../modal/inviteMemberView';
 import SettingServiceChargeView from '../../modal/settingServiceChargeView';
 import UsernamePasswordGroupView from '../../modal/usernamePasswordGroupView';
 import ScbPaymentView from '../../modal/scbPaymentView';
+import ScbQRCodePaymentView from '../../modal/scbQRCodePaymentView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -56,6 +57,7 @@ export default class GroupView extends Component {
   settingServiceChargeModal = React.createRef();
   usernamePasswordModal = React.createRef();
   scbPaymentModal = React.createRef();
+  scbQRCodePaymentModal = React.createRef();
 
   async componentWillMount() {
     this.triggerTurnOnNotification();
@@ -214,7 +216,7 @@ export default class GroupView extends Component {
     ) {
       this.settingServiceChargeModal.current.open();
     } else if (this.scbPaymentModal.current) {
-      let { isPassed, error } = await Authenticate.open(
+      let {isPassed, error} = await Authenticate.open(
         I18n.t('message.requestToOpenUsernamePasswordGroup', {
           name: this.state.group.name,
         }),
@@ -356,6 +358,53 @@ export default class GroupView extends Component {
           isDarkMode={this.state.isDarkMode}
           group={this.state.group}
           onPaymentDone={this.paymentDone}
+        />
+      </Modalize>
+    );
+  }
+
+  showModalSCBQRCodePayment = async () => {
+    if (this.scbQRCodePaymentModal.current) {
+      let {isPassed, error} = await Authenticate.open(
+        I18n.t('message.requestToOpenUsernamePasswordGroup', {
+          name: this.state.group.name,
+        }),
+      );
+      if (isPassed) {
+        this.scbQRCodePaymentModal.current.open();
+      } else {
+        console.log(error);
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.authenticateFailed'),
+        );
+      }
+    }
+  };
+
+  popUpModalSCBQRCodePayment() {
+    return (
+      <Modalize
+        ref={this.scbQRCodePaymentModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <ScbQRCodePaymentView
+          modal={this.scbQRCodePaymentModal}
+          isDarkMode={this.state.isDarkMode}
+          group={this.state.group}
         />
       </Modalize>
     );
@@ -651,9 +700,17 @@ export default class GroupView extends Component {
         {this.popUpModalSetUpReminder()}
         {this.popUpModalUsernamePassword()}
         {this.popUpModalSCBPayment()}
+        {this.popUpModalSCBQRCodePayment()}
 
         {this.state.userView.group_leader ? (
           <ActionButton buttonColor="rgba(231,76,60,1)">
+            <ActionButton.Item
+              buttonColor="#000"
+              title={I18n.t('placeholder.qrcodePayment')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalSCBQRCodePayment}>
+              <FAIcon name="qrcode" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
             <ActionButton.Item
               buttonColor="#6D06F9"
               title={I18n.t('placeholder.chat')}
@@ -685,6 +742,13 @@ export default class GroupView extends Component {
           </ActionButton>
         ) : (
           <ActionButton buttonColor="#FE8536">
+            <ActionButton.Item
+              buttonColor="#000"
+              title={I18n.t('placeholder.qrcodePayment')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalSCBQRCodePayment}>
+              <FAIcon name="qrcode" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
             <ActionButton.Item
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.chat')}
