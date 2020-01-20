@@ -14,6 +14,10 @@ import RNRestart from 'react-native-restart';
 import UserAvatar from 'react-native-user-avatar';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
+import Modalize from 'react-native-modalize';
+
+// View
+import EditProfileView from '../modal/editProfileView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -30,6 +34,8 @@ class ProfileView extends Component {
     };
     this.getProfile();
   }
+
+  editProfileChargeModal = React.createRef();
 
   componentDidMount = async () => {
     this.setState({spinner: true});
@@ -88,11 +94,7 @@ class ProfileView extends Component {
 
   clickEditProfile() {
     this.loadingEditProfile.showLoading(true);
-    this.props.navigation.navigate('EditProfile', {
-      isDarkMode: this.state.isDarkMode,
-      user: this.state.user,
-      onUpdated: () => this.refreshUser(),
-    });
+    this.showEditProfileModal();
     this.loadingEditProfile.showLoading(false);
   }
 
@@ -127,6 +129,47 @@ class ProfileView extends Component {
       GFun.errorMessage(I18n.t('message.error'), I18n.t('message.signOutFail'));
     }
   }
+
+  showEditProfileModal = async () => {
+    if (this.editProfileChargeModal.current) {
+      this.editProfileChargeModal.current.open();
+    }
+  };
+
+  popUpModalEditProfile() {
+    return (
+      <Modalize
+        ref={this.editProfileChargeModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <EditProfileView
+          modal={this.editProfileChargeModal}
+          isDarkMode={this.state.isDarkMode}
+          user={this.state.user}
+          onUpdatedUser={this.updateData}
+        />
+      </Modalize>
+    );
+  }
+
+  updateData = async user => {
+    await this.setState({
+      user: user,
+    });
+  };
 
   render() {
     return (
@@ -224,6 +267,8 @@ class ProfileView extends Component {
                 </Text>
               </View>
             )}
+
+            {this.popUpModalEditProfile()}
 
             <View style={{paddingBottom: GFun.hp(2)}}>
               <AnimateLoadingButton

@@ -36,6 +36,8 @@ const SHOW_NOTIFICATION = '/api/v1/notifications/:id';
 const UNREAD_COUNT = '/api/v1/notifications/unread_count';
 const UPSERT_GROUP_ACCOUNT = '/api/v1/groups/:id/account';
 const GROUP_PAYMENT = '/api/v1/groups/:group_id/payments';
+const GROUP_CREATE_QRCODE_PAYMENT =
+  '/api/v1/groups/:group_id/payments/create_qrcode';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -701,6 +703,33 @@ export async function createSCBPayment(token, group_id, amount) {
     let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
     if (status === 'reload') {
       return await this.createSCBPayment(newTokenJwt, group_id, amount);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function createSCBQRCodePayment(token, group_id, amount) {
+  try {
+    const resp = await fetch(
+      joinUrl(HOST, GROUP_CREATE_QRCODE_PAYMENT.replace(':group_id', group_id)),
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({amount: amount}),
+      },
+    );
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
+    if (status === 'reload') {
+      return await this.createSCBQRCodePayment(newTokenJwt, group_id, amount);
     } else if (status === 'ok') {
       let response = await resp.json();
       return response;
