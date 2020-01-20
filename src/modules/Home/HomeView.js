@@ -141,10 +141,7 @@ class HomeView extends Component {
       unread_messages_count,
       unread_notifications_count,
     );
-    if (
-      data.noti_type === 'group' ||
-      data.noti_type.includes('request_join-')
-    ) {
+    if (data.noti_type === 'group') {
       let group_noti_id = JSON.parse(data.group_noti_id);
       if (group_noti_id !== this.state.localNotiId) {
         let resp = await Api.getNotificationById(
@@ -155,6 +152,7 @@ class HomeView extends Component {
         if (resp.success) {
           await this.setState({localNotiId: group_noti_id});
           let noti = resp.notification[0];
+          this.updateGroup(noti.group);
           showMessage({
             message: noti.name,
             description: noti.message,
@@ -168,7 +166,10 @@ class HomeView extends Component {
           });
         }
       }
-    } else if (data.noti_type === 'chat') {
+    } else if (
+      data.noti_type === 'chat' ||
+      data.noti_type.includes('request_join-')
+    ) {
       let chatRoom = JSON.parse(data.chat_room);
       let resp = await Api.getChatRoomById(
         user.authentication_jwt,
@@ -196,11 +197,26 @@ class HomeView extends Component {
     }
   }
 
+  updateGroup = async group => {
+    let myGroupIndex = this.state.myGroups.findIndex(g => g.id === group.id);
+
+    if (myGroupIndex !== -1) {
+      this.state.myGroups[myGroupIndex] = group;
+      this.setState({myGroups: this.state.myGroups});
+    }
+
+    let tempMyGroupIndex = this.state.tempMyGroups.findIndex(
+      g => g.id === group.id,
+    );
+
+    if (tempMyGroupIndex !== -1) {
+      this.state.tempMyGroups[tempMyGroupIndex] = group;
+      this.setState({tempMyGroups: this.state.myGroups});
+    }
+  };
+
   goTo = notification => {
-    if (
-      notification.noti_type === 'chat' ||
-      notification.noti_type.includes('request_join-')
-    ) {
+    if (notification.noti_type === 'chat') {
       this.props.navigation.navigate('ChatRoom', {
         chatRoom: notification.data,
         isRequestJoin: false,
@@ -240,7 +256,6 @@ class HomeView extends Component {
 
       const fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        console.log('fcm token:', fcmToken); //-->use this token from the console to send a post request via postman
         let user = await GFun.user();
         let resp = await Api.createFcmToken(
           user.authentication_jwt,
