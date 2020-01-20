@@ -72,13 +72,13 @@ const MainNavigator = createMaterialBottomTabNavigator(
               {I18n.t('placeholder.home')}
             </Text>
           ),
-          tabBarColor: '#2370E6',
+          tabBarColor: '#202020',
           tabBarIcon: active => {
             return (
               <MatIcon
                 size={26}
                 name="home"
-                color={active.focused ? '#FFF' : '#D6D6D6'}
+                color={active.focused ? '#2370E6' : '#D6D6D6'}
               />
             );
           },
@@ -164,9 +164,9 @@ const MainNavigator = createMaterialBottomTabNavigator(
   },
   {
     initialRouteName: 'Home',
-    activeColor: '#f0edf6',
-    inactiveColor: '#3e2465',
-    barStyle: {backgroundColor: '#2370E6'},
+    activeColor: '#2370E6',
+    inactiveColor: '#202020',
+    barStyle: {backgroundColor: '#202020'},
     labeled: false,
   },
 );

@@ -325,7 +325,6 @@ export default class GroupView extends Component {
       if (isPassed) {
         this.scbPaymentModal.current.open();
       } else {
-        console.log(error);
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.authenticateFailed'),
@@ -357,11 +356,14 @@ export default class GroupView extends Component {
           modal={this.scbPaymentModal}
           isDarkMode={this.state.isDarkMode}
           group={this.state.group}
+          onNoAppSCBEasy={this.noAppSCBEasy}
           onPaymentDone={this.paymentDone}
         />
       </Modalize>
     );
   }
+
+  noAppSCBEasy() {}
 
   showModalSCBQRCodePayment = async () => {
     if (this.scbQRCodePaymentModal.current) {
@@ -373,7 +375,6 @@ export default class GroupView extends Component {
       if (isPassed) {
         this.scbQRCodePaymentModal.current.open();
       } else {
-        console.log(error);
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.authenticateFailed'),

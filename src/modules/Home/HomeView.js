@@ -55,6 +55,23 @@ class HomeView extends Component {
     };
   }
 
+  newGroupModal = React.createRef();
+  scanQrCodeModal = React.createRef();
+  joinGroupModal = React.createRef();
+
+  AppHerder() {
+    return (
+      <View>
+        <Appbar.Header style={{backgroundColor: '#202020'}}>
+          <Appbar.Content
+            title={I18n.t('placeholder.appName')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
+        </Appbar.Header>
+      </View>
+    );
+  }
+
   _handleOpenURL(event) {
     if (event.url.includes('payment-result?status=success')) {
       GFun.successMessage(
@@ -280,23 +297,6 @@ class HomeView extends Component {
     this.messageListener();
     this.notificationOpenedListener();
     this.notificationListener();
-  }
-
-  newGroupModal = React.createRef();
-  scanQrCodeModal = React.createRef();
-  joinGroupModal = React.createRef();
-
-  AppHerder() {
-    return (
-      <View>
-        <Appbar.Header style={{backgroundColor: '#2370E6'}}>
-          <Appbar.Content
-            title={I18n.t('placeholder.appName')}
-            titleStyle={{fontFamily: 'Kanit-Light'}}
-          />
-        </Appbar.Header>
-      </View>
-    );
   }
 
   showNewGroupModal = () => {
