@@ -127,13 +127,11 @@ class NotificationView extends Component {
       notification.noti_type.includes('request_join-')
     ) {
       this.props.navigation.navigate('ChatRoom', {
-        isDarkMode: this.state.isDarkMode,
         chatRoom: notification.data,
         isRequestJoin: false,
       });
     } else if (notification.noti_type === 'group') {
       this.props.navigation.navigate('Group', {
-        isDarkMode: this.state.isDarkMode,
         group: notification.data,
       });
     }
