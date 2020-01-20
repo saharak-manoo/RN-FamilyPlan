@@ -42,6 +42,7 @@ export default class ScbPaymentView extends Component {
       this.loadingScbPayment.showLoading(false);
       let scbLink = response.scb_deep_link;
       Linking.openURL(scbLink).catch(e => {
+        this.props.onNoAppSCBEasy();
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.requiresApp', {name: 'SCB Easy'}),

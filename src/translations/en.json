@@ -80,7 +80,10 @@
     "username": "Username",
     "editProfile": "Edit profile",
     "payment": "Payment",
-    "qrcodePayment": "Qrcode payment"
+    "qrcodePayment": "QR Code payment",
+    "merchantName": "Merchant name",
+    "qrcodeExpire": "Qrcode expire",
+    "amount": "Amount"
   },
   "message": {
     "forgotPassword": "Forgot password",
