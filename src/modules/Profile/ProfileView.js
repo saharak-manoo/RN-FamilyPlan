@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {setScreenBadge, setScreenBadgeNow} from '../actions';
+import {
+  setScreenBadge,
+  setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
+} from '../actions';
 import {Dimensions, Image, Platform, ScrollView, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Switch} from 'react-native-paper';
@@ -29,8 +34,8 @@ class ProfileView extends Component {
     this.state = {
       spinner: true,
       user: null,
-      isLanguageTH: false,
-      isDarkMode: false,
+      isLanguageTH: this.props.setting.locale === 'th',
+      isDarkMode: this.props.setting.isDarkMode,
     };
     this.getProfile();
   }
@@ -40,12 +45,10 @@ class ProfileView extends Component {
   componentDidMount = async () => {
     this.setState({spinner: true});
     let locale = await AsyncStorage.getItem('locale');
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
 
     this.setState({
       user: await GFun.user(),
       isLanguageTH: locale === 'th',
-      isDarkMode: JSON.parse(isDarkMode),
     });
   };
 
@@ -54,12 +57,14 @@ class ProfileView extends Component {
     I18n.locale = locale;
     await AsyncStorage.setItem('locale', locale);
     this.setState({isLanguageTH: isLanguageTH});
+    this.props.setLanguage(locale);
     RNRestart.Restart();
   };
 
   onSwitchDarkMode = async isDarkMode => {
     await AsyncStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
     this.setState({isDarkMode: isDarkMode});
+    this.props.setDarkMode(isDarkMode);
     RNRestart.Restart();
   };
 
@@ -82,7 +87,7 @@ class ProfileView extends Component {
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: '#6D06F9'}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.Content
             title={I18n.t('placeholder.profile')}
             titleStyle={{fontFamily: 'Kanit-Light'}}
@@ -420,11 +425,14 @@ class ProfileView extends Component {
 
 const mapStateToProps = state => ({
   screenBadge: state.screenBadge,
+  setting: state.setting,
 });
 
 const mapDispatchToProps = {
   setScreenBadge,
   setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileView);

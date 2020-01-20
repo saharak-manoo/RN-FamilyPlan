@@ -11,7 +11,12 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {setScreenBadge, setScreenBadgeNow} from '../actions';
+import {
+  setScreenBadge,
+  setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
+} from '../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
@@ -39,11 +44,10 @@ const height = Dimensions.get('window').height;
 class HomeView extends Component {
   constructor(props) {
     super(props);
-    let params = this.props.navigation.state.params;
     this.state = {
       localNotiId: null,
       search: '',
-      isDarkMode: params.isDarkMode || false,
+      isDarkMode: props.setting.isDarkMode,
       groupName: '',
       spinner: false,
       modalGroup: false,
@@ -62,7 +66,7 @@ class HomeView extends Component {
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: '#202020'}}>
+        <Appbar.Header style={{ backgroundColor: this.props.setting.appColor}}>
           <Appbar.Content
             title={I18n.t('placeholder.appName')}
             titleStyle={{fontFamily: 'Kanit-Light'}}
@@ -96,10 +100,8 @@ class HomeView extends Component {
 
   componentWillMount = async () => {
     this.triggerTurnOnNotification();
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({
       spinner: true,
-      isDarkMode: JSON.parse(isDarkMode),
     });
 
     let user = await GFun.user();
@@ -854,11 +856,14 @@ class HomeView extends Component {
 
 const mapStateToProps = state => ({
   screenBadge: state.screenBadge,
+  setting: state.setting,
 });
 
 const mapDispatchToProps = {
   setScreenBadge,
   setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeView);

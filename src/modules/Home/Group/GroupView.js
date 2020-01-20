@@ -8,6 +8,8 @@ import {
   StatusBar,
   View,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setDarkMode, setLanguage} from '../../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
@@ -38,13 +40,13 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class GroupView extends Component {
+class GroupView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
     let group = params.group;
     this.state = {
-      isDarkMode: params.isDarkMode,
+      isDarkMode: this.props.setting.isDarkMode,
       group: group,
       userView: [],
       selectedDay: null,
@@ -109,7 +111,7 @@ export default class GroupView extends Component {
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: this.state.group.color}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
             title={this.state.group.name}
@@ -791,3 +793,15 @@ export default class GroupView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+  setting: state.setting,
+});
+
+const mapDispatchToProps = {
+  setDarkMode,
+  setLanguage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GroupView);

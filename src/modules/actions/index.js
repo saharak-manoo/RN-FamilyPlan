@@ -2,6 +2,7 @@ import {
   UNREAD_MESSAGES_COUNT,
   UNREAD_NOTIFICATIONS_COUNT,
   RESET,
+  DARK_MODE,
 } from '../actions/constants';
 import * as Api from './api';
 import {Platform} from 'react-native';
@@ -14,6 +15,28 @@ export const resetRedux = () => ({
 export const resetReduxNow = () => {
   return dispatch => {
     dispatch(resetRedux());
+  };
+};
+
+export const darkMode = payload => ({
+  type: DARK_MODE,
+  payload,
+});
+
+export const setDarkMode = isOpen => {
+  return dispatch => {
+    dispatch(darkMode(isOpen));
+  };
+};
+
+export const language = payload => ({
+  type: LANGUAGE,
+  payload,
+});
+
+export const setLanguage = locale => {
+  return dispatch => {
+    dispatch(setLanguage(locale));
   };
 };
 

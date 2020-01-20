@@ -64,7 +64,8 @@ const MainNavigator = createMaterialBottomTabNavigator(
   {
     Home: {
       screen: HomeStack,
-      navigationOptions: ({navigation, screenProps}) => {
+      navigationOptions: ({navigation, screenProps, theme}) => {
+        let {appColor} = screenProps;
         return {
           tabBarLabel: (
             <Text
@@ -72,13 +73,13 @@ const MainNavigator = createMaterialBottomTabNavigator(
               {I18n.t('placeholder.home')}
             </Text>
           ),
-          tabBarColor: '#202020',
+          tabBarColor: appColor,
           tabBarIcon: active => {
             return (
               <MatIcon
                 size={26}
                 name="home"
-                color={active.focused ? '#2370E6' : '#D6D6D6'}
+                color={active.focused ? '#3FFC89' : '#D6D6D6'}
               />
             );
           },
@@ -87,7 +88,8 @@ const MainNavigator = createMaterialBottomTabNavigator(
     },
     Chat: {
       screen: ChatStack,
-      navigationOptions: ({navigation, screenProps}) => {
+      navigationOptions: ({navigation, screenProps, theme}) => {
+        let {appColor} = screenProps;
         let {unreadMessagesCount} = screenProps;
         let last = navigation.state.routes.length - 1;
         let visible = navigation.state.routes[last].routeName !== 'ChatRoom';
@@ -101,14 +103,14 @@ const MainNavigator = createMaterialBottomTabNavigator(
               {I18n.t('placeholder.chat')}
             </Text>
           ),
-          tabBarColor: '#09A650',
+          tabBarColor: appColor,
           tabBarIcon: active => {
             isActive = active.focused;
             return (
               <MatIcon
                 size={26}
                 name="chat"
-                color={active.focused ? '#FFF' : '#D6D6D6'}
+                color={active.focused ? '#3FFC89' : '#D6D6D6'}
               />
             );
           },
@@ -117,7 +119,8 @@ const MainNavigator = createMaterialBottomTabNavigator(
     },
     Notification: {
       screen: NotificationView,
-      navigationOptions: ({navigation, screenProps}) => {
+      navigationOptions: ({navigation, screenProps, theme}) => {
+        let {appColor} = screenProps;
         let {unreadNotificationsCount} = screenProps;
         return {
           tabBarBadge: unreadNotificationsCount || false,
@@ -127,13 +130,13 @@ const MainNavigator = createMaterialBottomTabNavigator(
               {I18n.t('placeholder.notifications')}
             </Text>
           ),
-          tabBarColor: '#F93636',
+          tabBarColor: appColor,
           tabBarIcon: active => {
             return (
               <MatIcon
                 size={26}
                 name="notifications"
-                color={active.focused ? '#FFF' : '#D6D6D6'}
+                color={active.focused ? '#3FFC89' : '#D6D6D6'}
               />
             );
           },
@@ -142,23 +145,26 @@ const MainNavigator = createMaterialBottomTabNavigator(
     },
     Profile: {
       screen: ProfileStack,
-      navigationOptions: {
-        tabBarLabel: (
-          <Text
-            style={{textAlign: 'center', flex: 1, fontFamily: 'Kanit-Light'}}>
-            {I18n.t('placeholder.profile')}
-          </Text>
-        ),
-        tabBarColor: '#6D06F9',
-        tabBarIcon: active => {
-          return (
-            <MatIcon
-              size={26}
-              name="account-box"
-              color={active.focused ? '#FFF' : '#D6D6D6'}
-            />
-          );
-        },
+      navigationOptions: ({navigation, screenProps, theme}) => {
+        let {appColor} = screenProps;
+        return {
+          tabBarLabel: (
+            <Text
+              style={{textAlign: 'center', flex: 1, fontFamily: 'Kanit-Light'}}>
+              {I18n.t('placeholder.profile')}
+            </Text>
+          ),
+          tabBarColor: appColor,
+          tabBarIcon: active => {
+            return (
+              <MatIcon
+                size={26}
+                name="account-box"
+                color={active.focused ? '#3FFC89' : '#D6D6D6'}
+              />
+            );
+          },
+        };
       },
     },
   },
