@@ -10,6 +10,8 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setDarkMode, setLanguage} from '../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
@@ -28,11 +30,11 @@ const IS_IOS = Platform.OS === 'ios';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class ChatListView extends Component {
+class ChatListView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDarkMode: false,
+      isDarkMode: props.setting.isDarkMode,
       user: [],
       spinner: false,
       search: '',
@@ -47,7 +49,7 @@ export default class ChatListView extends Component {
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: '#09A650'}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.Content
             title={I18n.t('placeholder.chat')}
             titleStyle={{fontFamily: 'Kanit-Light'}}
@@ -58,8 +60,7 @@ export default class ChatListView extends Component {
   }
 
   componentWillMount = async () => {
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
-    this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
+    this.setState({spinner: true});
     let user = await GFun.user();
     let params = {
       limit: this.state.limit,
@@ -415,3 +416,15 @@ export default class ChatListView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+  setting: state.setting,
+});
+
+const mapDispatchToProps = {
+  setDarkMode,
+  setLanguage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatListView);
