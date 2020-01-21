@@ -82,6 +82,8 @@ target 'FamilyPlan' do
 
   pod 'LineSDK', '5.0.0'
 
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-community/google-signin'
+
   target 'FamilyPlanTests' do
     inherit! :search_paths
     # Pods for testing

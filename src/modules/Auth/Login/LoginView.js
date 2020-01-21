@@ -33,6 +33,7 @@ import FBSDK, {
   GraphRequestManager,
 } from 'react-native-fbsdk';
 import LineLogin from 'react-native-line-sdk';
+import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 import {styles} from '../../../components/styles';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -51,6 +52,10 @@ class LoginView extends Component {
   }
 
   async componentDidMount() {
+    GoogleSignin.configure({
+      webClientId:
+        '1096043543785-m3lljr6es1l76jg7gnaeqs4kbvg8dgf7.apps.googleusercontent.com',
+    });
     this.props.setScreenBadgeNow(0, 0);
   }
 
@@ -209,6 +214,24 @@ class LoginView extends Component {
       });
   };
 
+  signInWithGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log('userInfo', userInfo);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
+
   render() {
     return (
       <View
@@ -317,6 +340,38 @@ class LoginView extends Component {
                       fontFamily: 'Kanit-Light',
                     }}>
                     {`${I18n.t('button.signinWith')} LINE`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{justifyContent: 'center', paddingTop: 2}}>
+              <TouchableOpacity
+                style={[
+                  styles.buttonLoginWith,
+                  {
+                    marginTop: GFun.hp(2),
+                    backgroundColor: '#2660A5',
+                    flexDirection: 'row',
+                    borderRadius: 28,
+                    height: 50,
+                  },
+                ]}
+                onPress={this.signInWithGoogle}>
+                <View style={{flex: 0.1, paddingLeft: 10}}>
+                  <FontAwesomeIcon
+                    name="google"
+                    size={26}
+                    color={'#FFF'}></FontAwesomeIcon>
+                </View>
+                <View style={{flex: 1, alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      color: '#FFF',
+                      fontSize: 19,
+                      fontFamily: 'Kanit-Light',
+                    }}>
+                    {`${I18n.t('button.signinWith')} Google`}
                   </Text>
                 </View>
               </TouchableOpacity>

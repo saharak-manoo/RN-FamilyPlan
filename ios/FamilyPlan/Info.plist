@@ -25,18 +25,39 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.CatCoding.FamilyPlan</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>familyPlan</string>
+				<string>line3rdp.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1096043543785-e3nqq2227vk9mgoqh6tbdvas2ng5lq0a</string>
+			</array>
+			<key>item0</key>
+			<string></string>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>844446596009232</string>
+	<key>FacebookDisplayName</key>
+	<string>FamilyPlan</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>lineauth2</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LineSDKConfig</key>
+	<dict>
+		<key>ChannelID</key>
+		<string>1653788362</string>
+	</dict>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -91,49 +112,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <!-- Facebook login ios -->
-  <key>CFBundleURLTypes</key>
-  <array>
-    <dict>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>fb844446596009232</string>
-    </array>
-    </dict>
-  </array>
-  <key>FacebookAppID</key>
-  <string>844446596009232</string>
-  <key>FacebookDisplayName</key>
-  <string>FamilyPlan</string>
-  <key>LSApplicationQueriesSchemes</key>
-  <array>
-    <string>fbapi</string>
-    <string>fb-messenger-share-api</string>
-    <string>fbauth2</string>
-    <string>fbshareextension</string>
-  </array>
-  <!-- Line login ios -->
-  <key>LineSDKConfig</key>
-  <dict>
-      <key>ChannelID</key>
-      <string>1653788362</string>
-  </dict>
-  <key>CFBundleURLTypes</key>
-  <array>
-      <dict>
-          <key>CFBundleTypeRole</key>
-          <string>Editor</string>
-          <key>CFBundleURLSchemes</key>
-          <array>
-              <!-- Specify URL scheme to use when returning from LINE to your app. -->
-              <string>line3rdp.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-          </array>
-      </dict>
-  </array>
-  <key>LSApplicationQueriesSchemes</key>
-  <array>
-      <!-- Specify URL scheme to use when launching LINE from your app. -->
-      <string>lineauth2</string>
-  </array>
 </dict>
 </plist>
