@@ -100,9 +100,8 @@ fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHand
   // Add any custom logic here.
   [RCTLinkingManager application:application openURL:url options:options];
   
-  return [RNGoogleSignin application:application openURL:url options:options];
   return [[LineSDKLogin sharedInstance] handleOpenURL:url];
-  return facebook;
+  return facebook || [RNGoogleSignin application:application openURL:url options:options];
 }
 
 @end

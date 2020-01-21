@@ -22,6 +22,12 @@
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
+    <dict>
+     <key>CFBundleURLSchemes</key>
+     <array>
+       <string>fb844446596009232</string>
+     </array>
+     </dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -41,6 +47,10 @@
 			<string></string>
 		</dict>
 	</array>
+  <key>FacebookAppID</key>
+  <string>844446596009232</string>
+  <key>FacebookDisplayName</key>
+  <string>Family Plan</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
@@ -49,6 +59,10 @@
 	<string>FamilyPlan</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+    <string>fbapi</string>
+    <string>fb-messenger-share-api</string>
+    <string>fbauth2</string>
+    <string>fbshareextension</string>
 		<string>lineauth2</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
