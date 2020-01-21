@@ -189,6 +189,7 @@ android {
 }
 
 dependencies {
+    implementation project(':@react-native-community_google-signin')
     implementation project(':react-native-line-sdk')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-touch-id')

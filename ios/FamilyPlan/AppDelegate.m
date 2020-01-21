@@ -17,6 +17,7 @@
 #import <React/RCTLinkingManager.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <LineSDK/LineSDK.h>
+#import <RNGoogleSignin/RNGoogleSignin.h>
 
 @implementation AppDelegate
 
@@ -93,12 +94,13 @@ fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHand
 
 
   BOOL facebook = [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                                openURL:url
-                                                      sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-                                                             annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
-                  ];
+      openURL:url
+    sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+    annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
   // Add any custom logic here.
   [RCTLinkingManager application:application openURL:url options:options];
+  
+  return [RNGoogleSignin application:application openURL:url options:options];
   return [[LineSDKLogin sharedInstance] handleOpenURL:url];
   return facebook;
 }
