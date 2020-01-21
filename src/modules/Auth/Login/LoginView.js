@@ -128,6 +128,7 @@ class LoginView extends Component {
       last_name: resp.fullName.familyName,
       apple_id_uid: resp.user,
       sign_in_with: 'apple_id',
+      auth_profile_url: null,
     };
 
     if (user.apple_id_uid == '' || user.apple_id_uid == null) {
@@ -138,6 +139,7 @@ class LoginView extends Component {
         email: user.email,
         appleIdUid: user.apple_id_uid,
         signInWith: 'apple_id',
+        authProfileUrl: user.auth_profile_url,
       });
     } else {
       let response = await Api.signInWith(user);
@@ -157,7 +159,8 @@ class LoginView extends Component {
           lastName: user.last_name,
           email: user.email,
           appleIdUid: user.apple_id_uid,
-          signInWith: 'apple_id',
+          signInWith: user.sign_in_with,
+          authProfileUrl: user.auth_profile_url,
         });
       }
     }
@@ -168,7 +171,6 @@ class LoginView extends Component {
       resp => {
         if (!resp.isCancelled) {
           AccessToken.getCurrentAccessToken().then(user => {
-            console.log('user', user);
             this.facebookSignIn(user.accessToken);
             return user;
           });
@@ -185,7 +187,47 @@ class LoginView extends Component {
       if (error) {
         console.log('error', error);
       } else if (resp) {
-        console.log('resp', resp);
+        let user = {
+          email: resp.email,
+          first_name: resp.first_name,
+          last_name: resp.last_name,
+          facebook_id_uid: resp.id,
+          sign_in_with: 'facebook',
+          auth_profile_url: resp.picture.data.url,
+        };
+
+        if (user.facebook_id_uid == '' || user.facebook_id_uid == null) {
+          this.props.navigation.navigate('Register', {
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email,
+            facebookIdUid: user.facebook_id_uid,
+            signInWith: user.sign_in_with,
+            authProfileUrl: user.auth_profile_url,
+          });
+        } else {
+          let response = await Api.signInWith(user);
+          if (response.success) {
+            await AsyncStorage.setItem('user', JSON.stringify(response.user));
+            GFun.successMessage(
+              I18n.t('message.success'),
+              I18n.t('message.signInSuccessful'),
+            );
+            this.props.navigation.navigate('Home', {
+              isDarkMode: this.state.isDarkMode,
+            });
+          } else {
+            this.props.navigation.navigate('Register', {
+              isDarkMode: this.state.isDarkMode,
+              firstName: user.first_name,
+              lastName: user.last_name,
+              email: user.email,
+              facebookIdUid: user.facebook_id_uid,
+              signInWith: user.sign_in_with,
+              authProfileUrl: user.auth_profile_url,
+            });
+          }
+        }
       }
     };
 
@@ -206,29 +248,103 @@ class LoginView extends Component {
 
   signInWithLine = async () => {
     LineLogin.loginWithPermissions(['profile', 'openid', 'email'])
-      .then(user => {
-        console.log('Line user', user);
+      .then(async resp => {
+        let profile = resp.profile;
+        let user = {
+          email: resp.email || null,
+          first_name: profile.displayName,
+          last_name: null,
+          line_id_uid: profile.userID,
+          sign_in_with: 'line',
+          auth_profile_url: profile.pictureURL,
+        };
+
+        if (user.line_id_uid == '' || user.line_id_uid == null) {
+          this.props.navigation.navigate('Register', {
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email,
+            lineIdUid: user.line_id_uid,
+            signInWith: user.sign_in_with,
+            authProfileUrl: user.auth_profile_url,
+          });
+        } else {
+          let response = await Api.signInWith(user);
+          if (response.success) {
+            await AsyncStorage.setItem('user', JSON.stringify(response.user));
+            GFun.successMessage(
+              I18n.t('message.success'),
+              I18n.t('message.signInSuccessful'),
+            );
+            this.props.navigation.navigate('Home', {
+              isDarkMode: this.state.isDarkMode,
+            });
+          } else {
+            this.props.navigation.navigate('Register', {
+              isDarkMode: this.state.isDarkMode,
+              firstName: user.first_name,
+              lastName: user.last_name,
+              email: user.email,
+              lineIdUid: user.line_id_uid,
+              signInWith: user.sign_in_with,
+              authProfileUrl: user.auth_profile_url,
+            });
+          }
+        }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.log(error);
       });
   };
 
   signInWithGoogle = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log('userInfo', userInfo);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
+      const resp = await GoogleSignin.signIn();
+      console.log('userInfo resp', resp);
+      let user = {
+        email: resp.user.email,
+        first_name: resp.user.givenName,
+        last_name: resp.user.familyName,
+        google_id_uid: resp.user.id,
+        sign_in_with: 'google',
+        auth_profile_url: resp.user.photo,
+      };
+
+      if (user.google_id_uid == '' || user.google_id_uid == null) {
+        this.props.navigation.navigate('Register', {
+          firstName: user.first_name,
+          lastName: user.last_name,
+          email: user.email,
+          googleIdUid: user.google_id_uid,
+          signInWith: user.sign_in_with,
+          authProfileUrl: user.auth_profile_url,
+        });
       } else {
-        // some other error happened
+        let response = await Api.signInWith(user);
+        if (response.success) {
+          await AsyncStorage.setItem('user', JSON.stringify(response.user));
+          GFun.successMessage(
+            I18n.t('message.success'),
+            I18n.t('message.signInSuccessful'),
+          );
+          this.props.navigation.navigate('Home', {
+            isDarkMode: this.state.isDarkMode,
+          });
+        } else {
+          this.props.navigation.navigate('Register', {
+            isDarkMode: this.state.isDarkMode,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email,
+            googleIdUid: user.google_id_uid,
+            signInWith: user.sign_in_with,
+            authProfileUrl: user.auth_profile_url,
+          });
+        }
       }
+    } catch (error) {
+      console.log('error', error);
     }
   };
 

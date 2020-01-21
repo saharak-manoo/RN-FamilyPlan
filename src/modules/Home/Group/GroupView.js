@@ -28,6 +28,7 @@ import ReactNativePickerModule from 'react-native-picker-module';
 import firebase from 'react-native-firebase';
 import UserAvatar from 'react-native-user-avatar';
 import * as Authenticate from '../../../helpers/authenticate';
+import {scbEasyApi} from '../../../../app';
 
 // View
 import InviteMemberView from '../../modal/inviteMemberView';
@@ -218,7 +219,7 @@ class GroupView extends Component {
       this.state.userView.group_leader
     ) {
       this.settingServiceChargeModal.current.open();
-    } else if (this.scbPaymentModal.current) {
+    } else if (this.scbPaymentModal.current && scbEasyApi) {
       let {isPassed, error} = await Authenticate.open(
         I18n.t('message.requestToOpenUsernamePasswordGroup', {
           name: this.state.group.name,
@@ -317,7 +318,7 @@ class GroupView extends Component {
   }
 
   showModalSCBPayment = async () => {
-    if (this.scbPaymentModal.current) {
+    if (this.scbPaymentModal.current && scbEasyApi) {
       let {isPassed, error} = await Authenticate.open(
         I18n.t('message.requestToOpenUsernamePasswordGroup', {
           name: this.state.group.name,
@@ -367,7 +368,7 @@ class GroupView extends Component {
   noAppSCBEasy() {}
 
   showModalSCBQRCodePayment = async () => {
-    if (this.scbQRCodePaymentModal.current) {
+    if (this.scbQRCodePaymentModal.current && scbEasyApi) {
       let {isPassed, error} = await Authenticate.open(
         I18n.t('message.requestToOpenUsernamePasswordGroup', {
           name: this.state.group.name,
@@ -513,7 +514,11 @@ class GroupView extends Component {
                 tension={100}
                 activeScale={0.95}
                 leftAvatar={() => (
-                  <UserAvatar size="40" name={item.full_name} />
+                  <UserAvatar
+                    size="40"
+                    name={item.full_name}
+                    src={item.photo}
+                  />
                 )}
                 title={item.full_name}
                 titleStyle={{
@@ -548,7 +553,9 @@ class GroupView extends Component {
               friction={90}
               tension={100}
               activeScale={0.95}
-              leftAvatar={() => <UserAvatar size="40" name={item.full_name} />}
+              leftAvatar={() => (
+                <UserAvatar size="40" name={item.full_name} src={item.photo} />
+              )}
               title={item.full_name}
               titleStyle={{
                 fontFamily: 'Kanit-Light',
@@ -705,13 +712,15 @@ class GroupView extends Component {
 
         {this.state.userView.group_leader ? (
           <ActionButton buttonColor="rgba(231,76,60,1)">
-            <ActionButton.Item
-              buttonColor="#000"
-              title={I18n.t('placeholder.qrcodePayment')}
-              textStyle={{fontFamily: 'Kanit-Light'}}
-              onPress={this.showModalSCBQRCodePayment}>
-              <FAIcon name="qrcode" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
+            {scbEasyApi && (
+              <ActionButton.Item
+                buttonColor="#000"
+                title={I18n.t('placeholder.qrcodePayment')}
+                textStyle={{fontFamily: 'Kanit-Light'}}
+                onPress={this.showModalSCBQRCodePayment}>
+                <FAIcon name="qrcode" style={styles.actionButtonIcon} />
+              </ActionButton.Item>
+            )}
             <ActionButton.Item
               buttonColor="#6D06F9"
               title={I18n.t('placeholder.chat')}
@@ -743,13 +752,15 @@ class GroupView extends Component {
           </ActionButton>
         ) : (
           <ActionButton buttonColor="#FE8536">
-            <ActionButton.Item
-              buttonColor="#000"
-              title={I18n.t('placeholder.qrcodePayment')}
-              textStyle={{fontFamily: 'Kanit-Light'}}
-              onPress={this.showModalSCBQRCodePayment}>
-              <FAIcon name="qrcode" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
+            {scbEasyApi && (
+              <ActionButton.Item
+                buttonColor="#000"
+                title={I18n.t('placeholder.qrcodePayment')}
+                textStyle={{fontFamily: 'Kanit-Light'}}
+                onPress={this.showModalSCBQRCodePayment}>
+                <FAIcon name="qrcode" style={styles.actionButtonIcon} />
+              </ActionButton.Item>
+            )}
             <ActionButton.Item
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.chat')}
@@ -764,13 +775,15 @@ class GroupView extends Component {
               onPress={this.showModalUsernamePassword}>
               <MatIcon name="https" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item
-              buttonColor="#6161FF"
-              title={I18n.t('placeholder.payment')}
-              textStyle={{fontFamily: 'Kanit-Light'}}
-              onPress={this.showModalSCBPayment}>
-              <MatIcon name="attach-money" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
+            {scbEasyApi && (
+              <ActionButton.Item
+                buttonColor="#6161FF"
+                title={I18n.t('placeholder.payment')}
+                textStyle={{fontFamily: 'Kanit-Light'}}
+                onPress={this.showModalSCBPayment}>
+                <MatIcon name="attach-money" style={styles.actionButtonIcon} />
+              </ActionButton.Item>
+            )}
             <ActionButton.Item
               buttonColor="rgba(231,76,60,1)"
               title={I18n.t('placeholder.leaveGroup')}

@@ -237,6 +237,7 @@ class ProfileView extends Component {
                   <UserAvatar
                     size={GFun.wp(25)}
                     name={this.state.user.full_name}
+                    src={this.state.user.photo}
                   />
                 </View>
                 <Text
@@ -251,7 +252,7 @@ class ProfileView extends Component {
                 <Text
                   style={{
                     fontFamily: 'Kanit-Light',
-                    fontSize: GFun.hp(3),
+                    fontSize: GFun.hp(2.5),
                     alignSelf: 'center',
                     paddingTop: GFun.hp(2),
                   }}>
@@ -260,7 +261,7 @@ class ProfileView extends Component {
                 <Text
                   style={{
                     fontFamily: 'Kanit-Light',
-                    fontSize: GFun.hp(3),
+                    fontSize: GFun.hp(2.5),
                     alignSelf: 'center',
                     paddingTop: GFun.hp(2),
                   }}>

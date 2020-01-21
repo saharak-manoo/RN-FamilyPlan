@@ -1,4 +1,5 @@
 {
   "name": "FamilyPlan",
-  "displayName": "FamilyPlan"
+  "displayName": "FamilyPlan",
+  "scbEasyApi": false
 }

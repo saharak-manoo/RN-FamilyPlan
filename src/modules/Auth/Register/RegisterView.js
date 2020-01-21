@@ -50,6 +50,8 @@ class RegisterView extends Component {
       appleIdUid: params ? params.appleIdUid : null,
       facebookIdUid: params ? params.facebookIdUid : null,
       lineIdUid: params ? params.lineIdUid : null,
+      googleIdUid: params ? params.googleIdUid : null,
+      authProfileUrl: params ? params.authProfileUrl : null,
       phoneNumber: '',
       password: '',
       confirmPassword: '',
@@ -125,6 +127,8 @@ class RegisterView extends Component {
       apple_id_uid: this.state.appleIdUid,
       facebook_id_uid: this.state.facebookIdUid,
       line_id_uid: this.state.lineIdUid,
+      google_id_uid: this.state.googleIdUid,
+      auth_profile_url: this.state.authProfileUrl,
     };
 
     let response = await Api.signUp(params);
