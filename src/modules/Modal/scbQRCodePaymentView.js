@@ -108,24 +108,24 @@ export default class ScbQRCodePaymentView extends Component {
           )}
 
           <View style={{paddingTop: GFun.hp(2)}}>
-            <Text style={{fontSize: 24, fontFamily: 'Kanit-Light'}}>
+            <Text style={{fontSize: 20, fontFamily: 'Kanit-Light'}}>
               {`${I18n.t('placeholder.merchantName')} : ${
                 this.state.isLoading
                   ? `${I18n.t('placeholder.loading')}...`
                   : this.state.merchantName
               }`}
             </Text>
-            <Text style={{fontSize: 24, fontFamily: 'Kanit-Light'}}>
+            <Text style={{fontSize: 20, fontFamily: 'Kanit-Light'}}>
               {`${I18n.t('placeholder.name')} : ${this.props.group.name}`}
             </Text>
-            <Text style={{fontSize: 24, fontFamily: 'Kanit-Light'}}>
+            <Text style={{fontSize: 20, fontFamily: 'Kanit-Light'}}>
               {`${I18n.t('placeholder.amount')} : ${
                 this.state.isLoading
                   ? `${I18n.t('placeholder.loading')}...`
                   : this.state.amount
               }`}
             </Text>
-            <Text style={{fontSize: 24, fontFamily: 'Kanit-Light'}}>
+            <Text style={{fontSize: 20, fontFamily: 'Kanit-Light'}}>
               {`${I18n.t('placeholder.qrcodeExpire')} : ${
                 this.state.isLoading
                   ? `${I18n.t('placeholder.loading')}...`
