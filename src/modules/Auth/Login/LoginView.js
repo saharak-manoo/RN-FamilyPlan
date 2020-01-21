@@ -25,6 +25,14 @@ import appleAuth, {
   AppleAuthCredentialState,
   AppleAuthError,
 } from '@invertase/react-native-apple-authentication';
+import FBSDK, {
+  LoginManager,
+  LoginButton,
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+} from 'react-native-fbsdk';
+
 import {styles} from '../../../components/styles';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -150,6 +158,47 @@ class LoginView extends Component {
     }
   };
 
+  signInWithFacebook = async () => {
+    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+      resp => {
+        if (!resp.isCancelled) {
+          AccessToken.getCurrentAccessToken().then(user => {
+            console.log('user', user);
+            this.facebookSignIn(user.accessToken);
+            return user;
+          });
+        }
+      },
+      error => {
+        console.log('Facebook  error : ', error);
+      },
+    );
+  };
+
+  facebookSignIn = async accessToken => {
+    const responseInfoCallback = async (error, resp) => {
+      if (error) {
+        console.log('error', error);
+      } else if (resp) {
+        console.log('resp', resp);
+      }
+    };
+
+    const infoRequest = new GraphRequest(
+      '/me',
+      {
+        accessToken: accessToken,
+        parameters: {
+          fields: {
+            string: 'email, first_name, last_name, age_range, gender, picture',
+          },
+        },
+      },
+      responseInfoCallback,
+    );
+    new GraphRequestManager().addRequest(infoRequest).start();
+  };
+
   render() {
     return (
       <View
@@ -211,7 +260,7 @@ class LoginView extends Component {
                     height: 50,
                   },
                 ]}
-                onPress={() => this.signInWithAppleId()}>
+                onPress={this.signInWithFacebook}>
                 <View style={{flex: 0.1, paddingLeft: 10}}>
                   <FontAwesomeIcon
                     name="facebook-square"
