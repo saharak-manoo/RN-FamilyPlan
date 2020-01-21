@@ -191,6 +191,7 @@ android {
 dependencies {
     implementation project(':@react-native-community_google-signin')
     implementation project(':react-native-line-sdk')
+    implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-touch-id')
     implementation project(':react-native-dark-mode')
