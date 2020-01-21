@@ -1,5 +1,6 @@
 {
   "name": "FamilyPlan",
   "displayName": "FamilyPlan",
-  "scbEasyApi": false
+  "scbEasyApi": false,
+  "notPasswordInGroup": false
 }

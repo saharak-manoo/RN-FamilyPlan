@@ -6,6 +6,7 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import * as Api from '../actions/api';
 import * as GFun from '../../helpers/globalFunction';
 import {Icon} from 'react-native-elements';
+import {notPasswordInGroup} from '../../../app';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -129,7 +130,7 @@ export default class UsernamePasswordGroupView extends Component {
           <View style={{flex: 0.8}}>
             <TextInput
               disabled={!this.state.isGroupLeader}
-              secureTextEntry
+              secureTextEntry={notPasswordInGroup}
               keyboardAppearance={this.state.isDarkMode ? 'dark' : 'light'}
               style={{
                 paddingBottom: 6,
