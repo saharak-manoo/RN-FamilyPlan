@@ -16,7 +16,9 @@
     "joinGroup": "Join Group",
     "invite": "Invite",
     "search": "Search",
-    "close": "Close"
+    "close": "Close",
+    "pay": "Pay",
+    "payWithSCBEasy": "Pay with SCB Easy"
   },
   "text": {
     "mr": "Mr",
@@ -28,7 +30,9 @@
     "disneyPlus": "Disney plus",
     "netflix": "Netflix",
     "spotify": "Spotify",
-    "notiGroupPayment": "%{day} of every month"
+    "notiGroupPayment": "%{day} of every month",
+    "authenticationRequired": "Authentication Required",
+    "showPasscode": "Show Passcode"
   },
   "placeholder": {
     "prefix": "Prefix",
@@ -74,7 +78,12 @@
     "darkMode": "Dark Mode",
     "usernameAndPassword": "Username password",
     "username": "Username",
-    "editProfile": "Edit profile"
+    "editProfile": "Edit profile",
+    "payment": "Payment",
+    "qrcodePayment": "QR Code payment",
+    "merchantName": "Merchant name",
+    "qrcodeExpire": "Qrcode expire",
+    "amount": "Amount"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -124,7 +133,16 @@
     "requestGroupSuccessful": "Request group successful",
     "removeChatSuccessful": "Remove chat successful",
     "removeNotiSuccessful": "Remove notification successful",
-    "copyUserNameSuccessful": "Copy username successful",
-    "copyPasswordSuccessful": "Copy password successful"
+    "copyUsernameSuccessful": "Copy username successful",
+    "copyPasswordSuccessful": "Copy password successful",
+    "authenticateFailed": "Authenticate failed",
+    "requestToOpenUsernamePasswordGroup": "Request to open username password group %{name}",
+    "settingUsernamePasswordSuccessful": "Updated username password successful",
+    "paymentToGroup": "Payment to group %{name}",
+    "totalPayment": "Price %{price} Bath",
+    "paymentFailed": "Payment failed",
+    "paymentSuccess": "Payment successful",
+    "requiresApp": "Requires application %{name}",
+    "editProfileSuccessful": "Edit profile successful"
   }
 }
