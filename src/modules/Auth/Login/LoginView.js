@@ -32,7 +32,7 @@ import FBSDK, {
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
-
+import LineLogin from 'react-native-line-sdk';
 import {styles} from '../../../components/styles';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -199,6 +199,16 @@ class LoginView extends Component {
     new GraphRequestManager().addRequest(infoRequest).start();
   };
 
+  signInWithLine = async () => {
+    LineLogin.loginWithPermissions(['profile', 'openid', 'email'])
+      .then(user => {
+        console.log('Line user', user);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   render() {
     return (
       <View
@@ -227,7 +237,7 @@ class LoginView extends Component {
                       height: 50,
                     },
                   ]}
-                  onPress={() => this.signInWithAppleId()}>
+                  onPress={this.signInWithAppleId}>
                   <View style={{flex: 0.1, paddingLeft: 10}}>
                     <FontAwesomeIcon
                       name="apple"
@@ -292,7 +302,7 @@ class LoginView extends Component {
                     height: 50,
                   },
                 ]}
-                onPress={() => this.signInWithAppleId()}>
+                onPress={this.signInWithLine}>
                 <View style={{flex: 0.1, paddingLeft: 10}}>
                   <Image
                     source={require('../../../img/line.png')}
