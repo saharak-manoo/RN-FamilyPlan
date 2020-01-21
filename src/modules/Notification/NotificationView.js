@@ -10,6 +10,8 @@ import {
   ScrollView,
   View,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setDarkMode, setLanguage} from '../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
@@ -29,11 +31,11 @@ const IS_IOS = Platform.OS === 'ios';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class NotificationView extends Component {
+class NotificationView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDarkMode: false,
+      isDarkMode: this.props.setting.isDarkMode,
       spinner: false,
       refreshing: false,
       isLoading: false,
@@ -46,7 +48,7 @@ export default class NotificationView extends Component {
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: '#F93636'}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.Content
             title={I18n.t('placeholder.notifications')}
             titleStyle={{fontFamily: 'Kanit-Light'}}
@@ -58,8 +60,7 @@ export default class NotificationView extends Component {
 
   componentWillMount = async () => {
     this.triggerTurnOnNotification();
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
-    this.setState({spinner: true, isDarkMode: JSON.parse(isDarkMode)});
+    this.setState({spinner: true});
     let user = await GFun.user();
     let params = {
       limit: this.state.limit,
@@ -126,13 +127,11 @@ export default class NotificationView extends Component {
       notification.noti_type.includes('request_join-')
     ) {
       this.props.navigation.navigate('ChatRoom', {
-        isDarkMode: this.state.isDarkMode,
         chatRoom: notification.data,
         isRequestJoin: false,
       });
     } else if (notification.noti_type === 'group') {
       this.props.navigation.navigate('Group', {
-        isDarkMode: this.state.isDarkMode,
         group: notification.data,
       });
     }
@@ -384,3 +383,15 @@ export default class NotificationView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+  setting: state.setting,
+});
+
+const mapDispatchToProps = {
+  setDarkMode,
+  setLanguage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationView);

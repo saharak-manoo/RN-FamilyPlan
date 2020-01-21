@@ -9,6 +9,8 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setScreenBadgeNow, setDarkMode, setLanguage} from '../../actions';
 import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
@@ -21,12 +23,12 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class RegisterView extends Component {
+class RegisterView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
     this.state = {
-      isDarkMode: params.isDarkMode,
+      isDarkMode: props.setting.isDarkMode,
       prefixs: [
         {
           value: I18n.t('text.mr'),
@@ -63,7 +65,7 @@ export default class RegisterView extends Component {
   appHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: '#1C83F7'}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
             title={I18n.t('placeholder.appName')}
@@ -371,3 +373,16 @@ export default class RegisterView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+  setting: state.setting,
+});
+
+const mapDispatchToProps = {
+  setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterView);

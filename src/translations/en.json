@@ -79,7 +79,11 @@
     "usernameAndPassword": "Username password",
     "username": "Username",
     "editProfile": "Edit profile",
-    "payment": "Payment"
+    "payment": "Payment",
+    "qrcodePayment": "QR Code payment",
+    "merchantName": "Merchant name",
+    "qrcodeExpire": "Qrcode expire",
+    "amount": "Amount"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -137,6 +141,8 @@
     "paymentToGroup": "Payment to group %{name}",
     "totalPayment": "Price %{price} Bath",
     "paymentFailed": "Payment failed",
-    "paymentSuccess": "Payment successful"
+    "paymentSuccess": "Payment successful",
+    "requiresApp": "Requires application %{name}",
+    "editProfileSuccessful": "Edit profile successful"
   }
 }

@@ -11,7 +11,12 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {setScreenBadge, setScreenBadgeNow} from '../actions';
+import {
+  setScreenBadge,
+  setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
+} from '../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
@@ -39,11 +44,10 @@ const height = Dimensions.get('window').height;
 class HomeView extends Component {
   constructor(props) {
     super(props);
-    let params = this.props.navigation.state.params;
     this.state = {
       localNotiId: null,
       search: '',
-      isDarkMode: params.isDarkMode || false,
+      isDarkMode: props.setting.isDarkMode,
       groupName: '',
       spinner: false,
       modalGroup: false,
@@ -55,13 +59,42 @@ class HomeView extends Component {
     };
   }
 
-  _handleOpenURL(event) {
-    if (event.url.includes('payment-result?status=success')) {
-      GFun.successMessage(
-        I18n.t('message.success'),
-        I18n.t('message.paymentSuccess'),
-      );
-    } else if (event.url.includes('payment-result?status=failed')) {
+  newGroupModal = React.createRef();
+  scanQrCodeModal = React.createRef();
+  joinGroupModal = React.createRef();
+
+  AppHerder() {
+    return (
+      <View>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
+          <Appbar.Content
+            title={I18n.t('placeholder.appName')}
+            titleStyle={{fontFamily: 'Kanit-Light'}}
+          />
+        </Appbar.Header>
+      </View>
+    );
+  }
+
+  async _handleOpenURL(event) {
+    let url = event.url;
+
+    if (url.includes('payment-result?status=success')) {
+      let user_id = url
+        .match(/(user_id=\S+)&group_id/gi)[0]
+        .replace(/(user_id=\S+)&group_id/gi, '$1')
+        .replace('user_id=', '');
+      let group_id = url
+        .match(/(group_id=\S+)&amount/gi)[0]
+        .replace(/(group_id=\S+)&amount/gi, '$1')
+        .replace('group_id=', '');
+      let amount = url
+        .match(/(amount=\S+)&payment-result/gi)[0]
+        .replace(/(amount=\S+)&payment-result/gi, '$1')
+        .replace('amount=', '');
+
+      await Api.createNotificationSCBPayment(user_id, group_id, amount);
+    } else if (url.includes('payment-result?status=failed')) {
       GFun.errorMessage(
         I18n.t('message.error'),
         I18n.t('message.paymentFailed'),
@@ -79,10 +112,8 @@ class HomeView extends Component {
 
   componentWillMount = async () => {
     this.triggerTurnOnNotification();
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
     this.setState({
       spinner: true,
-      isDarkMode: JSON.parse(isDarkMode),
     });
 
     let user = await GFun.user();
@@ -110,10 +141,7 @@ class HomeView extends Component {
       unread_messages_count,
       unread_notifications_count,
     );
-    if (
-      data.noti_type === 'group' ||
-      data.noti_type.includes('request_join-')
-    ) {
+    if (data.noti_type === 'group') {
       let group_noti_id = JSON.parse(data.group_noti_id);
       if (group_noti_id !== this.state.localNotiId) {
         let resp = await Api.getNotificationById(
@@ -124,6 +152,7 @@ class HomeView extends Component {
         if (resp.success) {
           await this.setState({localNotiId: group_noti_id});
           let noti = resp.notification[0];
+          this.updateGroup(noti.group);
           showMessage({
             message: noti.name,
             description: noti.message,
@@ -137,7 +166,10 @@ class HomeView extends Component {
           });
         }
       }
-    } else if (data.noti_type === 'chat') {
+    } else if (
+      data.noti_type === 'chat' ||
+      data.noti_type.includes('request_join-')
+    ) {
       let chatRoom = JSON.parse(data.chat_room);
       let resp = await Api.getChatRoomById(
         user.authentication_jwt,
@@ -155,7 +187,6 @@ class HomeView extends Component {
             duration: 5000,
             onPress: () => {
               this.props.navigation.navigate('ChatRoom', {
-                isDarkMode: this.state.isDarkMode,
                 chatRoom: resp.chat_room,
                 isRequestJoin: false,
               });
@@ -166,19 +197,32 @@ class HomeView extends Component {
     }
   }
 
+  updateGroup = async group => {
+    let myGroupIndex = this.state.myGroups.findIndex(g => g.id === group.id);
+
+    if (myGroupIndex !== -1) {
+      this.state.myGroups[myGroupIndex] = group;
+      this.setState({myGroups: this.state.myGroups});
+    }
+
+    let tempMyGroupIndex = this.state.tempMyGroups.findIndex(
+      g => g.id === group.id,
+    );
+
+    if (tempMyGroupIndex !== -1) {
+      this.state.tempMyGroups[tempMyGroupIndex] = group;
+      this.setState({tempMyGroups: this.state.myGroups});
+    }
+  };
+
   goTo = notification => {
-    if (
-      notification.noti_type === 'chat' ||
-      notification.noti_type.includes('request_join-')
-    ) {
+    if (notification.noti_type === 'chat') {
       this.props.navigation.navigate('ChatRoom', {
-        isDarkMode: this.state.isDarkMode,
         chatRoom: notification.data,
         isRequestJoin: false,
       });
     } else if (notification.noti_type === 'group') {
       this.props.navigation.navigate('Group', {
-        isDarkMode: this.state.isDarkMode,
         group: notification.data,
       });
     }
@@ -212,7 +256,6 @@ class HomeView extends Component {
 
       const fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        console.log('fcm token:', fcmToken); //-->use this token from the console to send a post request via postman
         let user = await GFun.user();
         let resp = await Api.createFcmToken(
           user.authentication_jwt,
@@ -229,6 +272,8 @@ class HomeView extends Component {
   }
 
   async triggerTurnOnNotification() {
+    let user = await GFun.user();
+
     this.notificationListener = firebase
       .notifications()
       .onNotification(async notification => {
@@ -238,13 +283,10 @@ class HomeView extends Component {
     this.notificationOpenedListener = firebase
       .notifications()
       .onNotificationOpened(async opened => {
-        let user = await GFun.user();
-
         let data = opened.notification._data;
         if (data.noti_type === 'group') {
           let group = JSON.parse(data.group);
           let resp = await Api.getGroupById(user.authentication_jwt, group.id);
-          console.log('resp', resp);
           if (resp.success) {
             this.props.navigation.navigate('Group', {
               isDarkMode: this.state.isDarkMode,
@@ -273,6 +315,37 @@ class HomeView extends Component {
     const notificationOpen = await firebase
       .notifications()
       .getInitialNotification();
+    if (notificationOpen) {
+      let notification = notificationOpen.notification;
+      let data = notification.notification._data;
+
+      if (data.noti_type === 'group') {
+        let group = JSON.parse(data.group);
+        let resp = await Api.getGroupById(user.authentication_jwt, group.id);
+        if (resp.success) {
+          this.props.navigation.navigate('Group', {
+            isDarkMode: this.state.isDarkMode,
+            group: resp.group,
+          });
+        }
+      } else if (
+        data.noti_type === 'chat' ||
+        data.noti_type.includes('request_join-')
+      ) {
+        let chatRoom = JSON.parse(data.chat_room);
+        let resp = await Api.getChatRoomById(
+          user.authentication_jwt,
+          chatRoom.id,
+        );
+        if (resp.success) {
+          this.props.navigation.navigate('ChatRoom', {
+            isDarkMode: this.state.isDarkMode,
+            chatRoom: resp.chat_room,
+            isRequestJoin: false,
+          });
+        }
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -280,23 +353,6 @@ class HomeView extends Component {
     this.messageListener();
     this.notificationOpenedListener();
     this.notificationListener();
-  }
-
-  newGroupModal = React.createRef();
-  scanQrCodeModal = React.createRef();
-  joinGroupModal = React.createRef();
-
-  AppHerder() {
-    return (
-      <View>
-        <Appbar.Header style={{backgroundColor: '#2370E6'}}>
-          <Appbar.Content
-            title={I18n.t('placeholder.appName')}
-            titleStyle={{fontFamily: 'Kanit-Light'}}
-          />
-        </Appbar.Header>
-      </View>
-    );
   }
 
   showNewGroupModal = () => {
@@ -565,14 +621,12 @@ class HomeView extends Component {
 
   goToRequestJoinGroup = chatRoom => {
     this.props.navigation.navigate('ChatRoom', {
-      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
     });
   };
 
   goToGroup = group => {
     this.props.navigation.navigate('Group', {
-      isDarkMode: this.state.isDarkMode,
       group: group,
       onLeaveGroup: () => this.refreshGroup(),
     });
@@ -581,7 +635,6 @@ class HomeView extends Component {
   setAndGoToModalGroup = async myGroups => {
     await this.setState({myGroups: myGroups});
     this.props.navigation.navigate('Group', {
-      isDarkMode: this.state.isDarkMode,
       group: myGroups[0],
       onLeaveGroup: () => this.refreshGroup(),
     });
@@ -854,11 +907,14 @@ class HomeView extends Component {
 
 const mapStateToProps = state => ({
   screenBadge: state.screenBadge,
+  setting: state.setting,
 });
 
 const mapDispatchToProps = {
   setScreenBadge,
   setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeView);

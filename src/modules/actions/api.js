@@ -36,6 +36,10 @@ const SHOW_NOTIFICATION = '/api/v1/notifications/:id';
 const UNREAD_COUNT = '/api/v1/notifications/unread_count';
 const UPSERT_GROUP_ACCOUNT = '/api/v1/groups/:id/account';
 const GROUP_PAYMENT = '/api/v1/groups/:group_id/payments';
+const GROUP_CREATE_QRCODE_PAYMENT =
+  '/api/v1/groups/:group_id/payments/create_qrcode';
+const GROUP_CREATE_NOTIFICATION_PAYMENT =
+  '/api/v1/notifications/transactions_payment';
 
 function joinUrl(host, path) {
   if (host.endsWith('/')) {
@@ -705,6 +709,55 @@ export async function createSCBPayment(token, group_id, amount) {
       let response = await resp.json();
       return response;
     }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function createSCBQRCodePayment(token, group_id, amount) {
+  try {
+    const resp = await fetch(
+      joinUrl(HOST, GROUP_CREATE_QRCODE_PAYMENT.replace(':group_id', group_id)),
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({amount: amount}),
+      },
+    );
+
+    let {status, newTokenJwt} = await this.checkTokenExpire(resp, token);
+    if (status === 'reload') {
+      return await this.createSCBQRCodePayment(newTokenJwt, group_id, amount);
+    } else if (status === 'ok') {
+      let response = await resp.json();
+      return response;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export async function createNotificationSCBPayment(user_id, group_id, amount) {
+  try {
+    const resp = await fetch(joinUrl(HOST, GROUP_CREATE_NOTIFICATION_PAYMENT), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: user_id,
+        group_id: group_id,
+        amount: amount,
+      }),
+    });
+
+    let response = await resp.json();
+    return response;
   } catch (e) {
     console.warn(e);
   }

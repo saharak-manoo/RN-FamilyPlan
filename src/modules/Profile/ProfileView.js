@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {setScreenBadge, setScreenBadgeNow} from '../actions';
+import {
+  setScreenBadge,
+  setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
+} from '../actions';
 import {Dimensions, Image, Platform, ScrollView, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Switch} from 'react-native-paper';
@@ -14,6 +19,10 @@ import RNRestart from 'react-native-restart';
 import UserAvatar from 'react-native-user-avatar';
 import ContentLoader from 'react-native-content-loader';
 import {Circle, Rect} from 'react-native-svg';
+import Modalize from 'react-native-modalize';
+
+// View
+import EditProfileView from '../modal/editProfileView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -25,21 +34,21 @@ class ProfileView extends Component {
     this.state = {
       spinner: true,
       user: null,
-      isLanguageTH: false,
-      isDarkMode: false,
+      isLanguageTH: this.props.setting.locale === 'th',
+      isDarkMode: this.props.setting.isDarkMode,
     };
     this.getProfile();
   }
 
+  editProfileChargeModal = React.createRef();
+
   componentDidMount = async () => {
     this.setState({spinner: true});
     let locale = await AsyncStorage.getItem('locale');
-    let isDarkMode = await AsyncStorage.getItem('isDarkMode');
 
     this.setState({
       user: await GFun.user(),
       isLanguageTH: locale === 'th',
-      isDarkMode: JSON.parse(isDarkMode),
     });
   };
 
@@ -76,7 +85,7 @@ class ProfileView extends Component {
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: '#6D06F9'}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.Content
             title={I18n.t('placeholder.profile')}
             titleStyle={{fontFamily: 'Kanit-Light'}}
@@ -88,11 +97,7 @@ class ProfileView extends Component {
 
   clickEditProfile() {
     this.loadingEditProfile.showLoading(true);
-    this.props.navigation.navigate('EditProfile', {
-      isDarkMode: this.state.isDarkMode,
-      user: this.state.user,
-      onUpdated: () => this.refreshUser(),
-    });
+    this.showEditProfileModal();
     this.loadingEditProfile.showLoading(false);
   }
 
@@ -119,14 +124,53 @@ class ProfileView extends Component {
         I18n.t('message.signOutSuccessful'),
       );
 
-      this.props.navigation.navigate('Login', {
-        isDarkMode: this.state.isDarkMode,
-      });
+      this.props.navigation.navigate('Login');
     } else {
       this.loadingSignOut.showLoading(false);
       GFun.errorMessage(I18n.t('message.error'), I18n.t('message.signOutFail'));
     }
   }
+
+  showEditProfileModal = async () => {
+    if (this.editProfileChargeModal.current) {
+      this.editProfileChargeModal.current.open();
+    }
+  };
+
+  popUpModalEditProfile() {
+    return (
+      <Modalize
+        ref={this.editProfileChargeModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <EditProfileView
+          modal={this.editProfileChargeModal}
+          isDarkMode={this.state.isDarkMode}
+          user={this.state.user}
+          onUpdatedUser={this.updateData}
+        />
+      </Modalize>
+    );
+  }
+
+  updateData = async user => {
+    await this.setState({
+      user: user,
+    });
+  };
 
   render() {
     return (
@@ -224,6 +268,8 @@ class ProfileView extends Component {
                 </Text>
               </View>
             )}
+
+            {this.popUpModalEditProfile()}
 
             <View style={{paddingBottom: GFun.hp(2)}}>
               <AnimateLoadingButton
@@ -375,11 +421,14 @@ class ProfileView extends Component {
 
 const mapStateToProps = state => ({
   screenBadge: state.screenBadge,
+  setting: state.setting,
 });
 
 const mapDispatchToProps = {
   setScreenBadge,
   setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileView);

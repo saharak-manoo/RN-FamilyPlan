@@ -37,3 +37,15 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 }
+
+subprojects {
+    afterEvaluate {project ->
+        if (project.hasProperty("android")) {
+            android {
+                compileSdkVersion 28     //do this in android/app/build.gradle too
+                buildToolsVersion '28.0.3'  //do this in android/app/build.gradle too
+            }
+        }
+    }
+}
+
