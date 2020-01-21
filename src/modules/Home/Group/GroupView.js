@@ -8,6 +8,8 @@ import {
   StatusBar,
   View,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setDarkMode, setLanguage} from '../../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text} from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
@@ -32,18 +34,19 @@ import InviteMemberView from '../../modal/inviteMemberView';
 import SettingServiceChargeView from '../../modal/settingServiceChargeView';
 import UsernamePasswordGroupView from '../../modal/usernamePasswordGroupView';
 import ScbPaymentView from '../../modal/scbPaymentView';
+import ScbQRCodePaymentView from '../../modal/scbQRCodePaymentView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class GroupView extends Component {
+class GroupView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
     let group = params.group;
     this.state = {
-      isDarkMode: params.isDarkMode,
+      isDarkMode: this.props.setting.isDarkMode,
       group: group,
       userView: [],
       selectedDay: null,
@@ -56,6 +59,7 @@ export default class GroupView extends Component {
   settingServiceChargeModal = React.createRef();
   usernamePasswordModal = React.createRef();
   scbPaymentModal = React.createRef();
+  scbQRCodePaymentModal = React.createRef();
 
   async componentWillMount() {
     this.triggerTurnOnNotification();
@@ -107,7 +111,7 @@ export default class GroupView extends Component {
   AppHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: this.state.group.color}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
             title={this.state.group.name}
@@ -194,6 +198,7 @@ export default class GroupView extends Component {
     );
 
     if (response.success) {
+      this.setState({group: response.group});
       GFun.successMessage(
         I18n.t('message.success'),
         I18n.t('message.settingDueDateSuccessful'),
@@ -214,7 +219,7 @@ export default class GroupView extends Component {
     ) {
       this.settingServiceChargeModal.current.open();
     } else if (this.scbPaymentModal.current) {
-      let { isPassed, error } = await Authenticate.open(
+      let {isPassed, error} = await Authenticate.open(
         I18n.t('message.requestToOpenUsernamePasswordGroup', {
           name: this.state.group.name,
         }),
@@ -222,7 +227,6 @@ export default class GroupView extends Component {
       if (isPassed) {
         this.scbPaymentModal.current.open();
       } else {
-        console.log(error);
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.authenticateFailed'),
@@ -274,7 +278,6 @@ export default class GroupView extends Component {
       if (isPassed) {
         this.usernamePasswordModal.current.open();
       } else {
-        console.log(error);
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.authenticateFailed'),
@@ -323,7 +326,6 @@ export default class GroupView extends Component {
       if (isPassed) {
         this.scbPaymentModal.current.open();
       } else {
-        console.log(error);
         GFun.errorMessage(
           I18n.t('message.error'),
           I18n.t('message.authenticateFailed'),
@@ -355,7 +357,56 @@ export default class GroupView extends Component {
           modal={this.scbPaymentModal}
           isDarkMode={this.state.isDarkMode}
           group={this.state.group}
+          onNoAppSCBEasy={this.noAppSCBEasy}
           onPaymentDone={this.paymentDone}
+        />
+      </Modalize>
+    );
+  }
+
+  noAppSCBEasy() {}
+
+  showModalSCBQRCodePayment = async () => {
+    if (this.scbQRCodePaymentModal.current) {
+      let {isPassed, error} = await Authenticate.open(
+        I18n.t('message.requestToOpenUsernamePasswordGroup', {
+          name: this.state.group.name,
+        }),
+      );
+      if (isPassed) {
+        this.scbQRCodePaymentModal.current.open();
+      } else {
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.authenticateFailed'),
+        );
+      }
+    }
+  };
+
+  popUpModalSCBQRCodePayment() {
+    return (
+      <Modalize
+        ref={this.scbQRCodePaymentModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <ScbQRCodePaymentView
+          modal={this.scbQRCodePaymentModal}
+          isDarkMode={this.state.isDarkMode}
+          group={this.state.group}
         />
       </Modalize>
     );
@@ -599,7 +650,6 @@ export default class GroupView extends Component {
 
   goToChatRoom(chatRoom) {
     this.props.navigation.navigate('ChatRoom', {
-      isDarkMode: this.state.isDarkMode,
       chatRoom: chatRoom,
       isRequestJoin: false,
     });
@@ -651,9 +701,17 @@ export default class GroupView extends Component {
         {this.popUpModalSetUpReminder()}
         {this.popUpModalUsernamePassword()}
         {this.popUpModalSCBPayment()}
+        {this.popUpModalSCBQRCodePayment()}
 
         {this.state.userView.group_leader ? (
           <ActionButton buttonColor="rgba(231,76,60,1)">
+            <ActionButton.Item
+              buttonColor="#000"
+              title={I18n.t('placeholder.qrcodePayment')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalSCBQRCodePayment}>
+              <FAIcon name="qrcode" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
             <ActionButton.Item
               buttonColor="#6D06F9"
               title={I18n.t('placeholder.chat')}
@@ -685,6 +743,13 @@ export default class GroupView extends Component {
           </ActionButton>
         ) : (
           <ActionButton buttonColor="#FE8536">
+            <ActionButton.Item
+              buttonColor="#000"
+              title={I18n.t('placeholder.qrcodePayment')}
+              textStyle={{fontFamily: 'Kanit-Light'}}
+              onPress={this.showModalSCBQRCodePayment}>
+              <FAIcon name="qrcode" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
             <ActionButton.Item
               buttonColor="#3D71FB"
               title={I18n.t('placeholder.chat')}
@@ -726,3 +791,15 @@ export default class GroupView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+  setting: state.setting,
+});
+
+const mapDispatchToProps = {
+  setDarkMode,
+  setLanguage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GroupView);

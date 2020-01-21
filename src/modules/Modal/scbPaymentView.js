@@ -16,12 +16,13 @@ import UserAvatar from 'react-native-user-avatar';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class scbPaymentView extends Component {
+export default class ScbPaymentView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isDarkMode: this.props.isDarkMode,
       group: this.props.group,
+      qrCodeImg: null,
       isPaymentSuccess: false,
     };
   }
@@ -40,7 +41,13 @@ export default class scbPaymentView extends Component {
     if (response.success) {
       this.loadingScbPayment.showLoading(false);
       let scbLink = response.scb_deep_link;
-      Linking.openURL(scbLink);
+      Linking.openURL(scbLink).catch(e => {
+        this.props.onNoAppSCBEasy();
+        GFun.errorMessage(
+          I18n.t('message.error'),
+          I18n.t('message.requiresApp', {name: 'SCB Easy'}),
+        );
+      });
       this.props.modal.current.close();
     } else {
       this.loadingScbPayment.showLoading(false);

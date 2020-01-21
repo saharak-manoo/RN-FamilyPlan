@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 import {Alert, View, Platform, Dimensions, Image} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import I18n from '../../components/i18n';
+import {connect} from 'react-redux';
+import {setDarkMode, setLanguage} from '../actions';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const IS_IOS = Platform.OS === 'ios';
 
-export default class LogoView extends Component {
+class LogoView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,17 +26,14 @@ export default class LogoView extends Component {
       await AsyncStorage.setItem('isDarkMode', JSON.stringify(false));
     }
     this.setState({isDarkMode: isDarkMode});
+    this.props.setDarkMode(isDarkMode);
 
     let isSignIn = await AsyncStorage.getItem('user');
     await this.setState({isSignIn: isSignIn != null});
     if (this.state.isSignIn) {
-      this.props.navigation.navigate('Home', {
-        isDarkMode: isDarkMode,
-      });
+      this.props.navigation.navigate('Home');
     } else {
-      this.props.navigation.navigate('Login', {
-        isDarkMode: isDarkMode,
-      });
+      this.props.navigation.navigate('Login');
     }
   }
 
@@ -61,3 +60,15 @@ export default class LogoView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+  setting: state.setting,
+});
+
+const mapDispatchToProps = {
+  setDarkMode,
+  setLanguage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogoView);

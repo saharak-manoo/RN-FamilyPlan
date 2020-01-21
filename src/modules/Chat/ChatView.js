@@ -9,6 +9,8 @@ import {
   View,
   TextInput,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {setDarkMode, setLanguage} from '../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Searchbar} from 'react-native-paper';
 import I18n from '../../components/i18n';
@@ -22,15 +24,16 @@ import firebase from 'react-native-firebase';
 import QuickReplies from 'react-native-gifted-chat/lib/QuickReplies';
 
 const IS_IOS = Platform.OS === 'ios';
-export default class ChatView extends Component {
+
+class ChatView extends Component {
   constructor(props) {
     super(props);
     let params = this.props.navigation.state.params;
     this.state = {
-      isDarkMode: params.isDarkMode,
+      isDarkMode: this.props.setting.isDarkMode,
       user: [],
       spinner: false,
-      chatRoom: this.props.navigation.state.params.chatRoom,
+      chatRoom: params.chatRoom,
       messages: [],
       search: '',
       text: '',
@@ -46,7 +49,7 @@ export default class ChatView extends Component {
       <View>
         <Appbar.Header
           style={{
-            backgroundColor: this.state.chatRoom.group.color,
+            backgroundColor: this.props.setting.appColor,
           }}>
           <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
           <Appbar.Content
@@ -356,3 +359,15 @@ export default class ChatView extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  screenBadge: state.screenBadge,
+  setting: state.setting,
+});
+
+const mapDispatchToProps = {
+  setDarkMode,
+  setLanguage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatView);

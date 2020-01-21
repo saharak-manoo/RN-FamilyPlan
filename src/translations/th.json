@@ -75,7 +75,11 @@
     "usernameAndPassword": "ชื่อผู้ใช้และรหัสผ่าน",
     "username": "ชื่อผู้ใช้",
     "editProfile": "แก้ไขโปรไฟล์",
-    "payment": "ชำระเงิน"
+    "payment": "ชำระเงิน",
+    "qrcodePayment": "ชำระเงินด้วย QR Code",
+    "merchantName": "ชื่อผู้ค้า",
+    "qrcodeExpire": "Qrcode หมดอายุ",
+    "amount": "ราคา"
   },
   "message": {
     "success": "สำเร็จ",
@@ -132,6 +136,8 @@
     "paymentToGroup": "ชำระเงินให้กลุ่ม %{name}",
     "totalPayment": "ยอดเงินที่ต้องชำระ %{price} Bath",
     "paymentFailed": "การชำระเงินล้มเหลว",
-    "paymentSuccess": "การชำระเงินสำเร็จ"
+    "paymentSuccess": "การชำระเงินสำเร็จ",
+    "requiresApp": "จำเป็นต้องมีแอปพลิเคชั่น %{name}",
+    "editProfileSuccessful": "แก้ไขข้อมูลสำเร็จ"
   }
 }

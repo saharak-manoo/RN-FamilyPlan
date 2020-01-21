@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {setScreenBadgeNow} from '../../actions';
+import {setScreenBadgeNow, setDarkMode, setLanguage} from '../../actions';
 import {Appbar, Text, HelperText, TextInput} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
@@ -35,9 +35,8 @@ const IS_IOS = Platform.OS === 'ios';
 class LoginView extends Component {
   constructor(props) {
     super(props);
-    let params = this.props.navigation.state.params;
     this.state = {
-      isDarkMode: params.isDarkMode,
+      isDarkMode: props.setting.isDarkMode,
       email: '',
       password: '',
     };
@@ -50,7 +49,7 @@ class LoginView extends Component {
   appHerder() {
     return (
       <View>
-        <Appbar.Header style={{backgroundColor: '#1C83F7'}}>
+        <Appbar.Header style={{backgroundColor: this.props.setting.appColor}}>
           <Appbar.Content
             title={I18n.t('placeholder.appName')}
             titleStyle={{fontFamily: 'Kanit-Light'}}
@@ -366,10 +365,13 @@ class LoginView extends Component {
 
 const mapStateToProps = state => ({
   screenBadge: state.screenBadge,
+  setting: state.setting,
 });
 
 const mapDispatchToProps = {
   setScreenBadgeNow,
+  setDarkMode,
+  setLanguage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginView);
