@@ -313,37 +313,39 @@ class LoginView extends Component {
               </TouchableOpacity>
             </View>
 
-            <View style={{justifyContent: 'center', paddingTop: 2}}>
-              <TouchableOpacity
-                style={[
-                  styles.buttonLoginWith,
-                  {
-                    marginTop: GFun.hp(2),
-                    backgroundColor: '#18C464',
-                    flexDirection: 'row',
-                    borderRadius: 28,
-                    height: 50,
-                  },
-                ]}
-                onPress={this.signInWithLine}>
-                <View style={{flex: 0.1, paddingLeft: 10}}>
-                  <Image
-                    source={require('../../../img/line.png')}
-                    style={{width: 26, height: 26, marginRight: 20}}
-                  />
-                </View>
-                <View style={{flex: 1, alignItems: 'center'}}>
-                  <Text
-                    style={{
-                      color: '#FFF',
-                      fontSize: 19,
-                      fontFamily: 'Kanit-Light',
-                    }}>
-                    {`${I18n.t('button.signinWith')} LINE`}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            {IS_IOS && (
+              <View style={{justifyContent: 'center', paddingTop: 2}}>
+                <TouchableOpacity
+                  style={[
+                    styles.buttonLoginWith,
+                    {
+                      marginTop: GFun.hp(2),
+                      backgroundColor: '#18C464',
+                      flexDirection: 'row',
+                      borderRadius: 28,
+                      height: 50,
+                    },
+                  ]}
+                  onPress={this.signInWithLine}>
+                  <View style={{flex: 0.1, paddingLeft: 10}}>
+                    <Image
+                      source={require('../../../img/line.png')}
+                      style={{width: 26, height: 26, marginRight: 20}}
+                    />
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#FFF',
+                        fontSize: 19,
+                        fontFamily: 'Kanit-Light',
+                      }}>
+                      {`${I18n.t('button.signinWith')} LINE`}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
 
             <View style={{justifyContent: 'center', paddingTop: 2}}>
               <TouchableOpacity
