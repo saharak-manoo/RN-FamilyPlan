@@ -79,7 +79,8 @@
     "qrcodePayment": "ชำระเงินด้วย QR Code",
     "merchantName": "ชื่อผู้ค้า",
     "qrcodeExpire": "Qrcode หมดอายุ",
-    "amount": "ราคา"
+    "amount": "ราคา",
+    "appSetting": "ตั้งค่า"
   },
   "message": {
     "success": "สำเร็จ",
@@ -138,6 +139,7 @@
     "paymentFailed": "การชำระเงินล้มเหลว",
     "paymentSuccess": "การชำระเงินสำเร็จ",
     "requiresApp": "จำเป็นต้องมีแอปพลิเคชั่น %{name}",
-    "editProfileSuccessful": "แก้ไขข้อมูลสำเร็จ"
+    "editProfileSuccessful": "แก้ไขข้อมูลสำเร็จ",
+    "needToRestartTheApp": "จำเป็นต้องรีสตาร์ทแอป"
   }
 }
