@@ -35,7 +35,13 @@ import FBSDK, {
 import LineLogin from 'react-native-line-sdk';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 import {styles} from '../../../components/styles';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import ActionButton from 'react-native-action-button';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import Modalize from 'react-native-modalize';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+// View
+import AppSettingView from '../../modal/appSettingView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -48,10 +54,14 @@ class LoginView extends Component {
       isDarkMode: props.setting.isDarkMode,
       email: '',
       password: '',
+      spinner: false,
     };
   }
 
+  appSettingModal = React.createRef();
+
   async componentDidMount() {
+    this.setState({spinner: false});
     GoogleSignin.configure({
       webClientId:
         '1096043543785-m3lljr6es1l76jg7gnaeqs4kbvg8dgf7.apps.googleusercontent.com',
@@ -122,6 +132,8 @@ class LoginView extends Component {
       ],
     });
 
+    this.setState({spinner: true});
+
     let user = {
       email: resp.email,
       first_name: resp.fullName.givenName,
@@ -132,6 +144,7 @@ class LoginView extends Component {
     };
 
     if (user.apple_id_uid == '' || user.apple_id_uid == null) {
+      this.setState({spinner: false});
       this.props.navigation.navigate('Register', {
         isDarkMode: this.state.isDarkMode,
         firstName: user.first_name,
@@ -144,6 +157,7 @@ class LoginView extends Component {
     } else {
       let response = await Api.signInWith(user);
       if (response.success) {
+        this.setState({spinner: false});
         await AsyncStorage.setItem('user', JSON.stringify(response.user));
         GFun.successMessage(
           I18n.t('message.success'),
@@ -153,6 +167,7 @@ class LoginView extends Component {
           isDarkMode: this.state.isDarkMode,
         });
       } else {
+        this.setState({spinner: false});
         this.props.navigation.navigate('Register', {
           isDarkMode: this.state.isDarkMode,
           firstName: user.first_name,
@@ -167,6 +182,7 @@ class LoginView extends Component {
   };
 
   signInWithFacebook = async () => {
+    this.setState({spinner: true});
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       resp => {
         if (!resp.isCancelled) {
@@ -177,7 +193,7 @@ class LoginView extends Component {
         }
       },
       error => {
-        console.log('Facebook  error : ', error);
+        this.setState({spinner: false});
       },
     );
   };
@@ -185,7 +201,7 @@ class LoginView extends Component {
   facebookSignIn = async accessToken => {
     const responseInfoCallback = async (error, resp) => {
       if (error) {
-        console.log('error', error);
+        this.setState({spinner: false});
       } else if (resp) {
         let user = {
           email: resp.email,
@@ -197,6 +213,7 @@ class LoginView extends Component {
         };
 
         if (user.facebook_id_uid == '' || user.facebook_id_uid == null) {
+          this.setState({spinner: false});
           this.props.navigation.navigate('Register', {
             firstName: user.first_name,
             lastName: user.last_name,
@@ -208,6 +225,7 @@ class LoginView extends Component {
         } else {
           let response = await Api.signInWith(user);
           if (response.success) {
+            this.setState({spinner: false});
             await AsyncStorage.setItem('user', JSON.stringify(response.user));
             GFun.successMessage(
               I18n.t('message.success'),
@@ -217,6 +235,7 @@ class LoginView extends Component {
               isDarkMode: this.state.isDarkMode,
             });
           } else {
+            this.setState({spinner: false});
             this.props.navigation.navigate('Register', {
               isDarkMode: this.state.isDarkMode,
               firstName: user.first_name,
@@ -247,6 +266,7 @@ class LoginView extends Component {
   };
 
   signInWithLine = async () => {
+    this.setState({spinner: true});
     LineLogin.loginWithPermissions(['profile', 'openid', 'email'])
       .then(async resp => {
         let profile = resp.profile;
@@ -260,6 +280,7 @@ class LoginView extends Component {
         };
 
         if (user.line_id_uid == '' || user.line_id_uid == null) {
+          this.setState({spinner: false});
           this.props.navigation.navigate('Register', {
             firstName: user.first_name,
             lastName: user.last_name,
@@ -271,6 +292,7 @@ class LoginView extends Component {
         } else {
           let response = await Api.signInWith(user);
           if (response.success) {
+            this.setState({spinner: false});
             await AsyncStorage.setItem('user', JSON.stringify(response.user));
             GFun.successMessage(
               I18n.t('message.success'),
@@ -280,6 +302,7 @@ class LoginView extends Component {
               isDarkMode: this.state.isDarkMode,
             });
           } else {
+            this.setState({spinner: false});
             this.props.navigation.navigate('Register', {
               isDarkMode: this.state.isDarkMode,
               firstName: user.first_name,
@@ -293,15 +316,15 @@ class LoginView extends Component {
         }
       })
       .catch(error => {
-        console.log(error);
+        this.setState({spinner: false});
       });
   };
 
   signInWithGoogle = async () => {
+    this.setState({spinner: true});
     try {
       await GoogleSignin.hasPlayServices();
       const resp = await GoogleSignin.signIn();
-      console.log('userInfo resp', resp);
       let user = {
         email: resp.user.email,
         first_name: resp.user.givenName,
@@ -312,6 +335,7 @@ class LoginView extends Component {
       };
 
       if (user.google_id_uid == '' || user.google_id_uid == null) {
+        this.setState({spinner: false});
         this.props.navigation.navigate('Register', {
           firstName: user.first_name,
           lastName: user.last_name,
@@ -323,6 +347,7 @@ class LoginView extends Component {
       } else {
         let response = await Api.signInWith(user);
         if (response.success) {
+          this.setState({spinner: false});
           await AsyncStorage.setItem('user', JSON.stringify(response.user));
           GFun.successMessage(
             I18n.t('message.success'),
@@ -332,6 +357,7 @@ class LoginView extends Component {
             isDarkMode: this.state.isDarkMode,
           });
         } else {
+          this.setState({spinner: false});
           this.props.navigation.navigate('Register', {
             isDarkMode: this.state.isDarkMode,
             firstName: user.first_name,
@@ -344,9 +370,39 @@ class LoginView extends Component {
         }
       }
     } catch (error) {
-      console.log('error', error);
+      this.setState({spinner: false});
     }
   };
+
+  showAppSettingModal = () => {
+    if (this.appSettingModal.current) {
+      this.appSettingModal.current.open();
+    }
+  };
+
+  popUpModalAppSetting() {
+    return (
+      <Modalize
+        ref={this.appSettingModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <AppSettingView modal={this.newGroupModal} />
+      </Modalize>
+    );
+  }
 
   render() {
     return (
@@ -356,6 +412,14 @@ class LoginView extends Component {
           backgroundColor: this.state.isDarkMode ? '#202020' : '#EEEEEE',
         }}>
         {this.appHerder()}
+        <Spinner
+          visible={this.state.spinner}
+          textContent={`${I18n.t('placeholder.loading')}...`}
+          textStyle={
+            ([styles.spinnerTextStyle],
+            {color: this.state.isDarkMode ? '#FFF' : '#000'})
+          }
+        />
         <ScrollView>
           <View
             style={{
@@ -378,10 +442,7 @@ class LoginView extends Component {
                   ]}
                   onPress={this.signInWithAppleId}>
                   <View style={{flex: 0.1, paddingLeft: 10}}>
-                    <FontAwesomeIcon
-                      name="apple"
-                      size={26}
-                      color={'#FFF'}></FontAwesomeIcon>
+                    <FAIcon name="apple" size={26} color={'#FFF'}></FAIcon>
                   </View>
                   <View style={{flex: 1, alignItems: 'center'}}>
                     <Text
@@ -411,10 +472,10 @@ class LoginView extends Component {
                 ]}
                 onPress={this.signInWithFacebook}>
                 <View style={{flex: 0.1, paddingLeft: 10}}>
-                  <FontAwesomeIcon
+                  <FAIcon
                     name="facebook-square"
                     size={26}
-                    color={'#FFF'}></FontAwesomeIcon>
+                    color={'#FFF'}></FAIcon>
                 </View>
                 <View style={{flex: 1, alignItems: 'center'}}>
                   <Text
@@ -477,10 +538,7 @@ class LoginView extends Component {
                 ]}
                 onPress={this.signInWithGoogle}>
                 <View style={{flex: 0.1, paddingLeft: 10}}>
-                  <FontAwesomeIcon
-                    name="google"
-                    size={26}
-                    color={'#FFF'}></FontAwesomeIcon>
+                  <FAIcon name="google" size={26} color={'#FFF'}></FAIcon>
                 </View>
                 <View style={{flex: 1, alignItems: 'center'}}>
                   <Text
@@ -590,6 +648,13 @@ class LoginView extends Component {
             </View>
           </View>
         </ScrollView>
+
+        <ActionButton
+          buttonColor={'#202020'}
+          icon={<FAIcon name="cog" style={styles.actionButtonIcon} />}
+          onPress={this.showAppSettingModal}
+        />
+        {this.popUpModalAppSetting()}
       </View>
     );
   }

@@ -15,6 +15,13 @@ import AnimateLoadingButton from 'react-native-animate-loading-button';
 import I18n from '../../../components/i18n';
 import * as Api from '../../actions/api';
 import * as GFun from '../../../helpers/globalFunction';
+import {styles} from '../../../components/styles';
+import ActionButton from 'react-native-action-button';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import Modalize from 'react-native-modalize';
+
+// View
+import AppSettingView from '../../modal/appSettingView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -28,6 +35,8 @@ class ForgotPasswordView extends Component {
       email: '',
     };
   }
+
+  appSettingModal = React.createRef();
 
   appHerder() {
     return (
@@ -68,6 +77,36 @@ class ForgotPasswordView extends Component {
         I18n.t('message.' + response.messages),
       );
     }
+  }
+
+  showAppSettingModal = () => {
+    if (this.appSettingModal.current) {
+      this.appSettingModal.current.open();
+    }
+  };
+
+  popUpModalAppSetting() {
+    return (
+      <Modalize
+        ref={this.appSettingModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <AppSettingView modal={this.newGroupModal} />
+      </Modalize>
+    );
   }
 
   render() {
@@ -124,6 +163,13 @@ class ForgotPasswordView extends Component {
             />
           </View>
         </View>
+
+        <ActionButton
+          buttonColor={'#202020'}
+          icon={<FAIcon name="cog" style={styles.actionButtonIcon} />}
+          onPress={this.showAppSettingModal}
+        />
+        {this.popUpModalAppSetting()}
       </View>
     );
   }

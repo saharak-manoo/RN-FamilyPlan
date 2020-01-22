@@ -83,7 +83,8 @@
     "qrcodePayment": "QR Code payment",
     "merchantName": "Merchant name",
     "qrcodeExpire": "Qrcode expire",
-    "amount": "Amount"
+    "amount": "Amount",
+    "appSetting": "Setting"
   },
   "message": {
     "forgotPassword": "Forgot password",
@@ -143,6 +144,7 @@
     "paymentFailed": "Payment failed",
     "paymentSuccess": "Payment successful",
     "requiresApp": "Requires application %{name}",
-    "editProfileSuccessful": "Edit profile successful"
+    "editProfileSuccessful": "Edit profile successful",
+    "needToRestartTheApp": "Need to restart the app"
   }
 }

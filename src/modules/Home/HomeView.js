@@ -133,14 +133,8 @@ class HomeView extends Component {
 
   async realTimeData(data) {
     let user = await GFun.user();
-
-    let {unread_messages_count, unread_notifications_count} = JSON.parse(
-      data.unread,
-    );
-    this.props.setScreenBadgeNow(
-      unread_messages_count,
-      unread_notifications_count,
-    );
+    this.props.setScreenBadge(user.authentication_jwt);
+    
     if (data.noti_type === 'group') {
       let group_noti_id = JSON.parse(data.group_noti_id);
       if (group_noti_id !== this.state.localNotiId) {

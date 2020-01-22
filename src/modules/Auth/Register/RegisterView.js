@@ -18,6 +18,13 @@ import {Dropdown} from 'react-native-material-dropdown';
 import * as Api from '../../actions/api';
 import * as GFun from '../../../helpers/globalFunction';
 import AsyncStorage from '@react-native-community/async-storage';
+import ActionButton from 'react-native-action-button';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import Modalize from 'react-native-modalize';
+import {styles} from '../../../components/styles';
+
+// View
+import AppSettingView from '../../modal/appSettingView';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -57,6 +64,8 @@ class RegisterView extends Component {
       confirmPassword: '',
     };
   }
+
+  appSettingModal = React.createRef();
 
   componentDidMount = async () => {
     this.setState({spinner: true});
@@ -161,6 +170,36 @@ class RegisterView extends Component {
         isDarkMode: this.state.isDarkMode,
       });
     }, 300);
+  }
+
+  showAppSettingModal = () => {
+    if (this.appSettingModal.current) {
+      this.appSettingModal.current.open();
+    }
+  };
+
+  popUpModalAppSetting() {
+    return (
+      <Modalize
+        ref={this.appSettingModal}
+        modalStyle={styles.popUpModal}
+        overlayStyle={styles.overlayModal}
+        handleStyle={styles.handleModal}
+        modalHeight={height / 1.08}
+        handlePosition="inside"
+        openAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        closeAnimationConfig={{
+          timing: {duration: 400},
+          spring: {speed: 10, bounciness: 10},
+        }}
+        withReactModal
+        adjustToContentHeight>
+        <AppSettingView modal={this.newGroupModal} />
+      </Modalize>
+    );
   }
 
   render() {
@@ -373,6 +412,13 @@ class RegisterView extends Component {
             </View>
           </View>
         </ScrollView>
+
+        <ActionButton
+          buttonColor={'#202020'}
+          icon={<FAIcon name="cog" style={styles.actionButtonIcon} />}
+          onPress={this.showAppSettingModal}
+        />
+        {this.popUpModalAppSetting()}
       </View>
     );
   }

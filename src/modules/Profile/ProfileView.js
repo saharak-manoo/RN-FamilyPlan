@@ -6,7 +6,14 @@ import {
   setDarkMode,
   setLanguage,
 } from '../actions';
-import {Dimensions, Image, Platform, ScrollView, View} from 'react-native';
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Platform,
+  ScrollView,
+  View,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Appbar, Text, Switch} from 'react-native-paper';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
@@ -52,6 +59,27 @@ class ProfileView extends Component {
     });
   };
 
+  alertChangeLanguage(isLanguageTH) {
+    Alert.alert(
+      '',
+      I18n.t('message.needToRestartTheApp'),
+      [
+        {
+          text: I18n.t('button.cancel'),
+          style: 'cancel',
+          style: 'destructive',
+        },
+        {
+          text: I18n.t('button.ok'),
+          onPress: () => this.onSelectedLanguageTh(isLanguageTH),
+        },
+      ],
+      {
+        cancelable: false,
+      },
+    );
+  }
+
   onSelectedLanguageTh = async isLanguageTH => {
     let locale = isLanguageTH ? 'th' : 'en';
     I18n.locale = locale;
@@ -59,6 +87,27 @@ class ProfileView extends Component {
     this.setState({isLanguageTH: isLanguageTH});
     RNRestart.Restart();
   };
+
+  alertChangeToDarkMode(isDarkMode) {
+    Alert.alert(
+      '',
+      I18n.t('message.needToRestartTheApp'),
+      [
+        {
+          text: I18n.t('button.cancel'),
+          style: 'cancel',
+          style: 'destructive',
+        },
+        {
+          text: I18n.t('button.ok'),
+          onPress: () => this.onSwitchDarkMode(isDarkMode),
+        },
+      ],
+      {
+        cancelable: false,
+      },
+    );
+  }
 
   onSwitchDarkMode = async isDarkMode => {
     await AsyncStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
@@ -343,7 +392,7 @@ class ProfileView extends Component {
                     <Switch
                       value={this.state.isLanguageTH}
                       onValueChange={isLanguageTH =>
-                        this.onSelectedLanguageTh(isLanguageTH)
+                        this.alertChangeLanguage(isLanguageTH)
                       }
                     />
                   }
@@ -362,7 +411,7 @@ class ProfileView extends Component {
                     <Switch
                       value={this.state.isDarkMode}
                       onValueChange={isDarkMode =>
-                        this.onSwitchDarkMode(isDarkMode)
+                        this.alertChangeToDarkMode(isDarkMode)
                       }
                     />
                   }

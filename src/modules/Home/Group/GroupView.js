@@ -711,7 +711,9 @@ class GroupView extends Component {
         {this.popUpModalSCBQRCodePayment()}
 
         {this.state.userView.group_leader ? (
-          <ActionButton buttonColor="rgba(231,76,60,1)">
+          <ActionButton
+            buttonColor="rgba(231,76,60,1)"
+            icon={<FAIcon name="cog" style={styles.actionButtonIcon} />}>
             {scbEasyApi && (
               <ActionButton.Item
                 buttonColor="#000"
