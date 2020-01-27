@@ -399,7 +399,7 @@ class LoginView extends Component {
         }}
         withReactModal
         adjustToContentHeight>
-        <AppSettingView modal={this.newGroupModal} />
+        <AppSettingView modal={this.appSettingModal} />
       </Modalize>
     );
   }

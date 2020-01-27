@@ -64,11 +64,14 @@ class AppSettingView extends Component {
   }
 
   onSelectedLanguageTh = async isLanguageTH => {
-    let locale = isLanguageTH ? 'th' : 'en';
-    I18n.locale = locale;
-    await AsyncStorage.setItem('locale', locale);
-    this.setState({isLanguageTH: isLanguageTH});
-    RNRestart.Restart();
+    this.props.modal.current.close();
+    setTimeout(async () => {
+      let locale = isLanguageTH ? 'th' : 'en';
+      I18n.locale = locale;
+      await AsyncStorage.setItem('locale', locale);
+      this.setState({isLanguageTH: isLanguageTH});
+      RNRestart.Restart();
+    }, 500);
   };
 
   alertChangeToDarkMode(isDarkMode) {
@@ -93,9 +96,12 @@ class AppSettingView extends Component {
   }
 
   onSwitchDarkMode = async isDarkMode => {
-    await AsyncStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
-    this.setState({isDarkMode: isDarkMode});
-    RNRestart.Restart();
+    this.props.modal.current.close();
+    setTimeout(async () => {
+      await AsyncStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
+      this.setState({isDarkMode: isDarkMode});
+      RNRestart.Restart();
+    }, 500);
   };
 
   render() {
