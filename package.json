@@ -27,7 +27,7 @@
     "d3-interpolate": "^1.4.0",
     "prop-types": "^15.7.2",
     "react": "16.9.0",
-    "react-native": "0.61.2",
+    "react-native": "0.61.5",
     "react-native-action-button": "^2.8.5",
     "react-native-animate-loading-button": "^1.0.3",
     "react-native-camera": "^3.8.0",
