@@ -417,7 +417,7 @@ class LoginView extends Component {
           textContent={`${I18n.t('placeholder.loading')}...`}
           textStyle={
             ([styles.spinnerTextStyle],
-            {color: this.state.isDarkMode ? '#FFF' : '#000'})
+              { color: '#FFF'})
           }
         />
         <ScrollView>
